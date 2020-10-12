@@ -8,3 +8,5 @@ x players can interact with the board and only they see it
 stats
 saving stats?
 saving logins?
+
+has to work on tablet!!
