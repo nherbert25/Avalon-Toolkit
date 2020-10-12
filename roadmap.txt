@@ -1,0 +1,10 @@
+x number of players see the same screen, barring certain information
+
+
+x players can interact with the board and everybody sees it
+x players can interact with the board and only they see it
+
+
+stats
+saving stats?
+saving logins?
