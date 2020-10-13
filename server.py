@@ -5,9 +5,9 @@ import threading
 #threading lets you seperate code out so it's not stacked waiting for code to finish
 
 HEADER = 64
-PORT = 5050
+PORT = 5050 #arbitrary port number
 #SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
-SERVER = socket.gethostbyname(socket.gethostname())
+SERVER = socket.gethostbyname(socket.gethostname())  #pulls in the ipaddress based off your computer's local name
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
