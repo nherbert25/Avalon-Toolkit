@@ -27,10 +27,17 @@ def send(msg):
     print(client.recv(2048).decode(FORMAT))
 
 
-send("Hello world!")
+#send("Hello world!")
 
 
-send(input())
+#send(input())
 
 
-send(DISCONNECT_MESSAGE)
+
+#board.main_page()
+
+
+
+
+
+#send(DISCONNECT_MESSAGE)
