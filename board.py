@@ -89,8 +89,7 @@ main_page()
 
 
 
-client.send(client.DISCONNECT_MESSAGE)
-client.send(client.DISCONNECT_MESSAGE)
+
 
 
 

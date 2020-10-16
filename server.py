@@ -37,9 +37,11 @@ def handle_client(conn, addr):
             print(f"[{addr}]: {msg}")
             conn.send("Message received!".encode(FORMAT))
 
-
-
     conn.close()
+
+
+
+
 
 def start():
     server.listen()
