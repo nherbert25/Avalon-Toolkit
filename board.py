@@ -1,16 +1,14 @@
 import tkinter as tk
 import requests
-import client
+#import client
+
+
 
 def main_page():
 	HEIGHT = 500
 	WIDTH = 600
 
-	def test_function(entry):
-		print("This is the entry:", entry)
 
-	# api.openweathermap.org/data/2.5/forecast?q={city name},{country code}
-	# a4aa5e3d83ffefaba8c00284de6ef7c3
 
 	def format_response(weather):
 		try:
@@ -32,6 +30,10 @@ def main_page():
 		weather = response.json()
 
 		label['text'] = format_response(weather)
+
+
+	def press_button2():
+		print('button2 pressed!!')
 
 
 
@@ -69,7 +71,7 @@ def main_page():
 	label = tk.Label(lower_frame)
 	label.grid(row=0, column=0)
 
-	button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda: client.send("hello!!!"))
+	button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda: press_button2())   #command=lambda: client.send("hello!!!")
 	button2.grid(row=1, column=1)
 
 
@@ -77,7 +79,8 @@ def main_page():
 
 
 
-main_page()
+if __name__ == "__main__":
+	main_page()
 
 
 

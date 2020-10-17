@@ -12,7 +12,7 @@ ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
-
+#this is all of the data coming in
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #anything that hits this address, hits this socket
 server.bind(ADDR)
