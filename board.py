@@ -5,10 +5,6 @@ import requests
 
 
 def main_page():
-	HEIGHT = 500
-	WIDTH = 600
-
-
 
 	def format_response(weather):
 		try:
@@ -32,13 +28,36 @@ def main_page():
 		label['text'] = format_response(weather)
 
 
+
+	def send_to_client():
+		return('test')
+
 	def press_button2():
 		print('button2 pressed!!')
 
 
+	HEIGHT = 500
+	WIDTH = 600
 
 	root = tk.Tk()
 	root.title("Avalon")
+
+
+
+	##############################################################
+	#menubar
+	menubar = tk.Menu(root)
+	filemenu = tk.Menu(menubar)
+	filemenu.add_command(label="Open")
+	filemenu.add_command(label="Save")
+	filemenu.add_command(label="Exit", command=root.quit)
+
+	menubar.add_cascade(label="File", menu=filemenu)
+	root.config(menu=menubar)
+
+
+	##############################################################
+	#canvas/background
 
 	canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
 	canvas.grid(row=0, column=0)
@@ -49,6 +68,8 @@ def main_page():
 	background_label = tk.Label(root, image=background_image)
 	background_label.grid(row=0, column=0)
 
+	##############################################################
+	#frames
 
 	main_frame = tk.LabelFrame(root)
 	main_frame.grid(row=0, column=0)
@@ -75,9 +96,16 @@ def main_page():
 	button2.grid(row=1, column=1)
 
 
+
+
+	##############################################################
+	#finished
+
 	root.mainloop()
 
 
+##############################################################
+##############################################################
 
 if __name__ == "__main__":
 	main_page()
