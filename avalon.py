@@ -8,7 +8,9 @@ my_client = client.Client()
 
 
 #create a main board GUI object
-board.main_page()
+#board.main_page()
+
+Main_Board = board.Main_Page()
 
 
 

@@ -63,7 +63,8 @@ class Main_Page():
 	label.grid(row=0, column=0)
 
 
-	button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda self: self.press_button2())   #command=lambda: client.send("hello!!!")
+	#button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda : press_button2())   #command=lambda: client.send("hello!!!")
+	button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda : main_helper.button2)   #command=lambda: client.send("hello!!!")
 	button2.grid(row=1, column=1)
 
 	##############################################################
@@ -95,9 +96,15 @@ class Main_Page():
 	def send_to_client(self):
 		return('test')
 
-	def press_button2(self):
+	def press_button2(self, b):
+		if b is None:
+			b = self.press_button2_helper()
 		print('button2 pressed!!')
 
+
+	def press_button2_helper(self):
+		pass
+		return 5
 
 
 	##############################################################

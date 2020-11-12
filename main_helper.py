@@ -26,3 +26,6 @@ def get_weather(city):
 def hello():
     print('hellow world!!')
     return('hello')
+
+def button2():
+    pass
