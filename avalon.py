@@ -1,6 +1,6 @@
 
 import client
-import board
+import board_class as board
 
 
 #create a socket connection object
