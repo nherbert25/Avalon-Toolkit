@@ -2,6 +2,8 @@ import tkinter as tk
 import requests
 #import client
 
+#https://stackoverflow.com/questions/17466561/best-way-to-structure-a-tkinter-application
+#https://python-textbok.readthedocs.io/en/latest/Introduction_to_GUI_Programming.html
 
 
 def main_page():

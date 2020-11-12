@@ -3,7 +3,6 @@ import socket
 
 class Client():
 
-
     HEADER = 64
     PORT = 5050
     #SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
