@@ -111,25 +111,23 @@ class Main_Page():
 	#finished
 
 	#root.mainloop()
-	def mainloop(self):
-		
-		pass
-		#root.update_idletasks()
-		#root.update()
+	def main_loop(self):
+		self.root.update_idletasks()
+		self.root.update()
 
 
-	print("testing?")
-	root.mainloop()
+	print("module board_class loaded successfully.")
 
 
-main_page = Main_Page()
+
+#main_page = Main_Page()
 
 
 
 if __name__ == "__main__":
-	
-	pass
-	#main_page()
+	Main_Board = Main_Page()
+	while True:
+		Main_Board.main_loop()
 
 
 

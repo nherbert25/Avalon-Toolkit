@@ -1,6 +1,13 @@
-
+import logging
 import client
 import board_class as board
+
+
+#logging.basicConfig(filename='AVALON.log', level=logging.INFO)
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+logging.info('Started')
+
+
 
 
 #create a socket connection object
@@ -10,9 +17,15 @@ my_client = client.Client()
 #create a main board GUI object
 #board.main_page()
 
+
 Main_Board = board.Main_Page()
 
+logging.debug('Main_Board loaded successfully.')
 
+
+
+while True:
+    Main_Board.main_loop()
 
 
 
@@ -28,7 +41,7 @@ Main_Board = board.Main_Page()
 my_client.send(my_client.DISCONNECT_MESSAGE)
 
 
-
+logging.info('Avalon exited gracefully.')
 
 
 
