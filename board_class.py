@@ -64,7 +64,7 @@ class Main_Page():
 
 
 	#button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda : press_button2())   #command=lambda: client.send("hello!!!")
-	button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda : main_helper.button2)   #command=lambda: client.send("hello!!!")
+	button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda : main_helper.meow())   #command=lambda: client.send("hello!!!")
 	button2.grid(row=1, column=1)
 
 	##############################################################
@@ -116,9 +116,28 @@ class Main_Page():
 		self.root.update()
 
 
+
+'''
+	def close_window(self):
+		global running
+		running = False  # turn off while loop
+		#print( "Window closed")
+
+	#root = Tk()
+#	root.protocol("WM_DELETE_WINDOW", close_window)
+
+
 	print("module board_class loaded successfully.")
 
 
+
+
+	def on_closing(self, root=root):
+		if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
+			root.destroy()
+
+	root.protocol("WM_DELETE_WINDOW", on_closing)
+'''
 
 #main_page = Main_Page()
 

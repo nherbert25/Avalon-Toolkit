@@ -1,6 +1,6 @@
 import socket
 import threading
-
+import server_board_state
 
 #threading lets you seperate code out so it's not stacked waiting for code to finish
 
@@ -33,6 +33,32 @@ def handle_client(conn, addr):
 
             if msg == DISCONNECT_MESSAGE:
                 connected = False
+
+
+
+
+
+            if msg.split(' ')[0] == '!USERNAME':
+
+                if msg.split(' ')[1] in server_board_state.players:
+                    #send server state to reconnect the player
+                    print('player already logged in')
+
+                else:
+                    server_board_state.players.append(msg.split(' ')[1])
+                    #send board state to all players!
+
+
+
+
+
+
+
+
+
+
+
+
 
             print(f"[{addr}]: {msg}")
             conn.send("Message received!".encode(FORMAT))

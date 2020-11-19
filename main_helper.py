@@ -1,4 +1,12 @@
 import requests
+import client
+
+
+my_client = client.Client()
+
+
+
+
 
 
 def format_response(weather):
@@ -24,8 +32,27 @@ def get_weather(city):
 
 
 def hello():
-    print('hellow world!!')
-    return('hello')
+	print('hellow world!!')
+	my_client.send('testing hello message')
+	return('hello')
 
 def button2():
     pass
+
+
+def meow():
+	print('pressed meow button')
+
+
+
+
+
+
+def initial_connect(my_client):
+	username = input('Enter your name: ')
+	print('!USERNAME',username)
+	my_client.send('!USERNAME '+username)
+
+
+
+initial_connect(my_client)
