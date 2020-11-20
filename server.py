@@ -2,6 +2,10 @@ import socket
 import threading
 import server_board_state
 
+
+
+
+
 #threading lets you seperate code out so it's not stacked waiting for code to finish
 
 HEADER = 64
@@ -18,6 +22,13 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
 
 
+
+
+
+
+
+
+#main function for handling client pings
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION]: {addr} connected.")
 
@@ -34,10 +45,6 @@ def handle_client(conn, addr):
             if msg == DISCONNECT_MESSAGE:
                 connected = False
 
-
-
-
-
             if msg.split(' ')[0] == '!USERNAME':
 
                 if msg.split(' ')[1] in server_board_state.players:
@@ -49,7 +56,10 @@ def handle_client(conn, addr):
                     #send board state to all players!
 
 
-
+            if msg.split(' ')[0] == '!PLAYERSTATE':
+                conn.send(server_board_state.player_state().encode(FORMAT))
+                print(f"[{addr}]: {msg}")
+                continue
 
 
 

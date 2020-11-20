@@ -63,18 +63,22 @@ class Main_Page():
 	#player_one = tk.LabelFrame(top_frame, text="Group", font=40, width=300, height=30)
 	#player_one.grid(row=1, column=0)
 
-	player_one_frame = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
-	player_one_frame.grid(row=1, column=0)
-
-	player_one = tk.Message(player_one_frame, font=40, text="player one")
-	player_one.grid(row=0, column=0)
 
 
-	player_two_frame = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
-	player_two_frame.grid(row=1, column=1)
 
-	player_two = tk.Message(player_two_frame, font=40, text=main_helper.username)
-	player_two.grid(row=0, column=0)
+
+	#player_one_frame = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
+	#player_one_frame.grid(row=1, column=0)
+
+	#player_one = tk.Message(player_one_frame, font=40, text="player one")
+	#player_one.grid(row=0, column=0)
+
+
+	#player_two_frame = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
+	#player_two_frame.grid(row=1, column=1)
+
+	#player_two = tk.Message(player_two_frame, font=40, text=main_helper.username)
+	#player_two.grid(row=0, column=0)
 
 
 
@@ -84,10 +88,9 @@ class Main_Page():
 	#player_list(self, top_frame=top_frame, list_of_players=['Nate', 'Frankie'])
 
 	def __init__(self):
-		self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Frankie'])
-
-
-		self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Dog', 'cat', 'taylor'])
+		#self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Frankie'])
+		#self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Dog', 'cat', 'taylor'])
+		pass
 
 
 
@@ -106,28 +109,6 @@ class Main_Page():
 
 	##############################################################
 	#functions
-
-	def format_response(self, weather):
-		try:
-			name = weather['name']
-			desc = weather['weather'][0]['description']
-			temp = weather['main']['temp']
-
-			final_str = 'City: %s \nConditions: %s \nTemperature (°F): %s' % (name, desc, temp)
-		except:
-			final_str = 'There was a problem retrieving that information'
-
-		return final_str
-
-	def get_weather(self, city):
-		weather_key = 'a4aa5e3d83ffefaba8c00284de6ef7c3'
-		url = 'https://api.openweathermap.org/data/2.5/weather'
-		params = {'APPID': weather_key, 'q': city, 'units': 'imperial'}
-		response = requests.get(url, params=params)
-		weather = response.json()
-
-		self.label['text'] = self.format_response(weather)
-
 
 
 	def send_to_client(self):
@@ -169,10 +150,13 @@ class Main_Page():
 	#root.mainloop()
 	def main_loop(self):
 
-		if Main_Page.list_of_players != Main_Page.list_of_players:
-			self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Dog'])
+		if Main_Page.list_of_players != main_helper.players:
+			Main_Page.list_of_players = main_helper.players
+			self.player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+			print('finished updating???')
 		self.root.update_idletasks()
 		self.root.update()
+		#print('finished updating222222???')
 
 
 

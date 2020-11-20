@@ -30,12 +30,17 @@ class Client():
         self.client.send(send_length)
         self.client.send(message)
 
-        print(self.client.recv(2048).decode(self.FORMAT))
+        return_message = self.client.recv(2048).decode(self.FORMAT)
+        print(return_message)
+        return(return_message)
 
 
     def receive(self, msg):
         message = msg.decode(self.FORMAT)
         print(message)
+
+
+
 
 
 
