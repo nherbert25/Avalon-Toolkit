@@ -52,7 +52,8 @@ def initial_connect(my_client):
 	username = input('Enter your name: ')
 	print('!USERNAME',username)
 	my_client.send('!USERNAME '+username)
+	return(username)
 
 
 
-initial_connect(my_client)
+username = initial_connect(my_client)

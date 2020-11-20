@@ -17,6 +17,10 @@ class Main_Page():
 	root = tk.Tk()
 	root.title("Avalon")
 
+
+	list_of_players = None
+
+
 	##############################################################
 	#menubar
 	menubar = tk.Menu(root)
@@ -46,7 +50,7 @@ class Main_Page():
 	main_frame = tk.LabelFrame(root)
 	main_frame.grid(row=0, column=0)
 
-	top_frame = tk.LabelFrame(main_frame, bg='#80c1ff', bd=5)
+	top_frame = tk.LabelFrame(main_frame, bg='#80c1ff', bd=5, text="Top Frame")
 	top_frame.grid(row=0, column=0)
 
 	entry = tk.Entry(top_frame, font=40)
@@ -56,7 +60,40 @@ class Main_Page():
 	button.grid(row=0, column=1)
 
 
-	lower_frame = tk.LabelFrame(main_frame, bg='#80c1ff', bd=10)
+	#player_one = tk.LabelFrame(top_frame, text="Group", font=40, width=300, height=30)
+	#player_one.grid(row=1, column=0)
+
+	player_one_frame = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
+	player_one_frame.grid(row=1, column=0)
+
+	player_one = tk.Message(player_one_frame, font=40, text="player one")
+	player_one.grid(row=0, column=0)
+
+
+	player_two_frame = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
+	player_two_frame.grid(row=1, column=1)
+
+	player_two = tk.Message(player_two_frame, font=40, text=main_helper.username)
+	player_two.grid(row=0, column=0)
+
+
+
+
+
+
+	#player_list(self, top_frame=top_frame, list_of_players=['Nate', 'Frankie'])
+
+	def __init__(self):
+		self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Frankie'])
+
+
+		self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Dog', 'cat', 'taylor'])
+
+
+
+
+
+	lower_frame = tk.LabelFrame(main_frame, bg='#80c1ff', bd=10, text="Bottom Frame")
 	lower_frame.grid(row=1, column=0)
 
 	label = tk.Label(lower_frame)
@@ -107,11 +144,33 @@ class Main_Page():
 		return 5
 
 
+
+
+	def player_list(self, top_frame, list_of_players):
+		
+		count = 0
+		player_frames = {}
+
+		for player in list_of_players:
+			player_frames[player] = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
+			player_frames[player].grid(row=0, column=count)
+
+			player = tk.Message(player_frames[player], font=40, text=player)
+			player.grid(row=0, column=0)
+
+			count += 1
+
+
+
+
 	##############################################################
 	#finished
 
 	#root.mainloop()
 	def main_loop(self):
+
+		if Main_Page.list_of_players != Main_Page.list_of_players:
+			self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Dog'])
 		self.root.update_idletasks()
 		self.root.update()
 
@@ -153,7 +212,11 @@ if __name__ == "__main__":
 
 
 
-
+'''
+	player_one = tk.Text(player_frame, font=40, width=40, height=30)
+	player_one.grid(row=0, column=0)
+	player_one.insert(tk.END, "playername")
+'''
 
 
 
