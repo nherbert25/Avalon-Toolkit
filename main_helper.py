@@ -4,15 +4,10 @@ import threading
 import queue
 import time
 
-
-
-players = None
-
-
+players = []
 my_client = client.Client()
-
-
-
+roles = []
+list_of_characters = {'Merlin': 0, 'Percival': 0, 'Resistance': 0, 'Morgana': 0, 'Assassin': 0, 'Mordred': 0, 'Spy': 0, 'Oberon': 0}
 
 
 
@@ -55,6 +50,20 @@ def initial_connect(my_client):
 
 
 
+
+def char_add(character, characters_widget, list_of_characters=list_of_characters):
+	list_of_characters[character] += 1
+	characters_widget.config(text=list_of_characters)
+	return list_of_characters
+
+
+
+
+
+def char_remove(character, characters_widget, list_of_characters=list_of_characters):
+	list_of_characters[character] -= 1
+	characters_widget.config(text=list_of_characters)
+	return list_of_characters
 
 #def board_state():
 #	my_client.send('!PLAYERSTATE')
@@ -157,7 +166,7 @@ def threaded_server_connection_i_dunno():
 
 def board_state():
 
-	print('starting threaded server')
+	print('Asking server for board state...')
 	#threading.Timer(1.0, threaded_server_connection(que)).start()
 
 	string_players = my_client.send('!PLAYERSTATE')
@@ -170,15 +179,16 @@ def board_state():
 
 ###################################################################################################
 #Queued threading for sending/receiving from server
+#https://www.geeksforgeeks.org/python-communicating-between-threads-set-1/
 
 # A thread that produces data 
 def producer(out_q): 
 	while True: 
 		# Produce some data 
-
 		out_q.put(board_state())
 		time.sleep(5)
 		  
+
 # A thread that consumes data 
 def consumer(in_q):
 	global players

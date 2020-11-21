@@ -15,8 +15,9 @@ mission = [1, 0, 0]  #boolean success/fail
 
 game_state = None #votes (calculate who's turn), mission success/fail
 
-assassination_phase = False
+pre_game_lobby = True
 
+assassination_phase = False
 
 voting_phase = False
 

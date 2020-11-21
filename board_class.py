@@ -47,87 +47,38 @@ class Main_Page():
 	##############################################################
 	#frames
 
-	main_frame = tk.LabelFrame(root)
-	main_frame.grid(row=0, column=0)
+	# main_frame = tk.LabelFrame(root)
+	# main_frame.grid(row=0, column=0)
 
-	top_frame = tk.LabelFrame(main_frame, bg='#80c1ff', bd=5, text="Top Frame")
-	top_frame.grid(row=0, column=0)
-
-	entry = tk.Entry(top_frame, font=40)
-	entry.grid(row=0, column=0)
-
-	button = tk.Button(top_frame, text="Get Weather", font=40, command=lambda: main_helper.hello())  #command=lambda self: self.get_weather(entry.get()))
-	button.grid(row=0, column=1)
-
-
-	#player_one = tk.LabelFrame(top_frame, text="Group", font=40, width=300, height=30)
-	#player_one.grid(row=1, column=0)
-
-
-
-
-
-	#player_one_frame = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
-	#player_one_frame.grid(row=1, column=0)
-
-	#player_one = tk.Message(player_one_frame, font=40, text="player one")
-	#player_one.grid(row=0, column=0)
-
-
-	#player_two_frame = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
-	#player_two_frame.grid(row=1, column=1)
-
-	#player_two = tk.Message(player_two_frame, font=40, text=main_helper.username)
-	#player_two.grid(row=0, column=0)
-
-
-
+	# top_frame = tk.LabelFrame(main_frame, bg='#80c1ff', bd=5, text="Top Frame")
+	# top_frame.grid(row=0, column=0)
 
 
 
 	#player_list(self, top_frame=top_frame, list_of_players=['Nate', 'Frankie'])
 
 	def __init__(self):
-		#self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Frankie'])
-		#self.player_list(top_frame=self.top_frame, list_of_players=['Nate', 'Dog', 'cat', 'taylor'])
-		pass
+		self.main_frame = tk.LabelFrame(self.root)
+		self.main_frame.grid(row=0, column=0)
+
+		self.top_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=5, text="Top Frame")
+		self.top_frame.grid(row=0, column=0)
 
 
+		self.lower_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Lower Frame")
+		self.lower_frame.grid(row=1, column=0)
+
+		self.button2 = tk.Button(self.lower_frame, text="Meow", font=40, command=lambda : main_helper.meow())   #command=lambda: client.send("hello!!!")
+		self.button2.grid(row=1, column=1)
 
 
-
-	lower_frame = tk.LabelFrame(main_frame, bg='#80c1ff', bd=10, text="Bottom Frame")
-	lower_frame.grid(row=1, column=0)
-
-	label = tk.Label(lower_frame)
-	label.grid(row=0, column=0)
-
-
-	#button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda : press_button2())   #command=lambda: client.send("hello!!!")
-	button2 = tk.Button(lower_frame, text="Meow", font=40, command=lambda : main_helper.meow())   #command=lambda: client.send("hello!!!")
-	button2.grid(row=1, column=1)
+		self.generate_rules_config(self.lower_frame)
 
 	##############################################################
 	#functions
 
 
-	def send_to_client(self):
-		return('test')
-
-	def press_button2(self, b):
-		if b is None:
-			b = self.press_button2_helper()
-		print('button2 pressed!!')
-
-
-	def press_button2_helper(self):
-		pass
-		return 5
-
-
-
-
-	def player_list(self, top_frame, list_of_players):
+	def generate_player_list(self, top_frame, list_of_players):
 		
 		count = 0
 		player_frames = {}
@@ -142,6 +93,33 @@ class Main_Page():
 			count += 1
 
 
+	# def generate_rules_config(self, lower_frame):
+	# 	pass
+
+
+
+	def generate_rules_config(self, lower_frame):
+
+		characters_widget = tk.Label(lower_frame, font=40, text=main_helper.list_of_characters)
+
+		count = 0
+		for character in main_helper.list_of_characters:
+
+			def f_factory(character = character):
+				#return character # i is now a *local* variable of f_factory and can't ever change
+
+				button = tk.Button(lower_frame, text=character, font=40, command=lambda : main_helper.char_add(character, characters_widget))
+				button.grid(row=0, column=count)
+				button2 = tk.Button(lower_frame, text=character, font=40, command=lambda : main_helper.char_remove(character, characters_widget))
+				button2.grid(row=1, column=count)
+
+				
+			f_factory()
+			count += 1
+		
+		characters_widget.grid(row=2, columnspan=count)
+
+
 
 
 	##############################################################
@@ -150,10 +128,10 @@ class Main_Page():
 	#root.mainloop()
 	def main_loop(self):
 
-		if Main_Page.list_of_players is None or Main_Page.list_of_players != main_helper.players:
+		if Main_Page.list_of_players != main_helper.players:
 			Main_Page.list_of_players = main_helper.players
-			self.player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
-			print('finished updating???')
+			self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+			#print('finished updating???')
 		self.root.update_idletasks()
 		self.root.update()
 		#print('finished updating222222???')
