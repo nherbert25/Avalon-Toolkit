@@ -166,6 +166,11 @@ def board_state():
 	return(players)
 
 
+
+
+###################################################################################################
+#Queued threading for sending/receiving from server
+
 # A thread that produces data 
 def producer(out_q): 
 	while True: 
