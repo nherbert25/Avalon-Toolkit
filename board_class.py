@@ -150,7 +150,7 @@ class Main_Page():
 	#root.mainloop()
 	def main_loop(self):
 
-		if Main_Page.list_of_players != main_helper.players:
+		if Main_Page.list_of_players is None or Main_Page.list_of_players != main_helper.players:
 			Main_Page.list_of_players = main_helper.players
 			self.player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 			print('finished updating???')

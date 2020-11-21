@@ -31,7 +31,7 @@ class Client():
         self.client.send(message)
 
         return_message = self.client.recv(2048).decode(self.FORMAT)
-        print(return_message)
+        print(f"server return message: {return_message}")
         return(return_message)
 
 
