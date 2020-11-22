@@ -1,6 +1,6 @@
 import tkinter as tk
 import requests
-import main_helper
+import main_board_helper
 
 
 #import client
@@ -61,15 +61,15 @@ class Main_Page():
 		self.main_frame = tk.LabelFrame(self.root)
 		self.main_frame.grid(row=0, column=0)
 
-		self.top_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=5, text="Top Frame")
+		self.top_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=5, text="Top Frame", pady=10, padx=5)
 		self.top_frame.grid(row=0, column=0)
 
 
 		self.lower_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Lower Frame")
 		self.lower_frame.grid(row=1, column=0)
 
-		self.button2 = tk.Button(self.lower_frame, text="Meow", font=40, command=lambda : main_helper.meow())   #command=lambda: client.send("hello!!!")
-		self.button2.grid(row=1, column=1)
+		# self.button2 = tk.Button(self.lower_frame, text="Meow", font=40, command=lambda : main_board_helper.meow())   #command=lambda: client.send("hello!!!")
+		# self.button2.grid(row=1, column=1)
 
 
 		self.generate_rules_config(self.lower_frame)
@@ -84,10 +84,10 @@ class Main_Page():
 		player_frames = {}
 
 		for player in list_of_players:
-			player_frames[player] = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame")
+			player_frames[player] = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame", pady=10)
 			player_frames[player].grid(row=0, column=count)
 
-			player = tk.Message(player_frames[player], font=40, text=player)
+			player = tk.Label(player_frames[player], font=40, text=player)
 			player.grid(row=0, column=0)
 
 			count += 1
@@ -100,24 +100,26 @@ class Main_Page():
 
 	def generate_rules_config(self, lower_frame):
 
-		characters_widget = tk.Label(lower_frame, font=40, text=main_helper.list_of_characters)
+		characters_widget = tk.Label(lower_frame, font=40, text=main_board_helper.list_of_characters, pady=2)
 
 		count = 0
-		for character in main_helper.list_of_characters:
+		for character in main_board_helper.list_of_characters:
 
 			def f_factory(character = character):
-				#return character # i is now a *local* variable of f_factory and can't ever change
+				#return character, character is now a *local* variable of f_factory and can't ever change
 
-				button = tk.Button(lower_frame, text=character, font=40, command=lambda : main_helper.char_add(character, characters_widget))
-				button.grid(row=0, column=count)
-				button2 = tk.Button(lower_frame, text=character, font=40, command=lambda : main_helper.char_remove(character, characters_widget))
-				button2.grid(row=1, column=count)
+				add_char_button = tk.Button(lower_frame, text=character, font=40, command=lambda : main_board_helper.char_add(character, characters_widget))
+				add_char_button.grid(row=0, column=count)
+				remove_char_button = tk.Button(lower_frame, text=character, font=40, command=lambda : main_board_helper.char_remove(character, characters_widget))
+				remove_char_button.grid(row=1, column=count)
 
 				
 			f_factory()
 			count += 1
 		
 		characters_widget.grid(row=2, columnspan=count)
+		start_game_button = tk.Button(lower_frame, text='Start!', font=40, command=main_board_helper.start_game)
+		start_game_button.grid(row=3, columnspan=count, pady=5)
 
 
 
@@ -128,39 +130,14 @@ class Main_Page():
 	#root.mainloop()
 	def main_loop(self):
 
-		if Main_Page.list_of_players != main_helper.players:
-			Main_Page.list_of_players = main_helper.players
+		if Main_Page.list_of_players != main_board_helper.players:
+			Main_Page.list_of_players = main_board_helper.players
 			self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
-			#print('finished updating???')
+
 		self.root.update_idletasks()
 		self.root.update()
-		#print('finished updating222222???')
 
 
-
-'''
-	def close_window(self):
-		global running
-		running = False  # turn off while loop
-		#print( "Window closed")
-
-	#root = Tk()
-#	root.protocol("WM_DELETE_WINDOW", close_window)
-
-
-	print("module board_class loaded successfully.")
-
-
-
-
-	def on_closing(self, root=root):
-		if tk.messagebox.askokcancel("Quit", "Do you want to quit?"):
-			root.destroy()
-
-	root.protocol("WM_DELETE_WINDOW", on_closing)
-'''
-
-#main_page = Main_Page()
 
 
 
@@ -171,14 +148,6 @@ if __name__ == "__main__":
 
 
 
-
-
-
-'''
-	player_one = tk.Text(player_frame, font=40, width=40, height=30)
-	player_one.grid(row=0, column=0)
-	player_one.insert(tk.END, "playername")
-'''
 
 
 

@@ -7,36 +7,7 @@ import time
 players = []
 my_client = client.Client()
 roles = []
-list_of_characters = {'Merlin': 0, 'Percival': 0, 'Resistance': 0, 'Morgana': 0, 'Assassin': 0, 'Mordred': 0, 'Spy': 0, 'Oberon': 0}
-
-
-
-def format_response(weather):
-	pass
-
-
-def get_weather(city):
-	pass
-
-
-
-
-
-def hello():
-	print('hellow world!!')
-	my_client.send('testing hello message')
-	return('hello')
-
-def button2():
-	pass
-
-
-def meow():
-	print('pressed meow button')
-
-
-
-
+list_of_characters = {'Merlin': 0, 'Percival': 0, 'Resistance': 0, 'Morgana': 0, 'Assassin': 0, 'Mordred': 0, 'Oberon': 0, 'Spy': 0}
 
 
 def initial_connect(my_client):
@@ -49,25 +20,25 @@ def initial_connect(my_client):
 	return(username)
 
 
-
-
 def char_add(character, characters_widget, list_of_characters=list_of_characters):
 	list_of_characters[character] += 1
 	characters_widget.config(text=list_of_characters)
 	return list_of_characters
 
 
-
-
-
 def char_remove(character, characters_widget, list_of_characters=list_of_characters):
-	list_of_characters[character] -= 1
-	characters_widget.config(text=list_of_characters)
+	if list_of_characters[character] > 0:
+		list_of_characters[character] -= 1
+		characters_widget.config(text=list_of_characters)
 	return list_of_characters
 
 #def board_state():
 #	my_client.send('!PLAYERSTATE')
 
+
+
+def start_game():
+	pass
 
 
 

@@ -1,6 +1,6 @@
 import logging
 import client
-import board_class as board
+import main_board_class as board
 
 
 running = True
