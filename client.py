@@ -1,4 +1,5 @@
 import socket
+import config
 
 
 class Client():

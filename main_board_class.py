@@ -1,7 +1,7 @@
 import tkinter as tk
 import requests
 import main_board_helper
-
+import config
 
 #import client
 
@@ -65,14 +65,10 @@ class Main_Page():
 		self.top_frame.grid(row=0, column=0)
 
 
-		self.lower_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Lower Frame")
-		self.lower_frame.grid(row=1, column=0)
-
-		# self.button2 = tk.Button(self.lower_frame, text="Meow", font=40, command=lambda : main_board_helper.meow())   #command=lambda: client.send("hello!!!")
-		# self.button2.grid(row=1, column=1)
 
 
-		self.generate_rules_config(self.lower_frame)
+
+		self.generate_rules_config()
 
 	##############################################################
 	#functions
@@ -93,14 +89,18 @@ class Main_Page():
 			count += 1
 
 
-	# def generate_rules_config(self, lower_frame):
-	# 	pass
+
+	def generate_rules_config(self):
 
 
 
-	def generate_rules_config(self, lower_frame):
+		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Lower Frame")
+		config_base_frame.grid(row=1, column=0)
 
-		characters_widget = tk.Label(lower_frame, font=40, text=main_board_helper.list_of_characters, pady=2)
+		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Lower Frame")
+		config_base_frame.grid(row=1, column=0)
+
+		characters_widget = tk.Label(config_base_frame, font=40, text=main_board_helper.list_of_characters, pady=2)
 
 		count = 0
 		for character in main_board_helper.list_of_characters:
@@ -108,9 +108,9 @@ class Main_Page():
 			def f_factory(character = character):
 				#return character, character is now a *local* variable of f_factory and can't ever change
 
-				add_char_button = tk.Button(lower_frame, text=character, font=40, command=lambda : main_board_helper.char_add(character, characters_widget))
+				add_char_button = tk.Button(config_base_frame, text=character, font=40, command=lambda : main_board_helper.char_add(character, characters_widget))
 				add_char_button.grid(row=0, column=count)
-				remove_char_button = tk.Button(lower_frame, text=character, font=40, command=lambda : main_board_helper.char_remove(character, characters_widget))
+				remove_char_button = tk.Button(config_base_frame, text=character, font=40, command=lambda : main_board_helper.char_remove(character, characters_widget))
 				remove_char_button.grid(row=1, column=count)
 
 				
@@ -118,8 +118,17 @@ class Main_Page():
 			count += 1
 		
 		characters_widget.grid(row=2, columnspan=count)
-		start_game_button = tk.Button(lower_frame, text='Start!', font=40, command=main_board_helper.start_game)
+		start_game_button = tk.Button(config_base_frame, text='Start!', font=40, command=lambda: main_board_helper.start_game(config_base_frame))
 		start_game_button.grid(row=3, columnspan=count, pady=5)
+
+
+
+		def forget(widget): 
+			# This will remove the widget from toplevel 
+			# basically widget do not get deleted 
+			# it just becomes invisible and loses its position 
+			# and can be retrieve 
+			widget.grid_forget()
 
 
 

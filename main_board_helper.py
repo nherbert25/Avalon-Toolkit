@@ -1,8 +1,9 @@
-import requests
-import client
 import threading
 import queue
 import time
+import requests
+import client
+import config
 
 players = []
 my_client = client.Client()
@@ -10,13 +11,13 @@ roles = []
 list_of_characters = {'Merlin': 0, 'Percival': 0, 'Resistance': 0, 'Morgana': 0, 'Assassin': 0, 'Mordred': 0, 'Oberon': 0, 'Spy': 0}
 
 
+
+
+
 def initial_connect(my_client):
 	username = input('Enter your name: ')
 	print('!USERNAME',username)
-
-	#print('before send')
 	my_client.send('!USERNAME '+username)
-	#print('after send')
 	return(username)
 
 
@@ -37,81 +38,20 @@ def char_remove(character, characters_widget, list_of_characters=list_of_charact
 
 
 
-def start_game():
+def start_game(widget):
+	#send !GAMESTART to the server
+	widget.grid_forget()
+
+
+def game_started():
+	#when receiving !GAMESTART from the server, start the game
+	#run  config_base_frame.grid_forget()
+	#run  function to create voting widget
+	#get list of players from the server/update players to sit in order
+	#reveal information to players
+	#update game board to show who's turn it is
 	pass
 
-
-
-
-
-'''
-#https://stackoverflow.com/questions/3393612/run-certain-code-every-n-seconds
-def threaded_server_connection():
-  threading.Timer(1.0, threaded_server_connection).start()
-
-  string_players = my_client.send('!PLAYERSTATE')
-  players = string_players.split(" ")
-  print(f'players: {players}')
-'''
-
-
-
-
-'''
-from threading import Timer
-
-class RepeatedTimer(object):
-	def __init__(self, interval, function, *args, **kwargs):
-		self._timer	 = None
-		self.interval   = interval
-		self.function   = function
-		self.args	   = args
-		self.kwargs	 = kwargs
-		self.is_running = False
-		self.start()
-
-	def _run(self):
-		self.is_running = False
-		self.start()
-		self.function(*self.args, **self.kwargs)
-
-	def start(self):
-		if not self.is_running:
-			self._timer = Timer(self.interval, self._run)
-			self._timer.start()
-			self.is_running = True
-
-	def stop(self):
-		self._timer.cancel()
-		self.is_running = False
-
-
-from time import sleep
-
-
-
-def hello2(name):
-	print("Hello %s!" % name)
-
-print("starting...")
-rt = RepeatedTimer(1, hello2, "World") # it auto-starts, no need of rt.start()
-try:
-	sleep(5) # your long-running job goes here...
-finally:
-	rt.stop() # better in a try/finally block to make sure the program ends!
-'''
-
-'''
-def threaded_server_connection(que):
-
-	print('starting threaded server')
-	#threading.Timer(1.0, threaded_server_connection(que)).start()
-
-	string_players = my_client.send('!PLAYERSTATE')
-	players = string_players.split(" ")
-	print(f'players: {players}')
-	que.put(players)
-'''
 
 
 username = initial_connect(my_client)
