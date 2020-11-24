@@ -1,5 +1,8 @@
 import socket
-import config
+import time
+import queue
+import threading
+import client_board_state
 
 
 class Client():
@@ -46,10 +49,59 @@ class Client():
 
 
 
+####################################################################################
+my_client = Client()
 
 
-#client.recv(1024)
-#send("Hello world!")
-#send(input())
+def initial_connect(my_client):
+	username = input('Enter your name: ')
+	print('!USERNAME',username)
+	my_client.send('!USERNAME '+username)
+	return(username)
 
-#send(DISCONNECT_MESSAGE)
+def board_state():
+
+	print('Asking server for board state...')
+	#threading.Timer(1.0, threaded_server_connection(que)).start()
+
+	string_players = my_client.send('!PLAYERSTATE')
+	players = string_players.split(" ")
+	print(f'players: {players}')
+	return(players)
+
+client_board_state.username = initial_connect(my_client)
+print(client_board_state.username)
+client_board_state.players = client_board_state.username
+
+
+###################################################################################################
+#Queued threading for sending/receiving from server
+#https://www.geeksforgeeks.org/python-communicating-between-threads-set-1/
+
+# A thread that produces data 
+def producer(out_q): 
+	while True: 
+		# Produce some data 
+		out_q.put(board_state())
+		time.sleep(5)
+		  
+
+# A thread that consumes data 
+def consumer(in_q):
+	while True: 
+		# Get some data 
+		data = in_q.get() 
+
+		print(data)
+
+		# Process the data 
+		client_board_state.players = data
+		time.sleep(5)
+
+		  
+# Create the shared queue and launch both threads 
+q = queue.Queue() 
+t1 = threading.Thread(target = consumer, args =(q, )) 
+t2 = threading.Thread(target = producer, args =(q, )) 
+t1.start()
+t2.start()

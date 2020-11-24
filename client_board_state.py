@@ -1,6 +1,9 @@
+username = None
+roles = []
 
+#players = ['Nate','Frankie', 'Jeff']
+players = []
 
-players = ['Nate','Frankie', 'Jeff']
 
 
 votes = {
@@ -9,19 +12,25 @@ votes = {
     'Jeff':[[1, 1, 0],[0, 1]]
     }
 
+votes = {}
 
 mission = [1, 0, 0]  #boolean success/fail
 
+mission = []
 
-game_state = None #votes (calculate who's turn), mission success/fail
+#game_state = None #votes (calculate who's turn), mission success/fail
 
-pre_game_lobby = True
+player_picking_team = 'Nate'
 
-assassination_phase = False
 
+
+
+lobby_phase = True
+picking_phase = False, player_picking_team
 voting_phase = False
-
 mission_phase = False
+assassination_phase = False
+game_over_phase = False
 
 
 

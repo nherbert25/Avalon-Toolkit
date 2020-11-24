@@ -1,4 +1,7 @@
 import logging
+
+import client_board_state
+
 import client
 import main_board_class as board
 

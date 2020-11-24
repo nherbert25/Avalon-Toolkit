@@ -1,7 +1,7 @@
 import tkinter as tk
 import requests
 import main_board_helper
-import config
+import client_board_state
 
 #import client
 
@@ -139,8 +139,9 @@ class Main_Page():
 	#root.mainloop()
 	def main_loop(self):
 
-		if Main_Page.list_of_players != main_board_helper.players:
-			Main_Page.list_of_players = main_board_helper.players
+		if Main_Page.list_of_players != client_board_state.players:
+			print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
+			Main_Page.list_of_players = client_board_state.players
 			self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 
 		self.root.update_idletasks()
@@ -154,11 +155,6 @@ if __name__ == "__main__":
 	Main_Board = Main_Page()
 	while True:
 		Main_Board.main_loop()
-
-
-
-
-
 
 
 
