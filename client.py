@@ -44,64 +44,67 @@ class Client():
         print(message)
 
 
+    def initial_connect(self):
+        username = input('Enter your name: ')
+        print('!USERNAME',username)
+        self.send('!USERNAME '+username)
+        return(username)
+
+    def board_state(self):
+
+        print('Asking server for board state...')
+        #threading.Timer(1.0, threaded_server_connection(que)).start()
+
+        string_players = self.send('!PLAYERSTATE')
+        players = string_players.split(" ")
+        print(f'players: {players}')
+        return(players)
+
+
+    ###################################################################################################
+    #Queued threading for sending/receiving from server
+    #https://www.geeksforgeeks.org/python-communicating-between-threads-set-1/
+
+    # A thread that produces data 
+    def producer(self, out_q): 
+        while True: 
+            # Produce some data 
+            out_q.put(self.board_state())
+            time.sleep(5)
+            
+
+    # A thread that consumes data 
+    def consumer(self, in_q):
+        while True: 
+            # Get some data 
+            data = in_q.get() 
+
+            print(data)
+
+            # Process the data 
+            client_board_state.players = data
+            time.sleep(5)
 
 
 
+def main():
 
 
-####################################################################################
-my_client = Client()
+    my_client = Client()
+
+    client_board_state.username = my_client.initial_connect()
+    print(client_board_state.username)
+    client_board_state.players = client_board_state.username
 
 
-def initial_connect(my_client):
-	username = input('Enter your name: ')
-	print('!USERNAME',username)
-	my_client.send('!USERNAME '+username)
-	return(username)
-
-def board_state():
-
-	print('Asking server for board state...')
-	#threading.Timer(1.0, threaded_server_connection(que)).start()
-
-	string_players = my_client.send('!PLAYERSTATE')
-	players = string_players.split(" ")
-	print(f'players: {players}')
-	return(players)
-
-client_board_state.username = initial_connect(my_client)
-print(client_board_state.username)
-client_board_state.players = client_board_state.username
+            
+    # Create the shared queue and launch both threads 
+    q = queue.Queue() 
+    t1 = threading.Thread(target = my_client.consumer, args =(q, )) 
+    t2 = threading.Thread(target = my_client.producer, args =(q, )) 
+    t1.start()
+    t2.start()
 
 
-###################################################################################################
-#Queued threading for sending/receiving from server
-#https://www.geeksforgeeks.org/python-communicating-between-threads-set-1/
-
-# A thread that produces data 
-def producer(out_q): 
-	while True: 
-		# Produce some data 
-		out_q.put(board_state())
-		time.sleep(5)
-		  
-
-# A thread that consumes data 
-def consumer(in_q):
-	while True: 
-		# Get some data 
-		data = in_q.get() 
-
-		print(data)
-
-		# Process the data 
-		client_board_state.players = data
-		time.sleep(5)
-
-		  
-# Create the shared queue and launch both threads 
-q = queue.Queue() 
-t1 = threading.Thread(target = consumer, args =(q, )) 
-t2 = threading.Thread(target = producer, args =(q, )) 
-t1.start()
-t2.start()
+if __name__ == '__main__':
+    main()

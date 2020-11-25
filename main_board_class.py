@@ -11,14 +11,18 @@ import client_board_state
 
 class Main_Page():
 
+	
+	running = True
 	HEIGHT = 500
 	WIDTH = 600
 
 	root = tk.Tk()
 	root.title("Avalon")
-
+	
 
 	list_of_players = None
+	
+
 
 
 	##############################################################
@@ -58,6 +62,7 @@ class Main_Page():
 	#player_list(self, top_frame=top_frame, list_of_players=['Nate', 'Frankie'])
 
 	def __init__(self):
+		self.root.protocol('WM_DELETE_WINDOW', self.crash_gui)  # root is your root window
 		self.main_frame = tk.LabelFrame(self.root)
 		self.main_frame.grid(row=0, column=0)
 
@@ -123,12 +128,21 @@ class Main_Page():
 
 
 
-		def forget(widget): 
-			# This will remove the widget from toplevel 
-			# basically widget do not get deleted 
-			# it just becomes invisible and loses its position 
-			# and can be retrieve 
-			widget.grid_forget()
+
+	def generate_voting_frame(self):
+		pass
+
+
+	def forget(self, widget): 
+		# This will remove the widget from toplevel 
+		# basically widget do not get deleted 
+		# it just becomes invisible and loses its position 
+		# and can be retrieve
+		widget.grid_forget()
+
+	def crash_gui(self, root=root):
+		Main_Page.running = False
+		root.destroy()
 
 
 

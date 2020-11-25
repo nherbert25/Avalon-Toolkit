@@ -6,45 +6,42 @@ import client
 import main_board_class as board
 
 
-running = True
 
-#logging.basicConfig(filename='AVALON.log', level=logging.INFO)
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
-logging.info('Started')
+def main():
 
-
-
-
-#create a socket connection object
-#my_client = client.Client()
-
-
-#create a main board GUI object
-#board.main_page()
-Main_Board = board.Main_Page()
-
-logging.debug('Main_Board loaded successfully.')
+    #logging.basicConfig(filename='AVALON.log', level=logging.INFO)
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.info('Started')
 
 
 
-while running:
-    Main_Board.main_loop()
+
+    #create a socket connection object
+    client.main()
+    logging.debug('Client loaded successfully.')
+
+    #create a main board GUI object
+    Main_Board = board.Main_Page()
+    logging.debug('Main_Board loaded successfully.')
+
+
+    while Main_Board.running:
+        Main_Board.main_loop()
 
 
 
 
 
+    #disconnect from the server
+    #my_client.send(my_client.DISCONNECT_MESSAGE)
+
+
+    logging.info('Avalon exited gracefully.')
 
 
 
-
-
-
-#disconnect from the server
-#my_client.send(my_client.DISCONNECT_MESSAGE)
-
-
-logging.info('Avalon exited gracefully.')
+if __name__ == '__main__':
+    main()
 
 
 
