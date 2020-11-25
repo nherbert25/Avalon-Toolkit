@@ -39,5 +39,5 @@ game_over_phase = False
 
 
 
-client_queue = None
+client_queue = []
 

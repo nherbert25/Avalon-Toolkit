@@ -62,6 +62,10 @@ def handle_client(conn, addr):
                 server_board_state.picking_phase = True
                 conn.send(server_board_state.player_state().encode(FORMAT))
 
+
+
+
+
             if msg.split(' ')[0] == '!USERNAME':
 
                 if msg.split(' ')[1] in server_board_state.players:
@@ -71,6 +75,11 @@ def handle_client(conn, addr):
                 else:
                     server_board_state.players.append(msg.split(' ')[1])
                     #send board state to all players!
+
+
+
+
+
 
 
             if msg.split(' ')[0] == '!PLAYERSTATE':
@@ -88,7 +97,7 @@ def handle_client(conn, addr):
 
 
             print(f"[{addr}]: {msg}")
-            conn.send("Message received!".encode(FORMAT))
+            #conn.send("!NONE".encode(FORMAT))
 
     conn.close()
 

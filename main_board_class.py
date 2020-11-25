@@ -83,6 +83,7 @@ class Main_Page():
 		
 		count = 0
 		player_frames = {}
+		print(list_of_players)
 
 		for player in list_of_players:
 			player_frames[player] = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame", pady=10)
@@ -98,9 +99,6 @@ class Main_Page():
 	def generate_rules_config(self):
 
 
-
-		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Lower Frame")
-		config_base_frame.grid(row=1, column=0)
 
 		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Lower Frame")
 		config_base_frame.grid(row=1, column=0)
@@ -153,7 +151,7 @@ class Main_Page():
 	def main_loop(self):
 
 		if Main_Page.list_of_players != client_board_state.players:
-			print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
+			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players
 			self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 

@@ -37,9 +37,9 @@ def start_game(widget):
 
 	#add to queue  !GAMESTART
 
+	client_board_state.client_queue.append('!GAMESTART')
 
-	
-	widget.grid_forget()
+	#widget.grid_forget()
 
 
 def game_started():

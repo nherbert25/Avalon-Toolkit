@@ -1,50 +1,48 @@
 
 
-#players = ['Nate','Frankie', 'Jeff']
-players = []
-
-
-
-votes = {
-    'Nate':[[1, 1, 0],[0, 1]],
-    'Frankie':[[1, 1, 0],[0, 1]],
-    'Jeff':[[1, 1, 0],[0, 1]]
-    }
-
-votes = {}
-
-mission = [1, 0, 0]  #boolean success/fail
-
-mission = []
-
-#game_state = None #votes (calculate who's turn), mission success/fail
-
-player_picking_team = 'Nate'
+players = ['Nate','Frankie', 'Jeff']
 
 
 
 
+player1 = {
+'name': 'Frankie', 
+'role': 'merlin',  #class object?
+'votes': [[1, 1, 0],[0, 1]]
+}
+
+player2 = {
+'name': 'Nate', 
+'role': 'assassin',  #class object?
+'votes': [[1, 1, 0],[0, 1]]
+}
+
+
+
+board_state = {
+'players': [player1, player2],
+'player_picking_team': 'Nate',
+'mission' : [1, 0, 0],
+'phase' : 'lobby_phase'
+}
+
+
+
+
+"""
 lobby_phase = True
-picking_phase = False, player_picking_team
+picking_phase = False  #, player_picking_team
 voting_phase = False
 mission_phase = False
 assassination_phase = False
 game_over_phase = False
+"""
+
+#players = []
+votes = []
+mission = []
 
 
-
-
-
-
-'''
-def gamestate(players, votes, mission):
-    gamestate = {
-        'players': players,
-        'votes': votes,
-        'mission': mission
-    }
-    return gamestate
-'''
 
 def game_state(players=players, votes=votes, mission=mission):
 
@@ -61,7 +59,62 @@ def game_state(players=players, votes=votes, mission=mission):
 
 
 
+######################################
 
+
+
+# players = []
+
+
+
+# votes = {
+#     'Nate':[[1, 1, 0],[0, 1]],
+#     'Frankie':[[1, 1, 0],[0, 1]],
+#     'Jeff':[[1, 1, 0],[0, 1]]
+#     }
+
+# votes = {}
+
+# mission = [1, 0, 0]  #boolean success/fail
+
+# mission = []
+
+# #game_state = None #votes (calculate who's turn), mission success/fail
+
+# player_picking_team = 'Nate'
+
+
+
+
+
+
+
+
+
+'''
+def gamestate(players, votes, mission):
+    gamestate = {
+        'players': players,
+        'votes': votes,
+        'mission': mission
+    }
+    return gamestate
+'''
+
+
+
+
+
+# def game_state(players=players, votes=votes, mission=mission):
+
+#     players = [x.encode('utf-8') for x in players]
+
+#     gamestate = {
+#         'players': players,
+#         'votes': votes,
+#         'mission': mission
+#     }
+#     return gamestate
 
 
 

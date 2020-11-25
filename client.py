@@ -35,7 +35,7 @@ class Client():
         self.client.send(message)
 
         return_message = self.client.recv(2048).decode(self.FORMAT)
-        print(f"server return message: {return_message}")
+        #print(f"server return message: {return_message}")
         return(return_message)
 
 
@@ -56,28 +56,9 @@ class Client():
 
 
 
-    def send_instructions_to_server(self, instructions=None):
+    def send_instructions_to_server(self, instructions):
+        string_players = self.send(instructions)
 
-
-        #do instructions
-
-
-
-
-
-        #ask server for board state
-        print('Asking server for board state...')
-
-        #print('Sending to server board state...')
-        #threading.Timer(1.0, threaded_server_connection(que)).start()
-
-        string_players = self.send('!PLAYERSTATE')
-        players = string_players.split(" ")
-        print(f'players: {players}')
-
-
-        #returns list of players from the server
-        return(players)
 
 
 
@@ -97,7 +78,10 @@ class Client():
 
         string_players = self.send('!PLAYERSTATE')
         players = string_players.split(" ")
-        print(f'players: {players}')
+        
+        
+        
+        #print(f'players: {players}')
 
 
         #returns list of players from the server
@@ -116,13 +100,31 @@ class Client():
     #https://www.geeksforgeeks.org/python-communicating-between-threads-set-1/
 
     # A thread that produces data and puts it on the queue
-    def to_server_queue(self, send_queue, instructions): 
+    def to_server_queue(self, send_queue): 
         while True: 
 
             # Produce some data 
+            if client_board_state.client_queue:
+                for instruction in client_board_state.client_queue:
+                    send_queue.put(instruction)
+                    
+
+            client_board_state.client_queue = []
 
             #put the return of this function into the queue
-            send_queue.put(self.send_instructions_to_server(instructions))
+            #send_queue.put(self.send_instructions_to_server(instructions))
+
+
+
+
+            for elem in list(send_queue.queue):
+                print(f'To Server Queue: {elem}')
+
+
+            while not send_queue.empty():
+                self.send_instructions_to_server(send_queue.get())
+                print('sent instructions!!')
+
             time.sleep(5)
 
 
@@ -134,13 +136,25 @@ class Client():
         while True: 
 
             # ask server for board state and put it on the queue
-            receive_queue.put(self.ask_server_for_board_state())
 
 
+            data_recieved = self.ask_server_for_board_state()
+
+
+            if data_recieved != '!NONE':
+                receive_queue.put(data_recieved)
+
+
+            for elem in list(receive_queue.queue):
+                print(f'From Server Queue: {elem}')
+
+
+
+            #print(f'From Server Queue: {list(receive_queue)}')
             # set board state to variable
             data = receive_queue.get() 
 
-            print(data)
+
 
             # Process the board state 
             client_board_state.players = data
@@ -165,7 +179,9 @@ def main():
 
 
     client_board_state.username = my_client.initial_connect()
-    print(client_board_state.username)
+    print(f'client username:  {client_board_state.username}')
+    #print(client_board_state.username)
+
     client_board_state.players = client_board_state.username
 
 
@@ -179,11 +195,11 @@ def main():
 
     t1 = threading.Thread(target = my_client.from_server_queue, args =(send_to_server_queue, ), daemon = True)
 
-    #t2 = threading.Thread(target = my_client.to_server_queue, args =(received_from_server_queue, ), daemon = True)
+    t2 = threading.Thread(target = my_client.to_server_queue, args =(received_from_server_queue, ), daemon = True)
 
 
     t1.start()
-    #t2.start()
+    t2.start()
 
 
     return my_client, send_to_server_queue
