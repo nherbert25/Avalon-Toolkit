@@ -134,10 +134,9 @@ class Main_Page():
 
 
 	def forget(self, widget): 
-		# This will remove the widget from toplevel 
-		# basically widget do not get deleted 
-		# it just becomes invisible and loses its position 
-		# and can be retrieve
+		"""This will remove the widget from toplevel without deleting it (as opposed to the destroy() method)
+		it just becomes invisible and loses its position 
+		can be retrieve by calling the grid() method of the widget again"""
 		widget.grid_forget()
 
 	def crash_gui(self, root=root):

@@ -33,6 +33,12 @@ def char_remove(character, characters_widget, list_of_characters=list_of_charact
 
 def start_game(widget):
 	#send !GAMESTART to the server
+
+
+	#add to queue  !GAMESTART
+
+
+	
 	widget.grid_forget()
 
 

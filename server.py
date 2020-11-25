@@ -1,6 +1,7 @@
 import socket
 import threading
 import server_board_state
+import random
 
 
 
@@ -35,7 +36,14 @@ def handle_client(conn, addr):
     connected = True
     while connected:
         msg_length = conn.recv(HEADER).decode(FORMAT)
-        
+
+
+
+
+
+
+
+
         if msg_length:
             msg_length = int(msg_length)
             msg = conn.recv(msg_length).decode(FORMAT)
@@ -44,6 +52,15 @@ def handle_client(conn, addr):
 
             if msg == DISCONNECT_MESSAGE:
                 connected = False
+
+            if msg == '!GAMESTART':
+                #randomize player orders and roles
+                random.shuffle(server_board_state.players)
+
+                #send game start to all clients with player information to each player
+                server_board_state.lobby_phase = False
+                server_board_state.picking_phase = True
+                conn.send(server_board_state.player_state().encode(FORMAT))
 
             if msg.split(' ')[0] == '!USERNAME':
 
@@ -74,6 +91,17 @@ def handle_client(conn, addr):
             conn.send("Message received!".encode(FORMAT))
 
     conn.close()
+
+
+
+
+
+
+
+
+
+
+
 
 
 

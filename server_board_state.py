@@ -58,6 +58,14 @@ def game_state(players=players, votes=votes, mission=mission):
     return gamestate
 
 
+
+
+
+
+
+
+
+
 def player_state(players=players):
 
     # initialize an empty string 

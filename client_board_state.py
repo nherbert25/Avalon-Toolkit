@@ -14,6 +14,10 @@ votes = {
 
 votes = {}
 
+
+
+
+
 mission = [1, 0, 0]  #boolean success/fail
 
 mission = []
@@ -35,5 +39,5 @@ game_over_phase = False
 
 
 
-
+client_queue = None
 

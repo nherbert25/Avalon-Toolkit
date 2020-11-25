@@ -17,8 +17,19 @@ def main():
 
 
     #create a socket connection object
-    client.main()
+    my_client, my_queue = client.main()
+
+
+
+
+
+
+
     logging.debug('Client loaded successfully.')
+
+
+
+    #print(client.my_example_var)
 
     #create a main board GUI object
     Main_Board = board.Main_Page()

@@ -50,47 +50,119 @@ class Client():
         self.send('!USERNAME '+username)
         return(username)
 
-    def board_state(self):
 
+
+
+
+
+
+    def send_instructions_to_server(self, instructions=None):
+
+
+        #do instructions
+
+
+
+
+
+        #ask server for board state
         print('Asking server for board state...')
+
+        #print('Sending to server board state...')
         #threading.Timer(1.0, threaded_server_connection(que)).start()
 
         string_players = self.send('!PLAYERSTATE')
         players = string_players.split(" ")
         print(f'players: {players}')
+
+
+        #returns list of players from the server
         return(players)
+
+
+
+
+
+
+    def ask_server_for_board_state(self):
+
+
+        #do instructions
+
+        #ask server for board state
+        print('Asking server for board state...')
+
+        #print('Sending to server board state...')
+        #threading.Timer(1.0, threaded_server_connection(que)).start()
+
+        string_players = self.send('!PLAYERSTATE')
+        players = string_players.split(" ")
+        print(f'players: {players}')
+
+
+        #returns list of players from the server
+        return(players)
+
+
+
+
+
+
+
 
 
     ###################################################################################################
     #Queued threading for sending/receiving from server
     #https://www.geeksforgeeks.org/python-communicating-between-threads-set-1/
 
-    # A thread that produces data 
-    def producer(self, out_q): 
+    # A thread that produces data and puts it on the queue
+    def to_server_queue(self, send_queue, instructions): 
         while True: 
-            # Produce some data 
-            out_q.put(self.board_state())
-            time.sleep(5)
-            
 
-    # A thread that consumes data 
-    def consumer(self, in_q):
+            # Produce some data 
+
+            #put the return of this function into the queue
+            send_queue.put(self.send_instructions_to_server(instructions))
+            time.sleep(5)
+
+
+
+
+
+    # A thread that consumes data and takes it from the queue
+    def from_server_queue(self, receive_queue):
         while True: 
-            # Get some data 
-            data = in_q.get() 
+
+            # ask server for board state and put it on the queue
+            receive_queue.put(self.ask_server_for_board_state())
+
+
+            # set board state to variable
+            data = receive_queue.get() 
 
             print(data)
 
-            # Process the data 
+            # Process the board state 
             client_board_state.players = data
             time.sleep(5)
 
 
 
+
+
+
+
+
+
+#################################################################################
 def main():
 
 
     my_client = Client()
+    #my_example_var = 'TESTING!!!'
+    #print(my_example_var)
+
+
 
     client_board_state.username = my_client.initial_connect()
     print(client_board_state.username)
@@ -99,11 +171,22 @@ def main():
 
             
     # Create the shared queue and launch both threads 
-    q = queue.Queue() 
-    t1 = threading.Thread(target = my_client.consumer, args =(q, )) 
-    t2 = threading.Thread(target = my_client.producer, args =(q, )) 
+    send_to_server_queue = queue.Queue() 
+
+    received_from_server_queue = queue.Queue()
+
+
+
+    t1 = threading.Thread(target = my_client.from_server_queue, args =(send_to_server_queue, ), daemon = True)
+
+    #t2 = threading.Thread(target = my_client.to_server_queue, args =(received_from_server_queue, ), daemon = True)
+
+
     t1.start()
-    t2.start()
+    #t2.start()
+
+
+    return my_client, send_to_server_queue
 
 
 if __name__ == '__main__':
