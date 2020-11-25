@@ -35,8 +35,14 @@ class Client():
         self.client.send(message)
 
         return_message = self.client.recv(2048).decode(self.FORMAT)
-        #print(f"server return message: {return_message}")
+
+
+        print(f"server return message: {return_message}")
         return(return_message)
+
+
+
+
 
 
     def receive(self, msg):
@@ -57,7 +63,7 @@ class Client():
 
 
     def send_instructions_to_server(self, instructions):
-        string_players = self.send(instructions)
+        server_return = self.send(instructions)
 
 
 
@@ -77,7 +83,12 @@ class Client():
         #threading.Timer(1.0, threaded_server_connection(que)).start()
 
         string_players = self.send('!PLAYERSTATE')
+
+
+        print(f'Server returned the following for !PLAYERSTATE: {string_players}')
         players = string_players.split(" ")
+
+        print(players)
         
         
         
@@ -125,7 +136,7 @@ class Client():
                 self.send_instructions_to_server(send_queue.get())
                 print('sent instructions!!')
 
-            time.sleep(5)
+            time.sleep(1)
 
 
 
@@ -158,7 +169,7 @@ class Client():
 
             # Process the board state 
             client_board_state.players = data
-            time.sleep(5)
+            time.sleep(1)
 
 
 

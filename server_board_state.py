@@ -124,6 +124,7 @@ def player_state(players=players):
     # initialize an empty string 
     player_string = " " 
     
+    #print(player_string.join(players))
     # return string   
     return (player_string.join(players)) 
 
