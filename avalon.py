@@ -29,7 +29,6 @@ def main():
 
 
 
-    #print(client.my_example_var)
 
     #create a main board GUI object
     Main_Board = board.Main_Page()

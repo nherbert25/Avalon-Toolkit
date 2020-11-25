@@ -20,7 +20,8 @@ class Main_Page():
 	root.title("Avalon")
 	
 
-	list_of_players = None
+	list_of_players = []
+	game_phase = 'picking_phase'
 	
 
 
@@ -69,24 +70,34 @@ class Main_Page():
 		self.top_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=5, text="Top Frame", pady=10, padx=5)
 		self.top_frame.grid(row=0, column=0)
 
+		
+		
+		
+		player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+
 
 
 
 
 		self.generate_rules_config()
 
+		self.generate_voting_frame()
+
 	##############################################################
 	#functions
 
 
 	def generate_player_list(self, top_frame, list_of_players):
-		
+
+		config_base_frame = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10, text="Player Frame")
+		config_base_frame.grid(row=1, column=0)
+
 		count = 0
 		player_frames = {}
-		print(list_of_players)
+
 
 		for player in list_of_players:
-			player_frames[player] = tk.LabelFrame(top_frame, bg='#80c1ff', bd=5, text="player_frame", pady=10)
+			player_frames[player] = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, text="player_frame", pady=10)
 			player_frames[player].grid(row=0, column=count)
 
 			player = tk.Label(player_frames[player], font=40, text=player)
@@ -95,10 +106,14 @@ class Main_Page():
 			count += 1
 
 
+		return config_base_frame
+
+
+
+
+
 
 	def generate_rules_config(self):
-
-
 
 		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Lower Frame")
 		config_base_frame.grid(row=1, column=0)
@@ -127,8 +142,28 @@ class Main_Page():
 
 
 
+
 	def generate_voting_frame(self):
-		pass
+		print('test')
+		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Voting Frame")
+		config_base_frame.grid(row=2, column=0)
+
+
+
+		
+		for j in range(len(client_board_state.players)):
+
+			count = 0
+			for i in range(25):
+
+				votebox = tk.Label(config_base_frame, text='x', font=12)
+				votebox.grid(row=j, column=count)
+
+				count += 1
+
+
+		print('test2')
+
 
 
 	def forget(self, widget): 
@@ -154,6 +189,8 @@ class Main_Page():
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players
 			self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+
+			
 
 		self.root.update_idletasks()
 		self.root.update()

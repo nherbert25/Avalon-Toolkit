@@ -1,8 +1,8 @@
 username = None
 roles = []
 
-#players = ['Nate','Frankie', 'Jeff']
-players = []
+players = ['Nate','Frankie', 'Jeff']
+#players = []
 
 
 
