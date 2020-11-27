@@ -1,3 +1,4 @@
+import pickle
 import socket
 import time
 import queue
@@ -25,7 +26,14 @@ class Client():
 
 
     def send(self, msg):
-        message = msg.encode(self.FORMAT)
+        if msg.split(' ')[0] == '!GAMESTART':
+            #b64_color = pickle.dumps(msg).encode('base64', 'strict')
+            #b64_color = pickle.dumps(msg).encode(self.FORMAT)
+            message = msg.encode(self.FORMAT)
+
+
+        else:
+            message = msg.encode(self.FORMAT)
         msg_length = len(message)
         send_length = str(msg_length).encode(self.FORMAT)
 
@@ -62,8 +70,15 @@ class Client():
 
 
 
-    def send_instructions_to_server(self, instructions):
-        server_return = self.send(instructions)
+    def send_instructions_to_server(self, instruction):
+
+
+
+        if instruction == '!GAMESTART':
+            server_return = self.send(instruction)
+
+        else:
+            server_return = self.send(instruction)
 
 
 
@@ -114,24 +129,20 @@ class Client():
     def to_server_queue(self, send_queue): 
         while True: 
 
-            # Produce some data 
+            #put pre-queue onto queue
             if client_board_state.client_queue:
                 for instruction in client_board_state.client_queue:
                     send_queue.put(instruction)
                     
 
+            #clear the pre-queue
             client_board_state.client_queue = []
 
-            #put the return of this function into the queue
-            #send_queue.put(self.send_instructions_to_server(instructions))
-
-
-
-
+            #debugging
             for elem in list(send_queue.queue):
                 print(f'To Server Queue: {elem}')
 
-
+            #send instructions to the server
             while not send_queue.empty():
                 self.send_instructions_to_server(send_queue.get())
                 print('sent instructions!!')
@@ -169,7 +180,7 @@ class Client():
 
             # Process the board state 
             client_board_state.players = data
-            time.sleep(1)
+            time.sleep(5)
 
 
 

@@ -53,7 +53,9 @@ def handle_client(conn, addr):
             if msg == DISCONNECT_MESSAGE:
                 connected = False
 
-            if msg == '!GAMESTART':
+
+
+            if msg.split(' ')[0] == '!GAMESTART':
                 #randomize player orders and roles
                 random.shuffle(server_board_state.players)
 

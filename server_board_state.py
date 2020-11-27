@@ -1,26 +1,48 @@
-
-
 players = ['Nate','Frankie', 'Jeff']
+roles = []
 
+
+def player_creation(name):
+    player = {
+    'name': name, 
+    'role': '',  #class object?
+    'votes': [],
+    'on_team': [],
+    'made_team': []
+    }
+    return player
 
 
 
 player1 = {
 'name': 'Frankie', 
 'role': 'merlin',  #class object?
-'votes': [[1, 1, 0],[0, 1]]
+'votes': [[1, 1, 0],[0, 1]],
+'on_team': [[1, 1, 0],[0, 1]],
+'made_team': [[1, 0, 0],[1, 0]]
 }
 
 player2 = {
 'name': 'Nate', 
 'role': 'assassin',  #class object?
-'votes': [[1, 1, 0],[0, 1]]
+'votes': [[1, 1, 0],[0, 1]],
+'on_team': [[1, 1, 0],[0, 1]],
+'made_team': [[0, 1, 0],[0, 1]]
+}
+
+player3 = {
+'name': 'Jeff', 
+'role': 'morgana',  #class object?
+'votes': [[1, 1, 0],[0, 1]],
+'on_team': [[1, 1, 0],[0, 1]],
+'made_team': [[0, 0, 1],[0, 0]]
 }
 
 
 
+
 board_state = {
-'players': [player1, player2],
+'players': [player1, player2, player3],
 'player_picking_team': 'Nate',
 'mission' : [1, 0, 0],
 'phase' : 'lobby_phase'
@@ -54,6 +76,16 @@ def game_state(players=players, votes=votes, mission=mission):
         'mission': mission
     }
     return gamestate
+
+
+def player_state(players=players):
+
+    # initialize an empty string 
+    player_string = " " 
+    
+    #print(player_string.join(players))
+    # return string   
+    return (player_string.join(players)) 
 
 
 
@@ -117,16 +149,6 @@ def gamestate(players, votes, mission):
 #     return gamestate
 
 
-
-
-def player_state(players=players):
-
-    # initialize an empty string 
-    player_string = " " 
-    
-    #print(player_string.join(players))
-    # return string   
-    return (player_string.join(players)) 
 
 
 

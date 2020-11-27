@@ -73,14 +73,8 @@ class Main_Page():
 		
 		
 		
-		player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
-
-
-
-
-
+		self.player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 		self.generate_rules_config()
-
 		self.generate_voting_frame()
 
 	##############################################################
@@ -136,7 +130,7 @@ class Main_Page():
 			count += 1
 		
 		characters_widget.grid(row=2, columnspan=count)
-		start_game_button = tk.Button(config_base_frame, text='Start!', font=40, command=lambda: main_board_helper.start_game(config_base_frame))
+		start_game_button = tk.Button(config_base_frame, text='Start!', font=40, command=lambda: main_board_helper.start_game(config_base_frame, main_board_helper.list_of_characters))
 		start_game_button.grid(row=3, columnspan=count, pady=5)
 
 
@@ -144,7 +138,6 @@ class Main_Page():
 
 
 	def generate_voting_frame(self):
-		print('test')
 		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Voting Frame")
 		config_base_frame.grid(row=2, column=0)
 
@@ -162,7 +155,7 @@ class Main_Page():
 				count += 1
 
 
-		print('test2')
+
 
 
 
@@ -188,7 +181,7 @@ class Main_Page():
 		if Main_Page.list_of_players != client_board_state.players:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players
-			self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+			self.player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 
 			
 

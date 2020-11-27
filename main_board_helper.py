@@ -31,15 +31,17 @@ def char_remove(character, characters_widget, list_of_characters=list_of_charact
 
 
 
-def start_game(widget):
+def start_game(widget, list_of_characters):
 	#send !GAMESTART to the server
 
 
 	#add to queue  !GAMESTART
 
+	client_board_state.roles = list_of_characters
 	client_board_state.client_queue.append('!GAMESTART')
-
+	print('Starting game!')
 	#widget.grid_forget()
+	widget.destroy()
 
 
 def game_started():
