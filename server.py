@@ -52,15 +52,18 @@ def handle_client(conn, addr):
 
         if msg_length:
             msg_length = int(msg_length)
-
-
             msg = pickle.loads(conn.recv(msg_length))
             #msg = conn.recv(msg_length).decode(FORMAT)
-
             print(f'Server message received: {msg}')
+
+
+
+
+
 
             if msg == DISCONNECT_MESSAGE:
                 connected = False
+                message = "!NONE"
 
 
             if msg[0] == '!GAMESTART':
@@ -70,19 +73,27 @@ def handle_client(conn, addr):
                 #send game start to all clients with player information to each player
                 server_board_state.lobby_phase = False
                 server_board_state.picking_phase = True
-                conn.send(server_board_state.player_state().encode(FORMAT))
-                continue
 
 
-            if msg.split(' ')[0] == '!GAMESTART':
-                #randomize player orders and roles
-                random.shuffle(server_board_state.players)
 
-                #send game start to all clients with player information to each player
-                server_board_state.lobby_phase = False
-                server_board_state.picking_phase = True
-                conn.send(server_board_state.player_state().encode(FORMAT))
-                continue
+                message = server_board_state.player_state()
+                #message = pickle.dumps(message)
+                #conn.send(message)
+
+
+                #conn.send(server_board_state.player_state().encode(FORMAT))
+                #continue
+
+
+            # if msg.split(' ')[0] == '!GAMESTART':
+            #     #randomize player orders and roles
+            #     random.shuffle(server_board_state.players)
+
+            #     #send game start to all clients with player information to each player
+            #     server_board_state.lobby_phase = False
+            #     server_board_state.picking_phase = True
+            #     conn.send(server_board_state.player_state().encode(FORMAT))
+            #     continue
 
 
 
@@ -97,6 +108,8 @@ def handle_client(conn, addr):
                 else:
                     server_board_state.players.append(msg.split(' ')[1])
                     #send board state to all players!
+                    message = "!NONE"
+                    #message = pickle.dumps(message)
 
 
 
@@ -105,9 +118,16 @@ def handle_client(conn, addr):
 
 
             if msg.split(' ')[0] == '!PLAYERSTATE':
-                sent_message = conn.send(server_board_state.player_state().encode(FORMAT))
-                print(f"[{addr}]: {msg}")
-                continue
+
+
+
+                message = server_board_state.player_state()
+                #message = pickle.dumps(message)
+                #conn.send(message)
+
+                #sent_message = conn.send(server_board_state.player_state().encode(FORMAT))
+                #print(f"[{addr}]: {msg}")
+                #continue
 
 
 
@@ -118,8 +138,19 @@ def handle_client(conn, addr):
 
 
 
-            print(f"[{addr}]: {msg}")
-            conn.send("!NONE".encode(FORMAT))
+
+
+            else:
+                message = "!NONE"
+                message = pickle.dumps(message)
+
+
+            print(f"[Received instructions from: {addr}]: {msg}")
+
+
+            message = pickle.dumps(message)
+            conn.send(message)
+            #conn.send("!NONE".encode(FORMAT))
     conn.close()
 
 

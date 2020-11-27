@@ -25,22 +25,28 @@ class Client():
     client.connect(ADDR)
 
 
+
+
+
+
+    #sends a message to the server and receives a message back. WILL HANG IF IT DOES NOT RECEIVE A MESSAGE BACK FROM THE SERVER!!!
     def send(self, msg):
 
         message = pickle.dumps(msg)
 
+        #determine the length of the message to be sent to the server, message must be 64 bits to be valid
         msg_length = len(message)
         send_length = str(msg_length).encode(self.FORMAT)
-
-        #message must be 64 bits to be valid
         send_length += b' ' * (self.HEADER - len(send_length))
+
+        #send message length then message to the server
         #client.send is a method of the socket object, NOT this send method. See the following: client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.send(send_length)
         self.client.send(message)
 
-        #return_message = pickle.loads(conn.recv(self.client.recv(2048)))
-        return_message = self.client.recv(2048).decode(self.FORMAT)
 
+        return_message = pickle.loads(self.client.recv(2048))
+        #return_message = self.client.recv(2048).decode(self.FORMAT)
 
         print(f"[Client Send Function] Server return message: {return_message}")
         return(return_message)
@@ -69,6 +75,9 @@ class Client():
         self.client.send(send_length)
         self.client.send(message)
 
+
+
+
         return_message = self.client.recv(2048).decode(self.FORMAT)
 
 
@@ -79,9 +88,9 @@ class Client():
 
 
 
-    def receive(self, msg):
-        message = msg.decode(self.FORMAT)
-        print(message)
+    # def receive(self, msg):
+    #     message = msg.decode(self.FORMAT)
+    #     print(message)
 
 
     def initial_connect(self):
