@@ -1,7 +1,10 @@
 import socket
 import threading
-import server_board_state
 import random
+import pickle
+
+import server_board_state
+
 
 
 
@@ -35,6 +38,9 @@ def handle_client(conn, addr):
 
     connected = True
     while connected:
+
+
+
         msg_length = conn.recv(HEADER).decode(FORMAT)
 
 
@@ -46,13 +52,26 @@ def handle_client(conn, addr):
 
         if msg_length:
             msg_length = int(msg_length)
-            msg = conn.recv(msg_length).decode(FORMAT)
 
 
+            msg = pickle.loads(conn.recv(msg_length))
+            #msg = conn.recv(msg_length).decode(FORMAT)
+
+            print(f'Server message received: {msg}')
 
             if msg == DISCONNECT_MESSAGE:
                 connected = False
 
+
+            if msg[0] == '!GAMESTART':
+                #randomize player orders and roles
+                random.shuffle(server_board_state.players)
+
+                #send game start to all clients with player information to each player
+                server_board_state.lobby_phase = False
+                server_board_state.picking_phase = True
+                conn.send(server_board_state.player_state().encode(FORMAT))
+                continue
 
 
             if msg.split(' ')[0] == '!GAMESTART':
@@ -101,7 +120,6 @@ def handle_client(conn, addr):
 
             print(f"[{addr}]: {msg}")
             conn.send("!NONE".encode(FORMAT))
-
     conn.close()
 
 

@@ -26,6 +26,31 @@ class Client():
 
 
     def send(self, msg):
+
+        message = pickle.dumps(msg)
+
+        msg_length = len(message)
+        send_length = str(msg_length).encode(self.FORMAT)
+
+        #message must be 64 bits to be valid
+        send_length += b' ' * (self.HEADER - len(send_length))
+        #client.send is a method of the socket object, NOT this send method. See the following: client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.send(send_length)
+        self.client.send(message)
+
+        #return_message = pickle.loads(conn.recv(self.client.recv(2048)))
+        return_message = self.client.recv(2048).decode(self.FORMAT)
+
+
+        print(f"[Client Send Function] Server return message: {return_message}")
+        return(return_message)
+
+
+
+
+############################################################
+############################################################
+    def send_backup(self, msg):
         if msg.split(' ')[0] == '!GAMESTART':
             #b64_color = pickle.dumps(msg).encode('base64', 'strict')
             #b64_color = pickle.dumps(msg).encode(self.FORMAT)
@@ -34,22 +59,23 @@ class Client():
 
         else:
             message = msg.encode(self.FORMAT)
+
         msg_length = len(message)
         send_length = str(msg_length).encode(self.FORMAT)
 
         #message must be 64 bits to be valid
         send_length += b' ' * (self.HEADER - len(send_length))
+        #client.send is a method of the socket object, NOT this send method. See the following: client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.send(send_length)
         self.client.send(message)
 
         return_message = self.client.recv(2048).decode(self.FORMAT)
 
 
-        print(f"server return message: {return_message}")
+        print(f"[Client Send Function] Server return message: {return_message}")
         return(return_message)
-
-
-
+############################################################
+############################################################
 
 
 
@@ -92,18 +118,16 @@ class Client():
         #do instructions
 
         #ask server for board state
-        print('Asking server for board state...')
+        print('\r\n\r\n[ask_server_for_board_state] Asking server for board state...')
 
         #print('Sending to server board state...')
         #threading.Timer(1.0, threaded_server_connection(que)).start()
 
         string_players = self.send('!PLAYERSTATE')
-
-
-        print(f'Server returned the following for !PLAYERSTATE: {string_players}')
         players = string_players.split(" ")
 
-        print(players)
+        print(f'[ask_server_for_board_state] Server returned the following for !PLAYERSTATE: {players}')
+
         
         
         
@@ -168,7 +192,7 @@ class Client():
 
 
             for elem in list(receive_queue.queue):
-                print(f'From Server Queue: {elem}')
+                print(f'[from_server_queue] From Server Queue: {elem}')
 
 
 

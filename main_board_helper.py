@@ -38,7 +38,7 @@ def start_game(widget, list_of_characters):
 	#add to queue  !GAMESTART
 
 	client_board_state.roles = list_of_characters
-	client_board_state.client_queue.append('!GAMESTART')
+	client_board_state.client_queue.append(['!GAMESTART', client_board_state.roles])
 	print('Starting game!')
 	#widget.grid_forget()
 	widget.destroy()
