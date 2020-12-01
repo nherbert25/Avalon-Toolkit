@@ -13,6 +13,19 @@ board_state = {
     'phase' : 'lobby_phase'
     }
 
+
+# def player_creation(name):
+#     player = {
+#     'name': name, 
+#     'role': '',  #class object?
+#     'votes': [],
+#     'on_team': [],
+#     'made_team': []
+#     }
+#     return player
+
+
+
 # votes = {
 #     'Nate':[[1, 1, 0],[0, 1]],
 #     'Frankie':[[1, 1, 0],[0, 1]],

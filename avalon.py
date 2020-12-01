@@ -1,6 +1,6 @@
 import logging
 import threading
-
+import time
 import client_board_state
 
 import client
@@ -37,8 +37,12 @@ def main():
     #Main_Board = threading.Thread(target = my_client.to_server_queue, args =(board.Main_Page, lock))
     #Main_Board.start()
 
-    Main_Board = board.Main_Page(lock)
+
+    time.sleep(1)
     
+    Main_Board = board.Main_Page(lock)
+
+
     logging.debug('Main_Board loaded successfully.')
 
 

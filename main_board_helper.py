@@ -2,6 +2,11 @@ import threading
 import queue
 import time
 import requests
+import tkinter as tk
+
+
+
+import characters
 import client_board_state
 
 
@@ -31,7 +36,7 @@ def char_remove(character, characters_widget, list_of_characters=list_of_charact
 
 
 
-def start_game(widget, list_of_characters):
+def start_game(widget, start_button, list_of_characters):
 	role_count = 0
 	for key in list_of_characters:
 		role_count += list_of_characters[key]
@@ -42,20 +47,22 @@ def start_game(widget, list_of_characters):
 		client_board_state.client_queue.append(['!GAMESTART', client_board_state.roles])
 		print('Starting game!')
 		#widget.grid_forget()
-		widget.destroy()
+		start_button.configure(state=tk.DISABLED)
+		#widget.destroy()
 	else:
 		print(role_count)
 
 
 
 
-def game_started():
+def game_started(widget):
 	#when receiving !GAMESTART from the server, start the game
 	#run  config_base_frame.grid_forget()
 	#run  function to create voting widget
 	#get list of players from the server/update players to sit in order
 	#reveal information to players
 	#update game board to show who's turn it is
+	widget.destroy()
 	pass
 
 
@@ -86,10 +93,49 @@ def threaded_server_connection_i_dunno():
     # 'made_team': []
     # }
 #takes in player object from board state
-def playerframetext(player, username=client_board_state.username):
+def playerframetext(player, player_frames, username, user_info):
 	display_text = player['name']
+
+
+	#user_role = client_board_state.board_state['players']
+
+	print(f'user_info:    {user_info}')
+	#print(f'TESTING!!!!!!!:   {characters.character_dictionary}')
+
+
+	user_role = characters.character_dictionary[user_info['role']]
+	print(f'TESTING user_role!!!!!!!:   {user_role}\r\n')
+
+
+
+	player_role = player['role']
+	#player_role = characters.character_dictionary[player['role']]
+	print(f'TESTING player_role!!!!!!!:   {player_role}\r\n')
+
+
+	if player_role in user_role[1]:
+		#set background to red if evil
+		bg = '#cf2121'
+		player_frames.configure(bg = bg)
+
+
+	if player['name'] == username and user_role[0] == 'evil':
+		#set background to red if evil
+		bg = '#cf2121'
+		player_frames.configure(bg = bg)
+
+
+
+	#if player_role in characters.character_dictionary[player.role.lower()]
+
+
+
+	#print(player['name'])
+	#print('username: '+username)
+
 
 	if player['name'] == username:
 		display_text += '\r\n'
-		display_text += '\r\n'
 		display_text += player['role']
+
+	return display_text

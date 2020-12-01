@@ -69,7 +69,7 @@ def handle_client(conn, addr):
                     print('player already logged in')
 
                     message = ['!INITIAL_CONNECT', msg[1], server_board_state.board_state]
-                    message = msg[1]
+                    #message = msg[1]
 
                 else:
                     server_board_state.players.append(msg[1])

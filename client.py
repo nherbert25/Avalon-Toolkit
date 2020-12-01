@@ -228,24 +228,29 @@ class Client():
 
 #################################################################################
 def main():
+    lock = threading.Lock()
 
 
+    lock.acquire()
     my_client = Client()
     initial_connect_to_client  = my_client.initial_connect()
 
+    print(f'initial connect:  {initial_connect_to_client}, {initial_connect_to_client[1]}')
 
 
-    lock = threading.Lock()
+
+
     
     
     instruction = initial_connect_to_client[0]
 
-    lock.acquire()
+
     client_board_state.username = initial_connect_to_client[1]
     client_board_state.board_state = initial_connect_to_client[2]
     lock.release()
 
     print(f'client username:  {client_board_state.username}')
+    print(f'client board state:  {client_board_state.board_state}')
 
 
     # Create the shared queue and launch both threads 

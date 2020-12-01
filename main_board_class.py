@@ -33,7 +33,9 @@ class Main_Page():
 	
 
 	list_of_players = []
-	game_phase = 'picking_phase'
+	#game_phase = 'lobby_phase'
+
+	
 	board_state = {}
 	
 
@@ -76,6 +78,7 @@ class Main_Page():
 	#player_list(self, top_frame=top_frame, list_of_players=['Nate', 'Frankie'])
 
 	def __init__(self, lock):
+		self.game_phase = client_board_state.board_state['phase']
 		self.lock = lock #threading lock object   lock.release()     lock.acquire()
 
 		self.root.protocol('WM_DELETE_WINDOW', self.crash_gui)  # root is your root window
@@ -96,14 +99,14 @@ class Main_Page():
 		#print('TESTING!!!!!!!!!!!\r\n',client_board_state.board_state)
 
 
-		print(lock.locked())
+		#print(lock.locked())
 		lock.acquire()
 		#time.sleep(2)
-		print(f'hello??? {client_board_state.board_state}')
-		print(client_board_state.board_state['phase'])
-		print(lock.locked())
+		#print(f'hello??? {client_board_state.board_state}')
+		#print(client_board_state.board_state['phase'])
+		#print(lock.locked())
 		if client_board_state.board_state['phase'] == 'lobby_phase':
-			self.generate_rules_config()
+			self.rules_frame = self.generate_rules_config()
 		lock.release()
 		self.generate_voting_frame()
 
@@ -135,6 +138,14 @@ class Main_Page():
 
 	def generate_game_started_player_frame(self, top_frame, board_state, username):
 
+		user_info = []
+		for player in client_board_state.board_state['players']:
+			if username == player['name']:
+				user_info = player
+
+		print(f'\r\nshould be the logged in persons information...: {user_info}\r\n')
+		print(f'client username:  {client_board_state.username}')
+		print(f'board state in generate_game_started_player_frame method: {board_state}')
 		config_base_frame = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10, text="Player Frame")
 		config_base_frame.grid(row=1, column=0)
 
@@ -146,7 +157,7 @@ class Main_Page():
 			player_frames = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, text="player_frame", pady=10)
 			player_frames.grid(row=0, column=count)
 
-			player_frame = tk.Label(player_frames, font=40, text=main_board_helper.playerframetext(player))
+			player_frame = tk.Label(player_frames, font=40, text=main_board_helper.playerframetext(player, player_frames, username, user_info))
 			player_frame.grid(row=0, column=0)
 
 			count += 1
@@ -178,8 +189,10 @@ class Main_Page():
 			count += 1
 		
 		characters_widget.grid(row=2, columnspan=count)
-		start_game_button = tk.Button(config_base_frame, text='Start!', font=40, command=lambda: main_board_helper.start_game(config_base_frame, main_board_helper.list_of_characters))
+		start_game_button = tk.Button(config_base_frame, text='Start!', font=40, command=lambda: main_board_helper.start_game(config_base_frame, start_game_button, main_board_helper.list_of_characters))
 		start_game_button.grid(row=3, columnspan=count, pady=5)
+
+		return config_base_frame
 
 
 
@@ -223,17 +236,29 @@ class Main_Page():
 	#root.mainloop()
 	def main_loop(self):
 
+		self.lock.acquire()
+		#print(f'client username:  {client_board_state.username}')
 		if client_board_state.board_state['phase'] == 'lobby_phase' and Main_Page.list_of_players != client_board_state.players:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players
 			self.player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 
+		if client_board_state.board_state['phase'] != 'lobby_phase' and self.game_phase == 'lobby_phase':
+			self.game_phase == client_board_state.board_state['phase']
+			main_board_helper.game_started(self.rules_frame)
+
 		if client_board_state.board_state['phase'] != 'lobby_phase' and Main_Page.board_state != client_board_state.board_state:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players
+			Main_Page.board_state = client_board_state.board_state
+
+			#print(Main_Page.list_of_players == client_board_state.players)
+			#print(client_board_state.board_state['phase'] != 'lobby_phase' and Main_Page.board_state != client_board_state.board_state)
+
 			self.player_frame.destroy()
 			self.player_frame = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
-
+		self.lock.release()
+		
 		self.root.update_idletasks()
 		self.root.update()
 

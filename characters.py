@@ -1,3 +1,25 @@
+
+
+#[ allienment  ,    known,     percival noteds      ]
+
+character_dictionary = {
+
+    'Merlin': ['good', ['Assassin', 'Morgana', 'Spy', 'Oberon']],
+    'Percival': ['good', []          ],
+    'Resistance': ['good', []       ],
+    'Morgana': ['evil', ['Assassin', 'Morgana', 'Mordred', 'Spy']],
+    'Assassin': ['evil', ['Assassin', 'Morgana', 'Mordred', 'Spy']],
+    'Mordred': ['evil', ['Assassin', 'Morgana', 'Mordred', 'Spy']],
+    'Spy': ['evil', ['Assassin', 'Morgana', 'Spy']],
+    'Oberon': ['evil', []],
+
+
+}
+
+
+
+
+
 class Character:
     
 
@@ -12,46 +34,62 @@ class Character:
 
 
 
+
 class Merlin(Character):
     def __init__(self):
+        self.name = 'merlin'
         self.known = ['assassin', 'morgana', 'spy']
-        self.noted = None
+        self.noted = []
         self.team = 'good'
 
 class Percival(Character):
 
-    known = None
-    noted = ['merlin', 'morgana']
+    def __init__(self):
+        self.name = 'merlin'
+        self.known = []
+        self.noted = ['merlin', 'morgana']
 
 class Resistance(Character):
-
-    known = None
-    noted = None
+    
+    def __init__(self):
+        self.name = 'resistance'
+        self.known = []
+        self.noted = []
 
 class Morgana(Character):
-
-    known = ['morgana', 'assassin', 'mordred', 'spy']
-    noted = None
+    
+    def __init__(self):
+        self.name = 'morgana'
+        self.known = ['morgana', 'assassin', 'mordred', 'spy']
+        self.noted = []
 
 class Assassin(Character):
-
-    known = ['morgana', 'assassin', 'mordred', 'spy']
-    noted = None
+    
+    def __init__(self):
+        self.name = 'assassin'
+        self.known = ['morgana', 'assassin', 'mordred', 'spy']
+        self.noted = []
 
 class Mordred(Character):
-
-    known = ['morgana', 'assassin', 'mordred', 'spy']
-    noted = None
+    
+    def __init__(self):
+        self.name = 'mordred'
+        self.known = ['morgana', 'assassin', 'mordred', 'spy']
+        self.noted = []
 
 class Spy(Character):
-
-    known = ['morgana', 'assassin', 'mordred', 'spy']
-    noted = None
+    
+    def __init__(self):
+        self.name = 'spy'
+        self.known = ['morgana', 'assassin', 'mordred', 'spy']
+        self.noted = []
 
 class Oberon(Character):
-
-    known = None
-    noted = None
+    
+    def __init__(self):
+        self.name = 'oberon'
+        self.known = []
+        self.noted = []
 
 
 
