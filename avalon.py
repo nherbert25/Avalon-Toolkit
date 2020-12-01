@@ -1,9 +1,11 @@
 import logging
+import threading
 
 import client_board_state
 
 import client
 import main_board_class as board
+
 
 
 
@@ -17,7 +19,7 @@ def main():
 
 
     #create a socket connection object
-    my_client, my_queue = client.main()
+    my_client, my_queue, lock = client.main()
 
 
 
@@ -31,7 +33,12 @@ def main():
 
 
     #create a main board GUI object
-    Main_Board = board.Main_Page()
+
+    #Main_Board = threading.Thread(target = my_client.to_server_queue, args =(board.Main_Page, lock))
+    #Main_Board.start()
+
+    Main_Board = board.Main_Page(lock)
+    
     logging.debug('Main_Board loaded successfully.')
 
 

@@ -32,16 +32,21 @@ def char_remove(character, characters_widget, list_of_characters=list_of_charact
 
 
 def start_game(widget, list_of_characters):
-	#send !GAMESTART to the server
+	role_count = 0
+	for key in list_of_characters:
+		role_count += list_of_characters[key]
+
+	if  role_count >= len(client_board_state.players):
+		#add to queue  !GAMESTART
+		client_board_state.roles = list_of_characters
+		client_board_state.client_queue.append(['!GAMESTART', client_board_state.roles])
+		print('Starting game!')
+		#widget.grid_forget()
+		widget.destroy()
+	else:
+		print(role_count)
 
 
-	#add to queue  !GAMESTART
-
-	client_board_state.roles = list_of_characters
-	client_board_state.client_queue.append(['!GAMESTART', client_board_state.roles])
-	print('Starting game!')
-	#widget.grid_forget()
-	widget.destroy()
 
 
 def game_started():
@@ -70,3 +75,21 @@ def threaded_server_connection_i_dunno():
 		threaded_server_connection(que)
 		time.sleep(60.0 - ((time.time() - starttime) % 60.0))
 '''
+
+
+
+    # player = {
+    # 'name': name, 
+    # 'role': '',  #class object?
+    # 'votes': [],
+    # 'on_team': [],
+    # 'made_team': []
+    # }
+#takes in player object from board state
+def playerframetext(player, username=client_board_state.username):
+	display_text = player['name']
+
+	if player['name'] == username:
+		display_text += '\r\n'
+		display_text += '\r\n'
+		display_text += player['role']

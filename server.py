@@ -33,6 +33,7 @@ server.bind(ADDR)
 
 
 #main function for handling client pings
+#expects a list ['!INSTRUCTION', DATA_TYPE]
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION]: {addr} connected.")
 
@@ -53,11 +54,7 @@ def handle_client(conn, addr):
         if msg_length:
             msg_length = int(msg_length)
             msg = pickle.loads(conn.recv(msg_length))
-            #msg = conn.recv(msg_length).decode(FORMAT)
-            print(f'Server message received: {msg}')
-
-
-
+            print(f"[Received the following instructions from {addr}]: {msg}")
 
 
 
@@ -66,50 +63,43 @@ def handle_client(conn, addr):
                 message = "!NONE"
 
 
-            if msg[0] == '!GAMESTART':
-                #randomize player orders and roles
-                random.shuffle(server_board_state.players)
-
-                #send game start to all clients with player information to each player
-                server_board_state.lobby_phase = False
-                server_board_state.picking_phase = True
-
-
-
-                message = server_board_state.player_state()
-                #message = pickle.dumps(message)
-                #conn.send(message)
-
-
-                #conn.send(server_board_state.player_state().encode(FORMAT))
-                #continue
-
-
-            # if msg.split(' ')[0] == '!GAMESTART':
-            #     #randomize player orders and roles
-            #     random.shuffle(server_board_state.players)
-
-            #     #send game start to all clients with player information to each player
-            #     server_board_state.lobby_phase = False
-            #     server_board_state.picking_phase = True
-            #     conn.send(server_board_state.player_state().encode(FORMAT))
-            #     continue
-
-
-
-
-
-            if msg.split(' ')[0] == '!USERNAME':
-
-                if msg.split(' ')[1] in server_board_state.players:
+            elif msg[0] == '!INITIAL_CONNECT':
+                if msg[1] in server_board_state.players:
                     #send server state to reconnect the player
                     print('player already logged in')
 
+                    message = ['!INITIAL_CONNECT', msg[1], server_board_state.board_state]
+                    message = msg[1]
+
                 else:
-                    server_board_state.players.append(msg.split(' ')[1])
-                    #send board state to all players!
-                    message = "!NONE"
-                    #message = pickle.dumps(message)
+                    server_board_state.players.append(msg[1])
+                    message = ['!INITIAL_CONNECT', msg[1], server_board_state.board_state]
+
+
+
+            elif msg[0] == '!GAMESTART':
+                #randomize player orders and roles
+                random.shuffle(server_board_state.players)
+                server_board_state.roles = server_board_state.create_roles_list(msg[1])
+                random.shuffle(server_board_state.roles)
+
+
+                print(server_board_state.roles)
+
+
+                server_board_state.board_state = server_board_state.create_board_state(server_board_state.players)
+                #send game start to all clients with player information to each player
+                server_board_state.board_state['phase'] = 'picking_phase'
+                server_board_state.next_round(server_board_state.board_state)
+                message = ['!GAMESTART', server_board_state.board_state]
+
+                #SEND THIS TO ALL CONNECTED CLIENTS!!!!!
+
+
+
+
+            elif msg[0] == '!BOARDSTATE':
+                    message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.player_state()]]
 
 
 
@@ -117,37 +107,17 @@ def handle_client(conn, addr):
 
 
 
-            if msg.split(' ')[0] == '!PLAYERSTATE':
-
-
-
-                message = server_board_state.player_state()
-                #message = pickle.dumps(message)
-                #conn.send(message)
-
-                #sent_message = conn.send(server_board_state.player_state().encode(FORMAT))
-                #print(f"[{addr}]: {msg}")
-                #continue
-
-
-
-
-
-
-
-
-
-
+            elif msg[0] == '!PLAYERSTATE':
+                message = ['!PLAYERSTATE', server_board_state.player_state()]
 
 
             else:
                 message = "!NONE"
-                message = pickle.dumps(message)
 
 
-            print(f"[Received instructions from: {addr}]: {msg}")
 
 
+            print(f"[Sending back to client: {addr}]: {message}\r\n")
             message = pickle.dumps(message)
             conn.send(message)
             #conn.send("!NONE".encode(FORMAT))

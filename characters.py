@@ -1,9 +1,10 @@
 class Character:
     
-    known = None
-    noted = None
+
     
     def __init__(self):
+        #known = None
+        #noted = None
         pass
 
     def base(self):
@@ -12,9 +13,10 @@ class Character:
 
 
 class Merlin(Character):
-
-    known = ['assassin', 'morgana', 'spy']
-    noted = None
+    def __init__(self):
+        self.known = ['assassin', 'morgana', 'spy']
+        self.noted = None
+        self.team = 'good'
 
 class Percival(Character):
 
