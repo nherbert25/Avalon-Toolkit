@@ -5,7 +5,7 @@
 character_dictionary = {
 
     'Merlin': ['good', ['Assassin', 'Morgana', 'Spy', 'Oberon']],
-    'Percival': ['good', []          ],
+    'Percival': ['good', [],   ['Merlin', 'Morgana']          ],
     'Resistance': ['good', []       ],
     'Morgana': ['evil', ['Assassin', 'Morgana', 'Mordred', 'Spy']],
     'Assassin': ['evil', ['Assassin', 'Morgana', 'Mordred', 'Spy']],

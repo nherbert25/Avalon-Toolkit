@@ -1,12 +1,47 @@
-x number of players see the same screen, barring certain information
+x number of players see the same screen, barring certain information - DONE
 
 
-x players can interact with the board and everybody sees it
-x players can interact with the board and only they see it
+x players can interact with the board and everybody sees it - DONE
+x players can interact with the board and only they see it - DONE
 
 
 stats
 saving stats?
 saving logins?
 
-has to work on tablet!!
+has to work on tablet!! lol, never going to happen
+
+
+
+---------------------------------------
+percival logic - DONE
+
+
+selecting people buttons
+send team button
+
+voting function
+if not enough votes, next turn function
+
+
+server waiting on several people but also able to send and receive. (server threading?)
+updating the vote frame to match the vote data
+
+
+
+mission function
+updating the mission frame to match the vote data
+
+assassination phase
+
+
+
+make server work between external computers!!!
+make sure executable works
+
+fix server crashes..../locking issues
+
+
+
+-------------------------------------
+

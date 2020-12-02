@@ -35,6 +35,9 @@ def char_remove(character, characters_widget, list_of_characters=list_of_charact
 #	my_client.send('!PLAYERSTATE')
 
 
+def select_player():
+	pass
+
 
 def start_game(widget, start_button, list_of_characters):
 	role_count = 0
@@ -132,7 +135,9 @@ def playerframetext(player, player_frames, username, user_info):
 
 	#print(player['name'])
 	#print('username: '+username)
-
+	if user_info['role'] == 'Percival' and player_role in user_role[2]:
+		display_text += '\r\n'
+		display_text += 'Merlin?'
 
 	if player['name'] == username:
 		display_text += '\r\n'

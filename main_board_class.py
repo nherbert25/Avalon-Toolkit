@@ -154,11 +154,22 @@ class Main_Page():
 
 
 		for player in board_state['players']:
-			player_frames = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, text="player_frame", pady=10)
+			#player_frames = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, text="player_frame", pady=10)
+			player_frames = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, pady=10)
 			player_frames.grid(row=0, column=count)
 
-			player_frame = tk.Label(player_frames, font=40, text=main_board_helper.playerframetext(player, player_frames, username, user_info))
+			#player_frame = tk.Label(player_frames, font=40, text=main_board_helper.playerframetext(player, player_frames, username, user_info))
+			player_frame = tk.Label(player_frames, bg='#39658f', fg='#ffffff', font=('Helvetica', '20'), text=main_board_helper.playerframetext(player, player_frames, username, user_info))
 			player_frame.grid(row=0, column=0)
+
+
+			#select_player_button = tk.Button(player_frames, text='Select!', font=10, command=lambda: main_board_helper.select_player())
+			#select_player_button.grid(row=3, column=0, pady=5)
+
+			select_player_button = tk.Button(player_frames, text='Select!', bg='#0052cc', fg='#ffffff', font=('Helvetica', '8'), command=lambda: main_board_helper.select_player())
+			#myFont = tk.font.Font(family='Helvetica', size=10, weight='bold')
+			#select_player_button['font'] = myFont
+			select_player_button.grid(row=3, column=0, pady=5)
 
 			count += 1
 
