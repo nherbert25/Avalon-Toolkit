@@ -37,7 +37,10 @@ assassination phase
 
 
 make server work between external computers!!!
+
+
 make sure executable works
+    pyinstaller --onefile pythonScriptName.py  (requires the .png file as well in the same directory for some reason)
 
 fix server crashes..../locking issues
 
