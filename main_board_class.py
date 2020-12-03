@@ -65,17 +65,6 @@ class Main_Page():
 	background_label.grid(row=0, column=0)
 
 	##############################################################
-	#frames
-
-	# main_frame = tk.LabelFrame(root)
-	# main_frame.grid(row=0, column=0)
-
-	# top_frame = tk.LabelFrame(main_frame, bg='#80c1ff', bd=5, text="Top Frame")
-	# top_frame.grid(row=0, column=0)
-
-
-
-	#player_list(self, top_frame=top_frame, list_of_players=['Nate', 'Frankie'])
 
 	def __init__(self, lock):
 		self.game_phase = client_board_state.board_state['phase']
@@ -94,14 +83,11 @@ class Main_Page():
 		self.player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 
 		#print('TESTING!!!!!!!!!!!\r\n',client_board_state.board_state)
-
 		#time.sleep(3)
 		#print('TESTING!!!!!!!!!!!\r\n',client_board_state.board_state)
 
 
-		#print(lock.locked())
 		lock.acquire()
-		#time.sleep(2)
 		#print(f'hello??? {client_board_state.board_state}')
 		#print(client_board_state.board_state['phase'])
 		#print(lock.locked())
@@ -136,6 +122,16 @@ class Main_Page():
 		return config_base_frame
 
 
+
+
+
+
+
+
+
+
+
+
 	def generate_game_started_player_frame(self, top_frame, board_state, username):
 
 		user_info = []
@@ -143,37 +139,61 @@ class Main_Page():
 			if username == player['name']:
 				user_info = player
 
-		print(f'\r\nshould be the logged in persons information...: {user_info}\r\n')
-		print(f'client username:  {client_board_state.username}')
-		print(f'board state in generate_game_started_player_frame method: {board_state}')
+		#print(f'\r\nshould be the logged in persons information...: {user_info}\r\n')
+		#print(f'client username:  {client_board_state.username}')
+		#print(f'board state in generate_game_started_player_frame method: {board_state}')
+
 		config_base_frame = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10, text="Player Frame")
 		config_base_frame.grid(row=1, column=0)
 
 		count = 0
-		player_frames = {}
+
+		#player_name: player frame
+		all_player_frames = {}
 
 
 		for player in board_state['players']:
-			#player_frames = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, text="player_frame", pady=10)
-			player_frames = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, pady=10)
-			player_frames.grid(row=0, column=count)
 
-			#player_frame = tk.Label(player_frames, font=40, text=main_board_helper.playerframetext(player, player_frames, username, user_info))
-			player_frame = tk.Label(player_frames, bg='#39658f', fg='#ffffff', font=('Helvetica', '20'), text=main_board_helper.playerframetext(player, player_frames, username, user_info))
+			player_base_frame = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, pady=10)  #text="player_frame"
+			player_base_frame.grid(row=0, column=count)
+
+			player_frame = tk.Label(player_base_frame, bg='#39658f', fg='#ffffff', font=('Helvetica', '20'), text=main_board_helper.playerframetext(player, player_base_frame, username, user_info))
 			player_frame.grid(row=0, column=0)
 
+			def create_select_player_button(player_frame=player_frame, player_name=player['name']):
 
-			#select_player_button = tk.Button(player_frames, text='Select!', font=10, command=lambda: main_board_helper.select_player())
-			#select_player_button.grid(row=3, column=0, pady=5)
+				select_player_button = tk.Button(player_base_frame, text='Select!', bg='#0052cc', fg='#ffffff', font=('Helvetica', '8'), command=lambda: main_board_helper.select_player(player_frame, player_name))
+				select_player_button.grid(row=3, column=0, pady=5)
 
-			select_player_button = tk.Button(player_frames, text='Select!', bg='#0052cc', fg='#ffffff', font=('Helvetica', '8'), command=lambda: main_board_helper.select_player())
-			#myFont = tk.font.Font(family='Helvetica', size=10, weight='bold')
-			#select_player_button['font'] = myFont
-			select_player_button.grid(row=3, column=0, pady=5)
+				return select_player_button
 
+			select_player_button = create_select_player_button()
+
+			all_player_frames[player['name']] = {'name': player['name'], 'player_base_frame': player_base_frame, 'player_frame': player_frame, 'select_player_button': select_player_button}
 			count += 1
 
+
+		config_base_frame_submit = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10, text="Submit Frame")
+		config_base_frame_submit.grid(row=2, column=0)
+
+
+		submit_button = tk.Button(config_base_frame_submit, text='Submit!', bg='#0052cc', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.submit_team(all_player_frames))
+		submit_button.grid(row=0, column=0)
+
+
 		return config_base_frame
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

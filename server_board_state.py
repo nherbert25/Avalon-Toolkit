@@ -1,10 +1,46 @@
+# {
+# 'player_order': ['Frankie', 'cat', 'Jeff', 'Nate'], 
+# 'players': [
+#     {'name': 'Frankie', 'role': 'Assassin', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, 
+#     {'name': 'cat', 'role': 'Percival', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, 
+#     {'name': 'Jeff', 'role': 'Resistance', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, 
+#     {'name': 'Nate', 'role': 'Merlin', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}
+#     ], 
+# 'player_picking_team': 'Frankie', 
+# 'mission': [], 
+# 'phase': 'picking_phase',
+# 'team_size': [2, 3, 2, 3, 3],
+# 'round': 1,
+# 'turn': 1}
+# }
+
+
+team_size = {
+    1: [2, 3, 2, 3, 3],
+    2: [2, 3, 2, 3, 3],
+    3: [2, 3, 2, 3, 3],
+    4: [2, 3, 2, 3, 3],
+    5: [2, 3, 2, 3, 3],
+    6: [2, 3, 4, 3, 4],
+    7: [2, 3, 3, 4, 4],
+    8: [3, 4, 4, 5, 5],
+    9: [3, 4, 4, 5, 5],
+    10: [3, 4, 4, 5, 5]
+}
+
+
+
 players = ['Nate','Frankie', 'Jeff']
 roles = []
 #players = []
 votes = []
 mission = []
 
+
+
+
 board_state = {
+    'player_order': [],
     'players': [],
     'player_picking_team': '',
     'mission' : [],
@@ -36,7 +72,11 @@ def create_roles_list(roles_dic):
     return roles
 
 
+
+
 def create_board_state(players, board_state = board_state):
+
+    board_state['player_order'] = players
 
     for player in players:
         my_player = player_creation(player)
@@ -47,11 +87,51 @@ def create_board_state(players, board_state = board_state):
     return(board_state)
 
 
+
+
+def start_game(board_state):
+
+    number_of_players = len(players)
+
+    board_state['team_size'] = team_size[number_of_players]
+    board_state['round'] = 0
+    board_state['turn'] = 1
+    
+    next_round(board_state)
+
+
+
+
+
 def next_round(board_state):
     for player in board_state['players']:
         player['votes'].append([])
         player['on_team'].append([])
         player['made_team'].append([])
+
+    moved_player = board_state['player_order'].pop(0)
+    board_state['player_order'].append(moved_player)
+
+    board_state['round'] += 1
+    board_state['turn'] = 1
+
+    #score point!!!!
+
+
+def next_turn(board_state):
+
+    moved_player = board_state['player_order'].pop(0)
+    board_state['player_order'].append(moved_player)
+
+    board_state['turn'] += 1
+
+    #if last round force vote!
+    if board_state['turn'] == 5:
+        pass
+
+
+
+
 
 
 

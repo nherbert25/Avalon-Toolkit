@@ -1,11 +1,23 @@
+
+#username of the player connected to this client instance
 username = ''
+
+#roles in the game
 roles = []
 
+#selected players for when picking a team
+selected_players = []
+
+
+#players that are in the game
 players = ['Nate','Frankie', 'Jeff']
 #players = []
 
+#pre-queue list of instructions to be sent to the queue
 client_queue = []
 
+
+#original board state
 board_state = {
     'players': [],
     'player_picking_team': '',

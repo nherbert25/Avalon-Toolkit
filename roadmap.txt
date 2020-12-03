@@ -37,7 +37,8 @@ assassination phase
 
 
 make server work between external computers!!!
-
+https://www.youtube.com/watch?v=KQasIwElg3w  --set server ip to the cloud service ip, set client ip to a blank string J(which will then update automatically when it's ran?....)
+https://www.youtube.com/watch?v=5OL7fu2R4M8   --might be better, free google cloud service (although you need to enter credit card, it doesn't charge)
 
 make sure executable works
     pyinstaller --onefile pythonScriptName.py  (requires the .png file as well in the same directory for some reason)

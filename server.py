@@ -90,7 +90,8 @@ def handle_client(conn, addr):
                 server_board_state.board_state = server_board_state.create_board_state(server_board_state.players)
                 #send game start to all clients with player information to each player
                 server_board_state.board_state['phase'] = 'picking_phase'
-                server_board_state.next_round(server_board_state.board_state)
+                server_board_state.start_game(server_board_state.board_state)
+                #server_board_state.next_round(server_board_state.board_state)
                 message = ['!GAMESTART', server_board_state.board_state]
 
                 #SEND THIS TO ALL CONNECTED CLIENTS!!!!!
@@ -103,12 +104,13 @@ def handle_client(conn, addr):
 
 
 
-
-
-
-
             elif msg[0] == '!PLAYERSTATE':
                 message = ['!PLAYERSTATE', server_board_state.player_state()]
+
+
+
+
+
 
 
             else:
