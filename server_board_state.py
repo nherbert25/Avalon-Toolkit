@@ -45,7 +45,8 @@ board_state = {
     'players': [],
     'player_picking_team': '',
     'mission' : [],
-    'phase' : 'lobby_phase'
+    'phase' : 'lobby_phase',
+    'team_selected': []
     }
 
 

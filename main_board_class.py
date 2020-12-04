@@ -67,14 +67,15 @@ class Main_Page():
 	##############################################################
 
 	def __init__(self, lock):
-		self.game_phase = client_board_state.board_state['phase']
+		self.game_phase = 'lobby_phase'
+		#self.game_phase = client_board_state.board_state['phase']
 		self.lock = lock #threading lock object   lock.release()     lock.acquire()
 
 		self.root.protocol('WM_DELETE_WINDOW', self.crash_gui)  # root is your root window
 		self.main_frame = tk.LabelFrame(self.root)
 		self.main_frame.grid(row=0, column=0)
 
-		self.top_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=5, text="Top Frame", pady=10, padx=5)
+		self.top_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=5, pady=10, padx=5)#, text="Top Frame")
 		self.top_frame.grid(row=0, column=0)
 
 		
@@ -91,8 +92,8 @@ class Main_Page():
 		#print(f'hello??? {client_board_state.board_state}')
 		#print(client_board_state.board_state['phase'])
 		#print(lock.locked())
-		if client_board_state.board_state['phase'] == 'lobby_phase':
-			self.rules_frame = self.generate_rules_config()
+		#if client_board_state.board_state['phase'] == 'lobby_phase':
+		self.rules_frame = self.generate_rules_config()
 		lock.release()
 		self.generate_voting_frame()
 
@@ -102,7 +103,7 @@ class Main_Page():
 
 	def generate_player_list(self, top_frame, list_of_players):
 
-		config_base_frame = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10, text="Player Frame")
+		config_base_frame = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10)#, text="Player Frame")
 		config_base_frame.grid(row=1, column=0)
 
 		count = 0
@@ -110,7 +111,7 @@ class Main_Page():
 
 
 		for player in list_of_players:
-			player_frames[player] = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, text="player_frame", pady=10)
+			player_frames[player] = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, pady=10)#text="player_frame",)
 			player_frames[player].grid(row=0, column=count)
 
 			player = tk.Label(player_frames[player], font=40, text=player)
@@ -143,7 +144,7 @@ class Main_Page():
 		#print(f'client username:  {client_board_state.username}')
 		#print(f'board state in generate_game_started_player_frame method: {board_state}')
 
-		config_base_frame = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10, text="Player Frame")
+		config_base_frame = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10)#, text="Player Frame")
 		config_base_frame.grid(row=1, column=0)
 
 		count = 0
@@ -173,13 +174,22 @@ class Main_Page():
 			count += 1
 
 
-		config_base_frame_submit = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10, text="Submit Frame")
+		config_base_frame_submit = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10)#, text="Submit Frame")
 		config_base_frame_submit.grid(row=2, column=0)
 
 
 		submit_button = tk.Button(config_base_frame_submit, text='Submit!', bg='#0052cc', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.submit_team(all_player_frames))
 		submit_button.grid(row=0, column=0)
 
+
+		config_base_frame_vote = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10)#, text="config_base_frame_vote")
+		config_base_frame_vote.grid(row=3, column=0)
+
+		approve_succeed_button = tk.Button(config_base_frame_vote, text='Approve/Succeed', bg='#0052cc', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.approve_succeed_button(all_player_frames))
+		approve_succeed_button.grid(row=0, column=0, padx=(100, 10))
+
+		reject_fail_button = tk.Button(config_base_frame_vote, text='Reject/Fail', bg='#cf2121', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.reject_fail_button(all_player_frames))
+		reject_fail_button.grid(row=0, column=1, padx=(10, 100))
 
 		return config_base_frame
 
@@ -278,25 +288,37 @@ class Main_Page():
 
 		#if game starts, or you reconnect and we're not in the lobby phase, run the following..... delete the rules widget, delete the lobby player widget, update internal board state, generate game board
 		if client_board_state.board_state['phase'] != 'lobby_phase' and self.game_phase == 'lobby_phase':
-			self.game_phase == client_board_state.board_state['phase']
+			self.game_phase = client_board_state.board_state['phase']
+
+			#print(self.game_phase)
+			#time.sleep(1)
 			main_board_helper.game_started(self.rules_frame)
 
 			Main_Page.list_of_players = client_board_state.players
-			Main_Page.board_state = client_board_state.board_state
+			#Main_Page.board_state = client_board_state.board_state
 			self.player_frame.destroy()
 			self.player_frame = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
 
-		#
-		if client_board_state.board_state['phase'] != 'lobby_phase' and Main_Page.board_state != client_board_state.board_state:
+
+		#if client_board_state.board_state['phase'] != 'lobby_phase':# and Main_Page.board_state != client_board_state.board_state:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
-			Main_Page.list_of_players = client_board_state.players
-			Main_Page.board_state = client_board_state.board_state
+			#Main_Page.list_of_players = client_board_state.players
+			#Main_Page.board_state = client_board_state.board_state
 
 			#print(Main_Page.list_of_players == client_board_state.players)
 			#print(client_board_state.board_state['phase'] != 'lobby_phase' and Main_Page.board_state != client_board_state.board_state)
 
-			self.player_frame.destroy()
-			self.player_frame = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
+
+
+
+		#	self.player_frame.destroy()
+		#	self.player_frame = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
+
+
+
+
+
+
 		self.lock.release()
 		
 		self.root.update_idletasks()

@@ -95,8 +95,11 @@ def submit_team(all_player_frames):
 		print('team size to select: ' + str(client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]))
 
 
+def approve_succeed_button(all_player_frames):
+	pass
 
-
+def reject_fail_button(all_player_frames):
+	pass
 
 
 def start_game(widget, start_button, list_of_characters):

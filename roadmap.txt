@@ -17,8 +17,8 @@ has to work on tablet!! lol, never going to happen
 percival logic - DONE
 
 
-selecting people buttons
-send team button
+selecting people buttons - DONE
+send team button - DONE
 
 voting function
 if not enough votes, next turn function
