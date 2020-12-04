@@ -269,15 +269,24 @@ class Main_Page():
 
 		self.lock.acquire()
 		#print(f'client username:  {client_board_state.username}')
+
+		#continually update player list in lobby
 		if client_board_state.board_state['phase'] == 'lobby_phase' and Main_Page.list_of_players != client_board_state.players:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players
 			self.player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 
+		#if game starts, or you reconnect and we're not in the lobby phase, run the following..... delete the rules widget, delete the lobby player widget, update internal board state, generate game board
 		if client_board_state.board_state['phase'] != 'lobby_phase' and self.game_phase == 'lobby_phase':
 			self.game_phase == client_board_state.board_state['phase']
 			main_board_helper.game_started(self.rules_frame)
 
+			Main_Page.list_of_players = client_board_state.players
+			Main_Page.board_state = client_board_state.board_state
+			self.player_frame.destroy()
+			self.player_frame = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
+
+		#
 		if client_board_state.board_state['phase'] != 'lobby_phase' and Main_Page.board_state != client_board_state.board_state:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players

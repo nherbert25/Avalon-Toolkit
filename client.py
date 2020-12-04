@@ -203,6 +203,19 @@ class Client():
                     if client_board_state.players != data[1]:
                         client_board_state.players = data[1]
 
+
+
+                elif instruction == '!VOTINGPHASE':
+                    if client_board_state.board_state != data[0]:
+                        client_board_state.board_state = data[0]
+                    if client_board_state.players != data[1]:
+                        client_board_state.players = data[1]
+
+
+
+
+
+
                 lock.release()
 
             time.sleep(5)

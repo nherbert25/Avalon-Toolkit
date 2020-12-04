@@ -11,7 +11,8 @@
 # 'phase': 'picking_phase',
 # 'team_size': [2, 3, 2, 3, 3],
 # 'round': 1,
-# 'turn': 1}
+# 'turn': 1,
+# 'team_selected': ['Nate', 'Jeff']
 # }
 
 

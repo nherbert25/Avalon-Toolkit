@@ -74,7 +74,8 @@ def submit_team(all_player_frames):
 		
 		print('submitting!!')
 		#send a voting command to the server!!!
-
+		
+		client_board_state.client_queue.append(['!TEAMSELECT', client_board_state.selected_players])
 		#MAKE SURE THIS RUNS AFTER YOU SUBMIT THIS INFORMATION TO THE SERVER
 		#remove selected players from selected players list
 		client_board_state.selected_players = []

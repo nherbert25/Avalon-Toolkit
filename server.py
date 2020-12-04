@@ -110,6 +110,18 @@ def handle_client(conn, addr):
 
 
 
+            elif msg[0] == '!TEAMSELECT':
+                server_board_state.board_state['phase'] = 'voting_phase'
+
+
+                server_board_state.board_state['team_selected'] = msg[1]
+
+                selected_teamj = msg[1]
+                message = ['!VOTINGPHASE', [server_board_state.board_state, server_board_state.player_state()]]
+
+
+
+
 
 
 
