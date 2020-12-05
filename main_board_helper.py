@@ -38,6 +38,8 @@ def select_player(player_frame, player_name):
 	print('Currently ' + client_board_state.board_state['player_order'][0] + 's turn')
 	print(f'Before pressing, these players are selected: {client_board_state.selected_players}')
 
+	if client_board_state.board_state['phase'] != 'picking_phase':
+		return None
 
 	#if your turn, you may select players
 	if client_board_state.username == client_board_state.board_state['player_order'][0]:
@@ -72,7 +74,7 @@ def submit_team(all_player_frames):
 	#if active player and # of selected players equals # of players for a team this round
 	if client_board_state.username == client_board_state.board_state['player_order'][0] and len(client_board_state.selected_players) == client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]:
 		
-		print('submitting!!')
+		print('submitting!')
 		#send a voting command to the server!!!
 		
 		client_board_state.client_queue.append(['!TEAMSELECT', client_board_state.selected_players])
@@ -90,16 +92,33 @@ def submit_team(all_player_frames):
 		print(f'client user: {client_board_state.username}')
 		print('active player: ' + client_board_state.board_state['player_order'][0])
 		print('# of selected players: ' + str(len(client_board_state.selected_players)))
-		print('full team size list: ' + str(client_board_state.board_state['team_size']))
-		print('round: ' + str(client_board_state.board_state['round']))
+		#print('full team size list: ' + str(client_board_state.board_state['team_size']))
+		#print('round: ' + str(client_board_state.board_state['round']))
 		print('team size to select: ' + str(client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]))
 
 
+
 def approve_succeed_button(all_player_frames):
-	pass
+
+	if client_board_state.board_state['phase'] == 'voting_phase':
+		client_board_state.client_queue.append(['!VOTE', client_board_state.username, 'approve'])
+		print('approving')
+
+	if client_board_state.board_state['phase'] == 'mission_phase' and client_board_state.username in client_board_state.board_state['team_selected']:
+		client_board_state.client_queue.append(['!MISSION', client_board_state.username, 'pass'])
+		print('passing')
 
 def reject_fail_button(all_player_frames):
-	pass
+
+	if client_board_state.board_state['phase'] == 'voting_phase':
+		client_board_state.client_queue.append(['!VOTE', client_board_state.username, 'reject'])
+		print('rejecting')
+
+	if client_board_state.board_state['phase'] == 'mission_phase' and client_board_state.username in client_board_state.board_state['team_selected']:
+		client_board_state.client_queue.append(['!MISSION', client_board_state.username, 'fail'])
+		print('failing')
+
+
 
 
 def start_game(widget, start_button, list_of_characters):

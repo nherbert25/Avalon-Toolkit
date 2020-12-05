@@ -16,6 +16,16 @@
 # }
 
 
+"""
+lobby_phase = True
+picking_phase = False  #, player_picking_team
+voting_phase = False
+mission_phase = False
+assassination_phase = False
+game_over_phase = False
+"""
+
+
 team_size = {
     1: [2, 3, 2, 3, 3],
     2: [2, 3, 2, 3, 3],
@@ -135,16 +145,76 @@ def next_turn(board_state):
 
 
 
+#server_board_state.board_state['waiting_on_votes']
+#not being used
+def check_if_voted(board_state):
+
+    round = board_state['round']
+    turn = board_state['turn']
+
+    for player in board_state['players']:
+        pass
 
 
-"""
-lobby_phase = True
-picking_phase = False  #, player_picking_team
-voting_phase = False
-mission_phase = False
-assassination_phase = False
-game_over_phase = False
-"""
+
+
+def calculate_votes(board_state=board_state):
+
+    round = board_state['round']
+    turn = board_state['turn']
+
+
+    for vote in board_state['votes_cast']:
+
+        for player in board_state['players']:
+
+            if player['name'] == vote[0]:
+                player['votes'][round-1].append(vote[1])
+
+
+
+
+
+def calculate_mission_votes(board_state=board_state):
+
+    round = board_state['round']
+    turn = board_state['turn']
+
+    number_of_fails = 0
+
+    for vote in board_state['mission_votes_cast']:
+
+        if vote[1] == 'fail':
+            number_of_fails += 1
+
+    if number_of_fails > 0:
+        board_state['mission'].append('fail')
+        return(f'Mission {round} failed with {number_of_fails} fails!')
+
+    else:
+        board_state['mission'].append('success')
+        return(f'Mission {round} passed!')
+
+
+
+
+
+
+def get_list_of_player_names(board_state):
+    
+    list_of_players = []
+
+    for player in board_state['players']:
+        list_of_players.append(player['name'])
+
+    return list_of_players
+
+
+# 'round': 1,
+# 'turn': 1,
+# 'team_selected': ['Nate', 'Jeff']
+
+
 
 # def game_state(players=players, votes=votes, mission=mission):
 

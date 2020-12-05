@@ -111,15 +111,93 @@ def handle_client(conn, addr):
 
 
             elif msg[0] == '!TEAMSELECT':
-                server_board_state.board_state['phase'] = 'voting_phase'
+
+
 
 
                 server_board_state.board_state['team_selected'] = msg[1]
                 selected_team = msg[1]
+
+
+                #if 5th round:
+                #server_board_state.board_state['phase'] = 'mission_phase'
+
+
+                #if NOT fifth round:
+
+
+                #list of list
+                server_board_state.board_state['waiting_on_votes'] = server_board_state.get_list_of_player_names(server_board_state.board_state)
+                server_board_state.board_state['votes_cast'] = []
+                server_board_state.board_state['mission_votes_cast'] = []
+
+                print(f"Waiting on votes from: {server_board_state.board_state['waiting_on_votes']}")
+
+
+                server_board_state.board_state['phase'] = 'voting_phase'
                 message = ['!VOTINGPHASE', [server_board_state.board_state, server_board_state.player_state()]]
 
 
 
+
+
+
+            elif msg[0] == '!VOTE':
+                player_voting = msg[1]
+                vote = msg[2]
+
+                if player_voting in server_board_state.board_state['waiting_on_votes']:
+
+                    server_board_state.board_state['waiting_on_votes'].remove(player_voting)
+                    server_board_state.board_state['votes_cast'].append([player_voting, vote])
+
+
+                #if not waiting on anyone, append votes to players and either go to next round or begin mission phase
+                if len(server_board_state.board_state['waiting_on_votes']) == 0:
+                    print('calculating!')
+                    server_board_state.calculate_votes()
+                    print('calculated votes!')
+
+                message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.player_state()]]
+
+
+
+            elif msg[0] == '!MISSION':
+                player_voting = msg[1]
+                mission_vote = msg[2]
+
+
+                if player_voting in server_board_state.board_state['team_selected']:
+
+                    server_board_state.board_state['team_selected'].remove(player_voting)
+                    server_board_state.board_state['mission_votes_cast'].append([player_voting, vote])
+
+
+                #if not waiting on anyone, append votes to players and either go to next round or begin mission phase
+                if len(server_board_state.board_state['team_selected']) == 0:
+                    print('calculating!')
+                    server_board_state.calculate_mission_votes()
+                    print('calculated votes!')
+
+                message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.player_state()]]
+
+
+
+
+
+
+                #if vote does not exist for player, add player and vote
+
+                #else ignore
+
+
+                #if all votes are accounted for, add information to the player sheets (reveal the information) and update the phase
+                    #if pass go to mission phase
+                    #if fail, call next turn function
+                
+                
+                
+                message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.player_state()]]
 
 
 

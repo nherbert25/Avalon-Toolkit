@@ -95,7 +95,7 @@ class Main_Page():
 		#if client_board_state.board_state['phase'] == 'lobby_phase':
 		self.rules_frame = self.generate_rules_config()
 		lock.release()
-		self.generate_voting_frame()
+
 
 	##############################################################
 	#functions
@@ -240,18 +240,43 @@ class Main_Page():
 
 
 	def generate_voting_frame(self):
-		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Voting Frame")
+		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10)#, text="Voting Frame")
 		config_base_frame.grid(row=2, column=0)
 
-		for j in range(len(client_board_state.players)):
 
-			count = 0
+		vcount = 0
+		xcount = 1
+		for i in range(1,6):
+			round_title = tk.Label(config_base_frame, text=f'Round {i}', font=12)
+			round_title.grid(row=vcount, column=xcount, columnspan=5)
+			xcount += 5
+
+
+		player_vote_dictionary = {}
+
+		vcount += 1
+		xcount = 0
+
+		for player in client_board_state.board_state['player_order']:
+
+			player_name = tk.Label(config_base_frame, text=player, font=12)
+			player_name.grid(row=vcount, column=xcount)
+
+			player_vote_dictionary[player] = []
+
 			for i in range(25):
 
+				xcount += 1
 				votebox = tk.Label(config_base_frame, text='x', font=12)
-				votebox.grid(row=j, column=count)
+				votebox.grid(row=vcount, column=xcount)
+				player_vote_dictionary[player].append(votebox)
+				
 
-				count += 1
+			vcount += 1
+			xcount = 0
+
+		#print(player_vote_dictionary)
+		return config_base_frame, player_vote_dictionary
 
 
 
@@ -286,6 +311,10 @@ class Main_Page():
 			Main_Page.list_of_players = client_board_state.players
 			self.player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 
+
+
+
+
 		#if game starts, or you reconnect and we're not in the lobby phase, run the following..... delete the rules widget, delete the lobby player widget, update internal board state, generate game board
 		if client_board_state.board_state['phase'] != 'lobby_phase' and self.game_phase == 'lobby_phase':
 			self.game_phase = client_board_state.board_state['phase']
@@ -298,6 +327,8 @@ class Main_Page():
 			#Main_Page.board_state = client_board_state.board_state
 			self.player_frame.destroy()
 			self.player_frame = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
+
+			self.voting_frame, self.player_vote_dictionary = self.generate_voting_frame()
 
 
 		#if client_board_state.board_state['phase'] != 'lobby_phase':# and Main_Page.board_state != client_board_state.board_state:
@@ -320,7 +351,6 @@ class Main_Page():
 
 
 		self.lock.release()
-		
 		self.root.update_idletasks()
 		self.root.update()
 
