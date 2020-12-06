@@ -204,17 +204,25 @@ class Client():
                         client_board_state.players = data[1]
 
 
-
                 elif instruction == '!VOTINGPHASE':
                     if client_board_state.board_state != data[0]:
                         client_board_state.board_state = data[0]
                     if client_board_state.players != data[1]:
                         client_board_state.players = data[1]
 
+                    client_board_state.message_from_server = data[1]
+
+                elif instruction == '!ENDVOTINGPHASE':
+                    if client_board_state.board_state != data[0]:
+                        client_board_state.board_state = data[0]
+                    #run helper function that updates the vote widget
+
+                    client_board_state.message_from_server = data[1]
 
 
-
-
+                else:
+                    if client_board_state.board_state != data[0]:
+                        client_board_state.board_state = data[0]
 
                 lock.release()
 

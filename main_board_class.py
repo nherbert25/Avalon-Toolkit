@@ -27,6 +27,12 @@ class Main_Page():
 	running = True
 	HEIGHT = 500
 	WIDTH = 600
+	
+	NEUTRAL_BLUE = '#80c1ff'
+	GOOD_BLUE = '#0052cc'
+	GOOD_BLUE_TEXT_COLOR = '#ffffff'
+	EVIL_RED = '#cf2121'
+	SELECTION_YELLOW = '#39658f'
 
 	root = tk.Tk()
 	root.title("Avalon")
@@ -34,7 +40,7 @@ class Main_Page():
 
 	list_of_players = []
 	#game_phase = 'lobby_phase'
-
+	message_from_server = ''
 	
 	board_state = {}
 	
@@ -77,21 +83,12 @@ class Main_Page():
 
 		self.top_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=5, pady=10, padx=5)#, text="Top Frame")
 		self.top_frame.grid(row=0, column=0)
-
-		
-		
 		
 		self.player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
-
-		#print('TESTING!!!!!!!!!!!\r\n',client_board_state.board_state)
-		#time.sleep(3)
-		#print('TESTING!!!!!!!!!!!\r\n',client_board_state.board_state)
+		self.server_message_frame = self.generate_server_message_frame()
 
 
 		lock.acquire()
-		#print(f'hello??? {client_board_state.board_state}')
-		#print(client_board_state.board_state['phase'])
-		#print(lock.locked())
 		#if client_board_state.board_state['phase'] == 'lobby_phase':
 		self.rules_frame = self.generate_rules_config()
 		lock.release()
@@ -197,7 +194,14 @@ class Main_Page():
 
 
 
+	def generate_server_message_frame(self, message_from_server = client_board_state.message_from_server):
+		
+		#config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10)#, text="Lower Frame")
+		
+		config_base_frame = tk.Label(self.main_frame, bg='#80c1ff', font=40, bd=10, text=message_from_server, pady=2)
+		config_base_frame.grid(row=4, column=0)
 
+		return config_base_frame
 
 
 
@@ -275,7 +279,7 @@ class Main_Page():
 			vcount += 1
 			xcount = 0
 
-		#print(player_vote_dictionary)
+		#print(player_vote_dictionary)  {'Nate': [widget_object, widget_object, widget_object], 'Frankie': [widget_object, widget_object, widget_object]}
 		return config_base_frame, player_vote_dictionary
 
 
@@ -331,6 +335,9 @@ class Main_Page():
 			self.voting_frame, self.player_vote_dictionary = self.generate_voting_frame()
 
 
+			main_board_helper.update_voter_frame(self.voting_frame, self.player_vote_dictionary, Main_Page.GOOD_BLUE, Main_Page.EVIL_RED)
+
+
 		#if client_board_state.board_state['phase'] != 'lobby_phase':# and Main_Page.board_state != client_board_state.board_state:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			#Main_Page.list_of_players = client_board_state.players
@@ -339,6 +346,19 @@ class Main_Page():
 			#print(Main_Page.list_of_players == client_board_state.players)
 			#print(client_board_state.board_state['phase'] != 'lobby_phase' and Main_Page.board_state != client_board_state.board_state)
 
+
+		if client_board_state.board_state['phase'] != self.game_phase:
+			self.game_phase = client_board_state.board_state['phase']
+
+			print('\r\nUPDATING VOTER FRAME!!!!!!!!!!!\r\n')
+
+			main_board_helper.update_voter_frame(self.voting_frame, self.player_vote_dictionary, Main_Page.GOOD_BLUE, Main_Page.EVIL_RED)
+			print('\r\nUPDATED VOTER FRAME!!!!!!!!!!!\r\n')
+
+
+		if client_board_state.message_from_server != Main_Page.message_from_server:
+			Main_Page.message_from_server = client_board_state.message_from_server
+			self.server_message_frame.configure(text=Main_Page.message_from_server)
 
 
 

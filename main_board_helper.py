@@ -34,8 +34,7 @@ def char_remove(character, characters_widget, list_of_characters=list_of_charact
 
 def select_player(player_frame, player_name):
 
-	print(client_board_state.username)
-	print('Currently ' + client_board_state.board_state['player_order'][0] + 's turn')
+	print('You are ' + player_name + ', It is currently ' + client_board_state.board_state['player_order'][0] + 's turn')
 	print(f'Before pressing, these players are selected: {client_board_state.selected_players}')
 
 	if client_board_state.board_state['phase'] != 'picking_phase':
@@ -62,14 +61,15 @@ def select_player(player_frame, player_name):
 
 				player_frame.configure(bg=bg)
 
-
-
-
 		print(f'After pressing, these players are selected: {client_board_state.selected_players}')
 
 
 
 def submit_team(all_player_frames):
+
+	if client_board_state.board_state['phase'] != 'picking_phase':
+		return None
+
 
 	#if active player and # of selected players equals # of players for a team this round
 	if client_board_state.username == client_board_state.board_state['player_order'][0] and len(client_board_state.selected_players) == client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]:
@@ -102,6 +102,7 @@ def approve_succeed_button(all_player_frames):
 
 	if client_board_state.board_state['phase'] == 'voting_phase':
 		client_board_state.client_queue.append(['!VOTE', client_board_state.username, 'approve'])
+		print(client_board_state.client_queue)
 		print('approving')
 
 	if client_board_state.board_state['phase'] == 'mission_phase' and client_board_state.username in client_board_state.board_state['team_selected']:
@@ -227,3 +228,50 @@ def playerframetext(player, player_frames, username, user_info):
 		display_text += player['role']
 
 	return display_text
+
+
+
+
+def update_voter_frame(widget_frame, widget_dictionary, approve_color, reject_color, board_state=client_board_state.board_state):
+
+	#round = board_state['round']
+	#turn = board_state['turn']
+	print('TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+	#[['approve', 'reject'], ['approve', 'reject']]
+
+	for player in board_state['players']:
+
+		name = player['name']
+		votes = player['votes']
+		on_team = player['on_team']
+		made_team = player['made_team']
+
+		print(name, votes, on_team, made_team)
+
+
+		#'players': [{'name': 'Frankie', 'role': 'Assassin', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]},
+
+		round_number = 0
+		for round in player['votes']:
+			
+			vote_number = 0
+			for vote in round:
+
+				#config widget color depending on approve/reject
+				#config widget text depending if on team or not
+				#config widget depending on made team or not
+				widget_index = round_number*5+vote_number
+
+				if vote == 'approve':
+					widget_dictionary[name][widget_index].configure(bg=approve_color)
+
+				if vote == 'reject':
+					widget_dictionary[name][widget_index].configure(bg=reject_color)
+
+
+
+				vote_number += 1
+			round_number += 1
+
+	pass

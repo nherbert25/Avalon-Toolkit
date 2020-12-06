@@ -1,3 +1,66 @@
+
+
+"""
+[Received the following instructions from ('192.168.1.47', 56931)]: ['!VOTE', 'Nate', 'approve']
+calculating!
+Calculated votes! Team approved.
+[Sending back to client: ('192.168.1.47', 56931)]: 
+
+
+['!ENDVOTINGPHASE', [{'phase': 'mission_phase',
+
+ 'player_order': ['Jeff', 'Nate', 'Frankie'], 
+
+'players': [{'name': 'Frankie', 'role': 'Assassin', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]},
+
+ {'name': 'Jeff', 'role': 'Morgana', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]},
+ 
+  {'name': 'Nate', 'role': 'Resistance', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]}],
+  
+  
+   'player_picking_team': 'Frankie', 
+   
+   'mission': [], 
+   'team_size': [2, 3, 2, 3, 3], 
+   'round': 1,
+    'turn': 1,
+     'team_selected': ['Jeff', 'Nate'],
+      'waiting_on_votes': [], 
+      'votes_cast': [],
+       'mission_votes_cast': []},
+       
+        'Calculated votes! Team approved.']]
+
+"""
+
+
+"""
+[Received the following instructions from ('192.168.1.47', 55099)]: ['!BOARDSTATE']
+[Sending back to client: ('192.168.1.47', 55099)]: ['!BOARDSTATE', [
+    
+
+{'player_order': ['Nate', 'Jeff', 'Frankie'], 
+
+'players': [
+{'name': 'Frankie', 'role': 'Morgana', 'votes': [['reject']], 'on_team': [[]], 'made_team': [[]]}, 
+{'name': 'Nate', 'role': 'Merlin', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]}, 
+{'name': 'Jeff', 'role': 'Mordred', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]}], 
+
+'player_picking_team': 'Frankie', 'mission': [], 
+'phase': 'voting_phase',
+ 'team_selected': ['Nate', 'Frankie'], 
+ 'team_size': [2, 3, 2, 3, 3], 
+ 'round': 1,
+  'turn': 1,
+   'waiting_on_votes': [],
+    'votes_cast': [['Nate', 'approve'], ['Frankie', 'reject'], ['Jeff', 'approve']],
+     'mission_votes_cast': []},
+      ['Nate', 'Jeff', 'Frankie']]]
+
+
+"""
+
+
 # {
 # 'player_order': ['Frankie', 'cat', 'Jeff', 'Nate'], 
 # 'players': [
@@ -51,11 +114,14 @@ mission = []
 
 
 board_state = {
+    'phase': 'lobby_phase',
     'player_order': [],
     'players': [],
     'player_picking_team': '',
-    'mission' : [],
-    'phase' : 'lobby_phase',
+    'mission': [],
+    'team_size': [],
+    'round': 0,
+    'turn': 0,
     'team_selected': []
     }
 
@@ -94,7 +160,8 @@ def create_board_state(players, board_state = board_state):
         my_player = player_creation(player)
         my_player['role'] = roles.pop(0)
         board_state['players'].append(my_player)
-    
+
+
     board_state['player_picking_team'] = board_state['players'][0]['name']
     return(board_state)
 
@@ -115,66 +182,105 @@ def start_game(board_state):
 
 
 
+
+def next_turn(board_state):
+
+    moved_player = board_state['player_order'].pop(0)
+    board_state['player_order'].append(moved_player)
+    board_state['player_picking_team'] = board_state['players'][0]['name']
+
+    board_state['turn'] += 1
+
+    #if last round force vote!
+    #XXX
+    if board_state['turn'] == 5:
+        pass
+
+    return board_state
+
+
+
 def next_round(board_state):
     for player in board_state['players']:
         player['votes'].append([])
         player['on_team'].append([])
         player['made_team'].append([])
 
-    moved_player = board_state['player_order'].pop(0)
-    board_state['player_order'].append(moved_player)
+    board_state = next_turn(board_state)
 
     board_state['round'] += 1
     board_state['turn'] = 1
 
+    return board_state
+
     #score point!!!!
 
 
-def next_turn(board_state):
 
-    moved_player = board_state['player_order'].pop(0)
-    board_state['player_order'].append(moved_player)
+# #server_board_state.board_state['waiting_on_votes']
+# #not being used
+# def check_if_voted(board_state):
 
-    board_state['turn'] += 1
+#     round = board_state['round']
+#     turn = board_state['turn']
 
-    #if last round force vote!
-    if board_state['turn'] == 5:
-        pass
-
-
-
-
-
-#server_board_state.board_state['waiting_on_votes']
-#not being used
-def check_if_voted(board_state):
-
-    round = board_state['round']
-    turn = board_state['turn']
-
-    for player in board_state['players']:
-        pass
+#     for player in board_state['players']:
+#         pass
 
 
 
 
+
+
+#calculate if vote passes or fails
+#append queued votes to player
+#sets board_state['votes_cast'] to empty list
 def calculate_votes(board_state=board_state):
 
     round = board_state['round']
     turn = board_state['turn']
 
+    approve_count = 0
+    reject_count = 0
 
+    #vote = ['Nate', 'reject']
     for vote in board_state['votes_cast']:
-
         for player in board_state['players']:
 
             if player['name'] == vote[0]:
                 player['votes'][round-1].append(vote[1])
 
+    #calculate if we go to next round or not
+    for vote in board_state['votes_cast']:
+        if vote[1] == 'approve':
+            approve_count +=1
+        elif vote[1] == 'reject':
+            reject_count +=1
+
+    board_state['votes_cast'] = []
+
+    if approve_count > reject_count:
+        #go to next phase
+        board_state['phase'] = 'mission_phase'
+        to_return = 'approved'
+
+    else:
+        #go to next team selection
+        board_state['phase'] = 'picking_phase'
+        board_state['team_selected'] = []
+        board_state = next_turn(board_state)
+        to_return = 'rejected'
+
+    return board_state, f'Calculated votes! Team {to_return}.'
 
 
 
 
+
+
+
+
+#appends success/failure to board_state['mission'], calculates and changes phase to next round or assassination phase. Runs next_round() if applicable. Returns a string meant for players ('Mission {round} failed with {number_of_fails} fail(s)!')
 def calculate_mission_votes(board_state=board_state):
 
     round = board_state['round']
@@ -182,6 +288,7 @@ def calculate_mission_votes(board_state=board_state):
 
     number_of_fails = 0
 
+    #vote = ['Nate', 'fail']
     for vote in board_state['mission_votes_cast']:
 
         if vote[1] == 'fail':
@@ -189,12 +296,32 @@ def calculate_mission_votes(board_state=board_state):
 
     if number_of_fails > 0:
         board_state['mission'].append('fail')
-        return(f'Mission {round} failed with {number_of_fails} fails!')
+        to_return = f'Mission {round} failed with {number_of_fails} fail(s)!'
 
     else:
         board_state['mission'].append('success')
-        return(f'Mission {round} passed!')
+        to_return = f'Mission {round} passed!'
 
+    board_state['phase'] = 'picking_phase'
+    #if 3 success or 3 failure, change game state, game over
+    success_count = 0
+    fail_count = 0
+
+    for i in board_state['mission']:
+        if i == 'success':
+            success_count += 1
+            if success_count >= 3:
+                board_state['phase'] = 'assassination_phase'
+
+        if i == 'fail':
+            fail_count += 1
+            if fail_count >= 3:
+                board_state['phase'] = 'game_over_phase'
+
+    if board_state['phase'] == 'picking_phase':
+        board_state = next_round(board_state)
+
+    return board_state, to_return
 
 
 
@@ -277,37 +404,10 @@ sample_board_state = {
 
 
 
-def player_state(players=players): 
-    #print(f'[player_state function] to return:   {players}')  
-    return (players) 
+# def player_state(players=players): 
+#     #print(f'[player_state function] to return:   {players}')  
+#     return (players) 
 
-
-
-
-
-######################################
-
-
-
-# players = []
-
-
-
-# votes = {
-#     'Nate':[[1, 1, 0],[0, 1]],
-#     'Frankie':[[1, 1, 0],[0, 1]],
-#     'Jeff':[[1, 1, 0],[0, 1]]
-#     }
-
-# votes = {}
-
-# mission = [1, 0, 0]  #boolean success/fail
-
-# mission = []
-
-# #game_state = None #votes (calculate who's turn), mission success/fail
-
-# player_picking_team = 'Nate'
 
 
 
@@ -329,18 +429,6 @@ def gamestate(players, votes, mission):
 
 
 
-
-
-# def game_state(players=players, votes=votes, mission=mission):
-
-#     players = [x.encode('utf-8') for x in players]
-
-#     gamestate = {
-#         'players': players,
-#         'votes': votes,
-#         'mission': mission
-#     }
-#     return gamestate
 
 
 

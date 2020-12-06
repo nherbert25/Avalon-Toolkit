@@ -20,6 +20,8 @@ ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
+lock = threading.Lock()
+
 #this is all of the data coming in
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #anything that hits this address, hits this socket
@@ -45,7 +47,7 @@ def handle_client(conn, addr):
         msg_length = conn.recv(HEADER).decode(FORMAT)
 
 
-
+        lock.acquire()
 
 
 
@@ -100,12 +102,12 @@ def handle_client(conn, addr):
 
 
             elif msg[0] == '!BOARDSTATE':
-                    message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.player_state()]]
+                    message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players]]
 
 
 
             elif msg[0] == '!PLAYERSTATE':
-                message = ['!PLAYERSTATE', server_board_state.player_state()]
+                message = ['!PLAYERSTATE', server_board_state.players]
 
 
 
@@ -135,7 +137,7 @@ def handle_client(conn, addr):
 
 
                 server_board_state.board_state['phase'] = 'voting_phase'
-                message = ['!VOTINGPHASE', [server_board_state.board_state, server_board_state.player_state()]]
+                message = ['!VOTINGPHASE', [server_board_state.board_state, server_board_state.players]]
 
 
 
@@ -152,13 +154,27 @@ def handle_client(conn, addr):
                     server_board_state.board_state['votes_cast'].append([player_voting, vote])
 
 
+
+
                 #if not waiting on anyone, append votes to players and either go to next round or begin mission phase
                 if len(server_board_state.board_state['waiting_on_votes']) == 0:
                     print('calculating!')
-                    server_board_state.calculate_votes()
-                    print('calculated votes!')
 
-                message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.player_state()]]
+
+
+                    server_board_state.board_state, vote_message = server_board_state.calculate_votes()  # 'approve' 'reject'
+
+                    #print(f'Calculated votes! Team {team_approve_or_reject}')
+
+                    print(vote_message)
+                    message = ['!ENDVOTINGPHASE', [server_board_state.board_state, vote_message]]
+
+
+                else:
+                    message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players]]
+
+
+
 
 
 
@@ -176,10 +192,13 @@ def handle_client(conn, addr):
                 #if not waiting on anyone, append votes to players and either go to next round or begin mission phase
                 if len(server_board_state.board_state['team_selected']) == 0:
                     print('calculating!')
-                    server_board_state.calculate_mission_votes()
-                    print('calculated votes!')
 
-                message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.player_state()]]
+                    #appends success/failure to board_state['mission'], calculates and changes phase to next round or assassination phase. Returns a string meant for players (round 4 failed with 2 fails!)
+                    server_board_state.board_state, mission_message = server_board_state.calculate_mission_votes()
+                    print('calculated votes!')
+                    print(mission_message)
+
+                    message = ['!ENDMISSION', [server_board_state.board_state, mission_message]]
 
 
 
@@ -196,10 +215,8 @@ def handle_client(conn, addr):
                     #if fail, call next turn function
                 
                 
-                
-                message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.player_state()]]
-
-
+                else:
+                    message = ['!MISSION', [server_board_state.board_state, server_board_state.players]]
 
 
             else:
@@ -207,14 +224,20 @@ def handle_client(conn, addr):
 
 
 
-
-            print(f"[Sending back to client: {addr}]: {message}\r\n")
+            if message[0] != '!BOARDSTATE':
+                print(f"[Sending back to client: {addr}]: {message}\r\n")
             message = pickle.dumps(message)
             conn.send(message)
+
+            lock.release()
             #conn.send("!NONE".encode(FORMAT))
     conn.close()
 
 
+
+##    lock = threading.Lock()
+    #lock.acquire()
+    #lock.release()
 
 
 
