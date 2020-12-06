@@ -96,13 +96,12 @@ def handle_client(conn, addr):
                 #server_board_state.next_round(server_board_state.board_state)
                 message = ['!GAMESTART', server_board_state.board_state]
 
-                #SEND THIS TO ALL CONNECTED CLIENTS!!!!!
 
 
 
 
             elif msg[0] == '!BOARDSTATE':
-                    message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players]]
+                    message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players, server_board_state.message_to_client()]]
 
 
 
@@ -113,9 +112,6 @@ def handle_client(conn, addr):
 
 
             elif msg[0] == '!TEAMSELECT':
-
-
-
 
                 server_board_state.board_state['team_selected'] = msg[1]
                 selected_team = msg[1]
@@ -133,11 +129,12 @@ def handle_client(conn, addr):
                 server_board_state.board_state['votes_cast'] = []
                 server_board_state.board_state['mission_votes_cast'] = []
 
-                print(f"Waiting on votes from: {server_board_state.board_state['waiting_on_votes']}")
+                to_send_message = f"Waiting on votes from: {server_board_state.board_state['waiting_on_votes']}"
+                print(to_send_message)
 
 
                 server_board_state.board_state['phase'] = 'voting_phase'
-                message = ['!VOTINGPHASE', [server_board_state.board_state, server_board_state.players]]
+                message = ['!VOTINGPHASE', [server_board_state.board_state, to_send_message]]
 
 
 
@@ -170,8 +167,10 @@ def handle_client(conn, addr):
                     message = ['!ENDVOTINGPHASE', [server_board_state.board_state, vote_message]]
 
 
+
                 else:
-                    message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players]]
+                    to_send_message = f"Waiting on votes from: {server_board_state.board_state['waiting_on_votes']}"
+                    message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players, to_send_message]]
 
 
 

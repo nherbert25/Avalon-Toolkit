@@ -131,7 +131,6 @@ class Client():
 
 
 
-
     ###################################################################################################
     #Queued threading for sending/receiving from server
     #https://www.geeksforgeeks.org/python-communicating-between-threads-set-1/
@@ -190,6 +189,23 @@ class Client():
 
                 lock.acquire()
 
+
+                # if instruction == '!INITIAL_CONNECT':
+                #     if client_board_state.board_state != data[0]:
+                #         client_board_state.board_state = data[0]
+
+                #     client_board_state.message_from_server = data[1]
+
+                # if instruction == '!GAMESTART':
+                #     if client_board_state.board_state != data[0]:
+                #         client_board_state.board_state = data[0]
+
+                #     client_board_state.message_from_server = data[1]
+
+
+
+
+
                 if instruction == '!PLAYERSTATE':
                     client_board_state.players = data
                     #client_board_state.board_state = data
@@ -202,23 +218,28 @@ class Client():
                         client_board_state.board_state = data[0]
                     if client_board_state.players != data[1]:
                         client_board_state.players = data[1]
-
+                    
+                    try:
+                        if data[2] != '':
+                            client_board_state.message_from_server = data[2]
+                    except:
+                        pass
 
                 elif instruction == '!VOTINGPHASE':
                     if client_board_state.board_state != data[0]:
                         client_board_state.board_state = data[0]
-                    if client_board_state.players != data[1]:
-                        client_board_state.players = data[1]
-
                     client_board_state.message_from_server = data[1]
 
                 elif instruction == '!ENDVOTINGPHASE':
                     if client_board_state.board_state != data[0]:
                         client_board_state.board_state = data[0]
-                    #run helper function that updates the vote widget
-
                     client_board_state.message_from_server = data[1]
 
+
+                elif instruction == '!ENDMISSION':
+                    if client_board_state.board_state != data[0]:
+                        client_board_state.board_state = data[0]
+                    client_board_state.message_from_server = data[1]
 
                 else:
                     if client_board_state.board_state != data[0]:

@@ -34,14 +34,14 @@ def char_remove(character, characters_widget, list_of_characters=list_of_charact
 
 def select_player(player_frame, player_name):
 
-	print('You are ' + player_name + ', It is currently ' + client_board_state.board_state['player_order'][0] + 's turn')
+	print('You are ' + player_name + ', It is currently ' + client_board_state.board_state['player_picking_team'] + 's turn')
 	print(f'Before pressing, these players are selected: {client_board_state.selected_players}')
 
 	if client_board_state.board_state['phase'] != 'picking_phase':
 		return None
 
 	#if your turn, you may select players
-	if client_board_state.username == client_board_state.board_state['player_order'][0]:
+	if client_board_state.username == client_board_state.board_state['player_picking_team']:
 
 		max_players = client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]
 
@@ -72,7 +72,7 @@ def submit_team(all_player_frames):
 
 
 	#if active player and # of selected players equals # of players for a team this round
-	if client_board_state.username == client_board_state.board_state['player_order'][0] and len(client_board_state.selected_players) == client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]:
+	if client_board_state.username == client_board_state.board_state['player_picking_team'] and len(client_board_state.selected_players) == client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]:
 		
 		print('submitting!')
 		#send a voting command to the server!!!
@@ -90,7 +90,7 @@ def submit_team(all_player_frames):
 	else:
 		print('It''s either not your turn or something''s wrong!')
 		print(f'client user: {client_board_state.username}')
-		print('active player: ' + client_board_state.board_state['player_order'][0])
+		print('active player: ' + client_board_state.board_state['player_picking_team'])
 		print('# of selected players: ' + str(len(client_board_state.selected_players)))
 		#print('full team size list: ' + str(client_board_state.board_state['team_size']))
 		#print('round: ' + str(client_board_state.board_state['round']))
@@ -232,13 +232,22 @@ def playerframetext(player, player_frames, username, user_info):
 
 
 
-def update_voter_frame(widget_frame, widget_dictionary, approve_color, reject_color, board_state=client_board_state.board_state):
+def update_voter_frame(widget_frame, widget_dictionary, approve_color, reject_color, board_state=None):
+
+	if board_state is None:
+		board_state = client_board_state.board_state
 
 	#round = board_state['round']
 	#turn = board_state['turn']
 	print('TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
 	#[['approve', 'reject'], ['approve', 'reject']]
+
+	print('client board state', client_board_state.board_state)
+
+	print('input boardstate', board_state)
+
+	print(board_state['players'])
 
 	for player in board_state['players']:
 

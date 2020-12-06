@@ -356,6 +356,13 @@ class Main_Page():
 			print('\r\nUPDATED VOTER FRAME!!!!!!!!!!!\r\n')
 
 
+
+		#print(client_board_state.message_from_server, 'client board state')
+		#print(Main_Page.message_from_server)
+
+
+
+
 		if client_board_state.message_from_server != Main_Page.message_from_server:
 			Main_Page.message_from_server = client_board_state.message_from_server
 			self.server_message_frame.configure(text=Main_Page.message_from_server)

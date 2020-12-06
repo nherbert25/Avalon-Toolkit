@@ -187,7 +187,7 @@ def next_turn(board_state):
 
     moved_player = board_state['player_order'].pop(0)
     board_state['player_order'].append(moved_player)
-    board_state['player_picking_team'] = board_state['players'][0]['name']
+    board_state['player_picking_team'] = board_state['player_order'][0]
 
     board_state['turn'] += 1
 
@@ -335,6 +335,37 @@ def get_list_of_player_names(board_state):
         list_of_players.append(player['name'])
 
     return list_of_players
+
+
+
+
+def message_to_client(board_state=board_state):
+
+    message = ''
+
+    if board_state['phase'] == 'picking_phase':
+        message = f'Waiting on {board_state["player_picking_team"]} to pick a team.'
+
+    if board_state['phase'] == 'voting_phase':
+        message = f"Waiting on votes from: {board_state['waiting_on_votes']}"
+
+    if board_state['phase'] == 'mission_phase':
+        message = f"Waiting on votes from: {board_state['team_selected']}"
+
+
+
+    return message
+
+
+
+"""
+lobby_phase = True
+picking_phase = False  #, player_picking_team
+voting_phase = False
+mission_phase = False
+assassination_phase = False
+game_over_phase = False
+"""
 
 
 # 'round': 1,
