@@ -70,56 +70,93 @@ class Main_Page():
 	background_label = tk.Label(root, image=background_image)
 	background_label.grid(row=0, column=0)
 
+	#background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+
 	##############################################################
 
 	def __init__(self, lock):
+
+		self.lock = lock #threading lock object. Commands: lock.acquire(), lock.release()
+		self.lock.acquire()
+
 		self.game_phase = 'lobby_phase'
 		#self.game_phase = client_board_state.board_state['phase']
-		self.lock = lock #threading lock object   lock.release()     lock.acquire()
+
+
 
 		self.root.protocol('WM_DELETE_WINDOW', self.crash_gui)  # root is your root window
 		self.main_frame = tk.LabelFrame(self.root)
 		self.main_frame.grid(row=0, column=0)
 
-		self.top_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=5, pady=10, padx=5)#, text="Top Frame")
-		self.top_frame.grid(row=0, column=0)
+		self.top_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10, pady=10, padx=5, text="Top Frame")
+		self.top_frame.grid(row=0, column=0, sticky='EW')
 		
-		self.player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+		self.player_lobby_widget = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+		#self.player_lobby_widget.grid(row=0, column=0, sticky='EW')
 		self.server_message_frame = self.generate_server_message_frame()
 
 
-		lock.acquire()
-		#if client_board_state.board_state['phase'] == 'lobby_phase':
+
 		self.rules_frame = self.generate_rules_config()
-		lock.release()
+		self.lock.release()
 
 
 	##############################################################
 	#functions
 
 
-	def generate_player_list(self, top_frame, list_of_players):
+	#creates a widget housing a 'player' widget for each player in the lobby
+	def generate_player_lobby_widget(self, top_frame, list_of_players):
 
-		config_base_frame = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10)#, text="Player Frame")
-		config_base_frame.grid(row=1, column=0)
+		config_base_frame = tk.LabelFrame(self.top_frame, bg=self.NEUTRAL_BLUE, bd=10, text="Player Frame")
+		config_base_frame.grid(row=0, column=0, sticky='EW')
 
 		count = 0
 		player_frames = {}
 
-
+		#create individual widgets for each player and append to the base widget
 		for player in list_of_players:
-			player_frames[player] = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, pady=10)#text="player_frame",)
-			player_frames[player].grid(row=0, column=count)
+			player_frames[player] = tk.LabelFrame(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, pady=10)#text="player_frame",)
+			player_frames[player].grid(row=0, column=count, sticky='EW')
 
 			player = tk.Label(player_frames[player], font=40, text=player)
-			player.grid(row=0, column=0)
+			player.grid(row=0, column=0, sticky='EW')
 
 			count += 1
-
 
 		return config_base_frame
 
 
+
+
+
+	def generate_rules_config(self):
+
+		config_base_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10, text="Rules Frame")
+		config_base_frame.grid(row=1, column=0)
+
+		characters_widget = tk.Label(config_base_frame, font=40, text=main_board_helper.list_of_characters, pady=2)
+
+		count = 0
+		for character in main_board_helper.list_of_characters:
+
+			def f_factory(character = character):
+				#return character, character is now a *local* variable of f_factory and can't ever change
+
+				add_char_button = tk.Button(config_base_frame, text=character, font=40, command=lambda : main_board_helper.char_add(character, characters_widget))
+				add_char_button.grid(row=0, column=count)
+				remove_char_button = tk.Button(config_base_frame, text=character, font=40, command=lambda : main_board_helper.char_remove(character, characters_widget))
+				remove_char_button.grid(row=1, column=count)
+
+			f_factory()
+			count += 1
+		
+		characters_widget.grid(row=2, columnspan=count)
+		start_game_button = tk.Button(config_base_frame, text='Start!', font=40, command=lambda: main_board_helper.start_game(config_base_frame, start_game_button, main_board_helper.list_of_characters))
+		start_game_button.grid(row=3, columnspan=count, pady=5)
+
+		return config_base_frame
 
 
 
@@ -141,8 +178,8 @@ class Main_Page():
 		#print(f'client username:  {client_board_state.username}')
 		#print(f'board state in generate_game_started_player_frame method: {board_state}')
 
-		config_base_frame = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10)#, text="Player Frame")
-		config_base_frame.grid(row=1, column=0)
+		config_base_frame = tk.LabelFrame(self.top_frame, bg=self.NEUTRAL_BLUE, bd=10)#, text="Player Frame")
+		config_base_frame.grid(row=1, column=0, sticky='EW')
 
 		count = 0
 
@@ -152,7 +189,7 @@ class Main_Page():
 
 		for player in board_state['players']:
 
-			player_base_frame = tk.LabelFrame(config_base_frame, bg='#80c1ff', bd=5, pady=10)  #text="player_frame"
+			player_base_frame = tk.LabelFrame(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, pady=10)  #text="player_frame"
 			player_base_frame.grid(row=0, column=count)
 
 			player_frame = tk.Label(player_base_frame, bg='#39658f', fg='#ffffff', font=('Helvetica', '20'), text=main_board_helper.playerframetext(player, player_base_frame, username, user_info))
@@ -171,22 +208,24 @@ class Main_Page():
 			count += 1
 
 
-		config_base_frame_submit = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10)#, text="Submit Frame")
+		config_base_frame_submit = tk.LabelFrame(self.top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="Submit Frame")
 		config_base_frame_submit.grid(row=2, column=0)
 
 
 		submit_button = tk.Button(config_base_frame_submit, text='Submit!', bg='#0052cc', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.submit_team(all_player_frames))
-		submit_button.grid(row=0, column=0)
+		submit_button.grid(row=0, column=0, pady=(10,10))
 
 
-		config_base_frame_vote = tk.LabelFrame(self.top_frame, bg='#80c1ff', bd=10)#, text="config_base_frame_vote")
+		config_base_frame_vote = tk.LabelFrame(self.top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="config_base_frame_vote")
+		config_base_frame_vote.columnconfigure(0, weight=1)
+		config_base_frame_vote.columnconfigure(1, weight=1)
 		config_base_frame_vote.grid(row=3, column=0)
 
 		approve_succeed_button = tk.Button(config_base_frame_vote, text='Approve/Succeed', bg='#0052cc', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.approve_succeed_button(all_player_frames))
-		approve_succeed_button.grid(row=0, column=0, padx=(100, 10))
+		approve_succeed_button.grid(row=0, column=0, padx=(0, 20), sticky='nsew')
 
 		reject_fail_button = tk.Button(config_base_frame_vote, text='Reject/Fail', bg='#cf2121', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.reject_fail_button(all_player_frames))
-		reject_fail_button.grid(row=0, column=1, padx=(10, 100))
+		reject_fail_button.grid(row=0, column=1, padx=(20, 0), sticky='nsew')
 
 		return config_base_frame
 
@@ -198,8 +237,8 @@ class Main_Page():
 		
 		#config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10)#, text="Lower Frame")
 		
-		config_base_frame = tk.Label(self.main_frame, bg='#80c1ff', font=40, bd=10, text=message_from_server, pady=2)
-		config_base_frame.grid(row=4, column=0)
+		config_base_frame = tk.Label(self.main_frame, bg=self.NEUTRAL_BLUE, font=40, bd=10, text=message_from_server, pady=2)
+		config_base_frame.grid(row=4, column=0, sticky='nsew')
 
 		return config_base_frame
 
@@ -208,44 +247,14 @@ class Main_Page():
 
 
 
-
-
-
-	def generate_rules_config(self):
-
-		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10, text="Lower Frame")
-		config_base_frame.grid(row=1, column=0)
-
-		characters_widget = tk.Label(config_base_frame, font=40, text=main_board_helper.list_of_characters, pady=2)
-
-		count = 0
-		for character in main_board_helper.list_of_characters:
-
-			def f_factory(character = character):
-				#return character, character is now a *local* variable of f_factory and can't ever change
-
-				add_char_button = tk.Button(config_base_frame, text=character, font=40, command=lambda : main_board_helper.char_add(character, characters_widget))
-				add_char_button.grid(row=0, column=count)
-				remove_char_button = tk.Button(config_base_frame, text=character, font=40, command=lambda : main_board_helper.char_remove(character, characters_widget))
-				remove_char_button.grid(row=1, column=count)
-
-				
-			f_factory()
-			count += 1
-		
-		characters_widget.grid(row=2, columnspan=count)
-		start_game_button = tk.Button(config_base_frame, text='Start!', font=40, command=lambda: main_board_helper.start_game(config_base_frame, start_game_button, main_board_helper.list_of_characters))
-		start_game_button.grid(row=3, columnspan=count, pady=5)
-
-		return config_base_frame
 
 
 
 
 
 	def generate_voting_frame(self):
-		config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10)#, text="Voting Frame")
-		config_base_frame.grid(row=2, column=0)
+		config_base_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10)#, text="Voting Frame")
+		config_base_frame.grid(row=2, column=0) #, fill=tk.X)
 
 
 		vcount = 0
@@ -271,7 +280,7 @@ class Main_Page():
 			for i in range(25):
 
 				xcount += 1
-				votebox = tk.Label(config_base_frame, text='x', font=12)
+				votebox = tk.Label(config_base_frame, text='x', font=12, highlightthickness=1)
 				votebox.grid(row=vcount, column=xcount)
 				player_vote_dictionary[player].append(votebox)
 				
@@ -300,6 +309,21 @@ class Main_Page():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	##############################################################
 	#finished
 
@@ -309,11 +333,12 @@ class Main_Page():
 		self.lock.acquire()
 		#print(f'client username:  {client_board_state.username}')
 
+
 		#continually update player list in lobby
 		if client_board_state.board_state['phase'] == 'lobby_phase' and Main_Page.list_of_players != client_board_state.players:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players
-			self.player_frame = self.generate_player_list(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+			self.player_lobby_widget = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 
 
 
@@ -329,8 +354,8 @@ class Main_Page():
 
 			Main_Page.list_of_players = client_board_state.players
 			#Main_Page.board_state = client_board_state.board_state
-			self.player_frame.destroy()
-			self.player_frame = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
+			self.player_lobby_widget.destroy()
+			self.player_lobby_widget = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
 
 			self.voting_frame, self.player_vote_dictionary = self.generate_voting_frame()
 
@@ -349,11 +374,8 @@ class Main_Page():
 
 		if client_board_state.board_state['phase'] != self.game_phase:
 			self.game_phase = client_board_state.board_state['phase']
-
-			print('\r\nUPDATING VOTER FRAME!!!!!!!!!!!\r\n')
-
 			main_board_helper.update_voter_frame(self.voting_frame, self.player_vote_dictionary, Main_Page.GOOD_BLUE, Main_Page.EVIL_RED)
-			print('\r\nUPDATED VOTER FRAME!!!!!!!!!!!\r\n')
+
 
 
 
@@ -369,8 +391,8 @@ class Main_Page():
 
 
 
-		#	self.player_frame.destroy()
-		#	self.player_frame = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
+		#	self.player_lobby_widget.destroy()
+		#	self.player_lobby_widget = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
 
 
 
@@ -383,6 +405,14 @@ class Main_Page():
 
 
 
+
+
+
+
+
+
+
+#################################################################
 
 
 if __name__ == "__main__":

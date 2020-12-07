@@ -11,23 +11,25 @@ class Client():
     HEADER = 64
     PORT = 5050
     #SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
-    print(socket.gethostbyname(socket.gethostname()))
+
     SERVER = socket.gethostbyname(socket.gethostname())
     ADDR = (SERVER, PORT)
     FORMAT = 'utf-8'
     DISCONNECT_MESSAGE = "!DISCONNECT"
-
-    def __init__(self):
-        pass
+    CLIENT_CONNECT_TIME = 1 #0.5 #number of seconds to sleep before request full board state from the server again
 
     #this is all of the data coming in
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(ADDR)
 
 
+    def __init__(self):
+        print(f'Server IP Address: {self.SERVER}')
 
 
 
+    ###########################################################################
+    #client methods
 
     #sends a message to the server and receives a message back. WILL HANG IF IT DOES NOT RECEIVE A MESSAGE BACK FROM THE SERVER!!!
     def send(self, msg):
@@ -64,12 +66,8 @@ class Client():
 
 
     def initial_connect(self):
-        username = input('Enter your name: ')
-        
-        
+        username = client_board_state.USERNAME
         username = self.send(['!INITIAL_CONNECT', username])
-
-
         return(username)
 
 
@@ -247,7 +245,7 @@ class Client():
 
                 lock.release()
 
-            time.sleep(5)
+            time.sleep(self.CLIENT_CONNECT_TIME)
 
 
 
@@ -270,45 +268,37 @@ class Client():
 
 #################################################################################
 def main():
+
     lock = threading.Lock()
-
-
     lock.acquire()
+
     my_client = Client()
+
+    #sends !INITIAL_CONNECT to server, which takes in the username from client_board_state and adds it to the player list there
     initial_connect_to_client  = my_client.initial_connect()
-
     print(f'initial connect:  {initial_connect_to_client}, {initial_connect_to_client[1]}')
-
-
-
-
-    
-    
-    instruction = initial_connect_to_client[0]
-
-
     client_board_state.username = initial_connect_to_client[1]
     client_board_state.board_state = initial_connect_to_client[2]
-    lock.release()
+
 
     print(f'client username:  {client_board_state.username}')
     print(f'client board state:  {client_board_state.board_state}')
+
+
+    lock.release()
+
+
 
 
     # Create the shared queue and launch both threads 
     send_to_server_queue = queue.Queue() 
     received_from_server_queue = queue.Queue()
 
-
-    
-
     t1 = threading.Thread(target = my_client.from_server_queue, args =(send_to_server_queue, lock), daemon = True)
     t2 = threading.Thread(target = my_client.to_server_queue, args =(received_from_server_queue, lock), daemon = True)
 
-
     t1.start()
     t2.start()
-
 
     return my_client, send_to_server_queue, lock
 

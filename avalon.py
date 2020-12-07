@@ -1,8 +1,8 @@
 import logging
 import threading
 import time
-import client_board_state
 
+import client_board_state
 import client
 import main_board_class as board
 

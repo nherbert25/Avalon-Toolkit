@@ -1,4 +1,9 @@
 
+USERNAME = 'Nate'
+#USERNAME = input('Enter your name: ')
+
+
+
 #username of the player connected to this client instance
 username = ''
 
@@ -15,7 +20,7 @@ players = []
 client_queue = []
 
 #pre-queue list of instructions to be sent to the queue
-message_from_server = 'testing!!'
+message_from_server = 'Waiting on game to start. Select roles for the game and press "Start!".'#\r\nIf there are more roles than players, roles will be selected randomly from the list.'
 
 
 #original board state

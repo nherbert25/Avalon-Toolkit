@@ -90,18 +90,3 @@ class Oberon(Character):
         self.name = 'oberon'
         self.known = []
         self.noted = []
-
-
-
-
-
-
-
-
-
-
-
-
-
-merlin = Merlin()
-print(merlin.known)

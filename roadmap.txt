@@ -20,19 +20,48 @@ percival logic - DONE
 selecting people buttons - DONE
 send team button - DONE
 
-voting function
-if not enough votes, next turn function
+voting function - DONE
+if not enough votes, next turn function - DONE
 
 
-server waiting on several people but also able to send and receive. (server threading?)
-updating the vote frame to match the vote data
+server waiting on several people but also able to send and receive. (server threading?) - DONE
+updating the vote frame to match the vote data - DONE
 
 
 
-mission function
-updating the mission frame to match the vote data
+mission function - DONE
+updating the mission frame to match the vote data - DONE
+
+
+
+-------------------------------------
+
 
 assassination phase
+
+
+teams points widget
+make users go around teams widget
+
+
+show selected team somehow to other players
+show team failed with multiple votes
+
+multiple fails for round 4!!!/custom rounds
+
+input name widget
+
+on team/created team indicator on voter frame
+
+conditional logic so 5th team automatically goes
+
+
+
+
+
+
+
+
 
 
 
