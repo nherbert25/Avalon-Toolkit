@@ -10,7 +10,15 @@ import characters
 import client_board_state
 
 
-list_of_characters = {'Merlin': 0, 'Percival': 0, 'Resistance': 0, 'Morgana': 0, 'Assassin': 0, 'Mordred': 0, 'Oberon': 0, 'Spy': 0}
+
+def create_list_of_characters(character_dic):
+	list_of_characters = {}
+	for character in character_dic:
+		list_of_characters[character] = 0
+	return list_of_characters
+
+##list_of_characters = {'Merlin': 0, 'Percival': 0, 'Resistance': 0, 'Morgana': 0, 'Assassin': 0, 'Mordred': 0, 'Oberon': 0, 'Spy': 0}
+list_of_characters = create_list_of_characters(characters.character_dictionary)
 
 
 def char_add(character, characters_widget, list_of_characters=list_of_characters):
@@ -211,17 +219,17 @@ def playerframetext(player, player_frames, username, user_info):
 		bg = '#cf2121'
 		player_frames.configure(bg = bg)
 
-
-
 	#if player_role in characters.character_dictionary[player.role.lower()]
-
-
 
 	#print(player['name'])
 	#print('username: '+username)
 	if user_info['role'] == 'Percival' and player_role in user_role[2]:
 		display_text += '\r\n'
 		display_text += 'Merlin?'
+
+	if user_info['role'] == 'Sister' and player_role in user_role[2]:
+		display_text += '\r\n'
+		display_text += 'Sister'
 
 	if player['name'] == username:
 		display_text += '\r\n'
@@ -239,16 +247,15 @@ def update_voter_frame(widget_frame, widget_dictionary, approve_color, reject_co
 
 	#round = board_state['round']
 	#turn = board_state['turn']
-	print('TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+
+	#print('TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+	# print('client board state', client_board_state.board_state)
+	# print('input boardstate', board_state)
+	# print(board_state['players'])
+
 
 	#[['approve', 'reject'], ['approve', 'reject']]
-
-	print('client board state', client_board_state.board_state)
-
-	print('input boardstate', board_state)
-
-	print(board_state['players'])
-
 	for player in board_state['players']:
 
 		name = player['name']
@@ -256,9 +263,7 @@ def update_voter_frame(widget_frame, widget_dictionary, approve_color, reject_co
 		on_team = player['on_team']
 		made_team = player['made_team']
 
-		print(name, votes, on_team, made_team)
-
-
+		#print(name, votes, on_team, made_team)
 		#'players': [{'name': 'Frankie', 'role': 'Assassin', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]},
 
 		round_number = 0

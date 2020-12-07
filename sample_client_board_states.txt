@@ -1,0 +1,68 @@
+"""Large Game
+
+[Client Send Function] Server return message: ['!BOARDSTATE', [{'phase': 'picking_phase', 'player_order': ['oof', 'beep boop', 'baybe', 'hmmmm?', 'ffffffffff', 'Frankie', 'Jeff', 'Nate', 'cat'], 'players': [{'name': 'cat', 'role': 'Morgana', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, {'name': 'oof', 'role': 'Resistance', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, {'name': 'beep boop', 'role': 'Assassin', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, {'name': 'baybe', 'role': 'Morgana', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, {'name': 'hmmmm?', 'role': 'Morgana', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, {'name': 'ffffffffff', 'role': 'Percival', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, {'name': 'Frankie', 'role': 'Assassin', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, {'name': 'Jeff', 'role': 'Spy', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, {'name': 'Nate', 'role': 'Resistance', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}], 'player_picking_team': 'oof', 'mission': [], 'team_size': [3, 4, 4, 5, 5], 'round': 1, 'turn': 1, 'team_selected': []}, ['oof', 'beep boop', 'baybe', 'hmmmm?', 'ffffffffff', 'Frankie', 'Jeff', 'Nate', 'cat'], 'Waiting on oof to pick a team.']]
+
+"""
+
+
+
+
+"""
+[Received the following instructions from ('192.168.1.47', 56931)]: ['!VOTE', 'Nate', 'approve']
+calculating!
+Calculated votes! Team approved.
+[Sending back to client: ('192.168.1.47', 56931)]: 
+
+
+['!ENDVOTINGPHASE', [{'phase': 'mission_phase',
+
+ 'player_order': ['Jeff', 'Nate', 'Frankie'], 
+
+'players': [{'name': 'Frankie', 'role': 'Assassin', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]},
+
+ {'name': 'Jeff', 'role': 'Morgana', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]},
+ 
+  {'name': 'Nate', 'role': 'Resistance', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]}],
+  
+  
+   'player_picking_team': 'Frankie', 
+   
+   'mission': [], 
+   'team_size': [2, 3, 2, 3, 3], 
+   'round': 1,
+    'turn': 1,
+     'team_selected': ['Jeff', 'Nate'],
+      'waiting_on_votes': [], 
+      'votes_cast': [],
+       'mission_votes_cast': []},
+       
+        'Calculated votes! Team approved.']]
+
+"""
+
+
+"""
+[Received the following instructions from ('192.168.1.47', 55099)]: ['!BOARDSTATE']
+[Sending back to client: ('192.168.1.47', 55099)]: ['!BOARDSTATE', [
+    
+
+{'player_order': ['Nate', 'Jeff', 'Frankie'], 
+
+'players': [
+{'name': 'Frankie', 'role': 'Morgana', 'votes': [['reject']], 'on_team': [[]], 'made_team': [[]]}, 
+{'name': 'Nate', 'role': 'Merlin', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]}, 
+{'name': 'Jeff', 'role': 'Mordred', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]}], 
+
+'player_picking_team': 'Frankie', 'mission': [], 
+'phase': 'voting_phase',
+ 'team_selected': ['Nate', 'Frankie'], 
+ 'team_size': [2, 3, 2, 3, 3], 
+ 'round': 1,
+  'turn': 1,
+   'waiting_on_votes': [],
+    'votes_cast': [['Nate', 'approve'], ['Frankie', 'reject'], ['Jeff', 'approve']],
+     'mission_votes_cast': []},
+      ['Nate', 'Jeff', 'Frankie']]]
+
+
+"""

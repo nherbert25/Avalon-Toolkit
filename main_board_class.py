@@ -91,9 +91,13 @@ class Main_Page():
 
 		self.top_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10, pady=10, padx=5, text="Top Frame")
 		self.top_frame.grid(row=0, column=0, sticky='EW')
+		#self.top_frame.grid_rowconfigure(0, weight=1)
+		#https://stackoverflow.com/questions/45847313/what-does-weight-do-in-tkinter
+		self.top_frame.grid_columnconfigure(0, weight=1)
 		
-		self.player_lobby_widget = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+		self.player_lobby_widget, player_frames = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 		#self.player_lobby_widget.grid(row=0, column=0, sticky='EW')
+
 		self.server_message_frame = self.generate_server_message_frame()
 
 
@@ -109,23 +113,30 @@ class Main_Page():
 	#creates a widget housing a 'player' widget for each player in the lobby
 	def generate_player_lobby_widget(self, top_frame, list_of_players):
 
-		config_base_frame = tk.LabelFrame(self.top_frame, bg=self.NEUTRAL_BLUE, bd=10, text="Player Frame")
+		config_base_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10)#, text="Player Frame")
 		config_base_frame.grid(row=0, column=0, sticky='EW')
+		#config_base_frame.grid_columnconfigure(0, weight=1)
 
-		count = 0
+		column_num = 0
+		row_num = 0
 		player_frames = {}
 
 		#create individual widgets for each player and append to the base widget
 		for player in list_of_players:
-			player_frames[player] = tk.LabelFrame(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, pady=10)#text="player_frame",)
-			player_frames[player].grid(row=0, column=count, sticky='EW')
+			config_base_frame.grid_columnconfigure(column_num, weight=1)
+			player_frames[player] = tk.LabelFrame(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, padx=10, pady=10)#, height=2, width=2)#text="player_frame",)
+			player_frames[player].grid(row=row_num, column=column_num)#, sticky='EW')
+			player_frames[player].grid_columnconfigure(column_num, weight=1)
 
-			player = tk.Label(player_frames[player], font=40, text=player)
+			player = tk.Label(player_frames[player], font=40, text=player, height=5, width=10)
 			player.grid(row=0, column=0, sticky='EW')
+			column_num += 1
 
-			count += 1
+			if column_num >= 6:
+				column_num = 0
+				row_num += 1
 
-		return config_base_frame
+		return config_base_frame, player_frames
 
 
 
@@ -133,8 +144,8 @@ class Main_Page():
 
 	def generate_rules_config(self):
 
-		config_base_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10, text="Rules Frame")
-		config_base_frame.grid(row=1, column=0)
+		config_base_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10)#, text="Rules Frame")
+		config_base_frame.grid(row=1, column=0, sticky='EW')
 
 		characters_widget = tk.Label(config_base_frame, font=40, text=main_board_helper.list_of_characters, pady=2)
 
@@ -143,7 +154,6 @@ class Main_Page():
 
 			def f_factory(character = character):
 				#return character, character is now a *local* variable of f_factory and can't ever change
-
 				add_char_button = tk.Button(config_base_frame, text=character, font=40, command=lambda : main_board_helper.char_add(character, characters_widget))
 				add_char_button.grid(row=0, column=count)
 				remove_char_button = tk.Button(config_base_frame, text=character, font=40, command=lambda : main_board_helper.char_remove(character, characters_widget))
@@ -338,7 +348,9 @@ class Main_Page():
 		if client_board_state.board_state['phase'] == 'lobby_phase' and Main_Page.list_of_players != client_board_state.players:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players
-			self.player_lobby_widget = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+			self.player_lobby_widget, player_frames = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+			#self.player_lobby_widget.grid(row=0, column=0, sticky='EW')
+			self.player_lobby_widget.grid_rowconfigure(0, weight=1)
 
 
 
