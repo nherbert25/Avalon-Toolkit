@@ -86,6 +86,10 @@ class Main_Page():
 		self.main_frame = tk.LabelFrame(self.root, bd=10, bg=self.NEUTRAL_BLUE)
 		self.main_frame.grid(row=0, column=0)
 
+		self.player_name_widget = self.generate_player_name_widget(self.main_frame)
+		self.player_name_widget.grid(row=0, column=2, sticky='EW')
+
+
 		self.top_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10, pady=10, padx=5)#, text="Top Frame")
 		self.top_frame.grid(row=0, column=0, sticky='EW')
 		#self.top_frame.grid_rowconfigure(0, weight=1)
@@ -182,7 +186,8 @@ class Main_Page():
 			if username == player['name']:
 				user_board_state_info = player
 
-
+		print(f"username: {username}")
+		print(f"user_board_state_info: {user_board_state_info}")
 		print(f"\r\nBroken here:\r\n{player_frame_widget_dictionary}\r\n\r\n\r\n")
 
 		#update all player widgets to match user information
@@ -325,7 +330,7 @@ class Main_Page():
 			for i in range(25):
 
 				xcount += 1
-				votebox = tk.Label(config_base_frame, text='x', font=12, highlightthickness=1)
+				votebox = tk.Label(config_base_frame, text="✔", fg="white", font="BOLD 12", relief="solid", bd=3, bg='white')#, borderwidth=2)#,, highlightbackground="#37d3ff", highlightthickness=4)
 				votebox.grid(row=vcount, column=xcount)
 				player_vote_dictionary[player].append(votebox)
 				
@@ -335,6 +340,28 @@ class Main_Page():
 
 		#print(player_vote_dictionary)  {'Nate': [widget_object, widget_object, widget_object], 'Frankie': [widget_object, widget_object, widget_object]}
 		return config_base_frame, player_vote_dictionary
+
+	#creates the player name widget AUTO UPDATES CLIENT USERNAME
+	def generate_player_name_widget(self, parent_widget):
+
+		def submit(): 
+			client_board_state.username = player_name_entry.get()
+			self.forget(config_base_frame)
+			#client_board_state.board_state['phase'] = 'lobby_phase'
+			self.game_phase = 'lobby_phase'
+			main_board_helper.login(client_board_state.username)
+
+		config_base_frame = tk.LabelFrame(parent_widget, bg=self.NEUTRAL_BLUE, bd=10)#, text="Voting Frame")
+
+		text_label = tk.Label(config_base_frame, text = "Please enter username:")
+		player_name_entry = tk.Entry(config_base_frame)
+		submit_button = tk.Button(config_base_frame, text="submit", command=submit)
+
+		text_label.grid(row=0, columnspan=2)
+		player_name_entry.grid(row=1, column=0)
+		submit_button.grid(row=1, column=1)
+
+		return config_base_frame
 
 
 
@@ -389,6 +416,10 @@ class Main_Page():
 
 
 		#if game starts, or you reconnect and we're not in the lobby phase, run the following..... delete the rules widget, delete the lobby player widget, update internal board state, generate game board
+		# print(client_board_state.board_state['phase'])
+		# print(self.game_phase)
+		# time.sleep(1)
+
 		if client_board_state.board_state['phase'] != 'lobby_phase' and self.game_phase == 'lobby_phase':
 			self.game_phase = client_board_state.board_state['phase']
 

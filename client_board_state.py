@@ -1,6 +1,7 @@
 
-USERNAME = 'Nate'
-USERNAME = input('Enter your name: ')
+#USERNAME = None
+#USERNAME = 'Nate'
+#USERNAME = input('Enter your name: ')
 
 
 
@@ -59,6 +60,6 @@ game_over_phase = False
 
 
 #TESTING CONFIG OPTIONS
-players = ['Nate','Frankie', 'Jeff']
-players.append(USERNAME)
+#players = ['Nate','Frankie', 'Jeff']
+#players.append(username)
 

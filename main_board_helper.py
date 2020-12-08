@@ -5,7 +5,6 @@ import requests
 import tkinter as tk
 
 
-
 import characters
 import client_board_state
 
@@ -33,10 +32,9 @@ def char_remove(character, characters_widget, list_of_characters=list_of_charact
 		characters_widget.config(text=list_of_characters)
 	return list_of_characters
 
-#def board_state():
-#	my_client.send('!PLAYERSTATE')
 
-
+def login(username):
+	client_board_state.client_queue.append(['!INITIAL_CONNECT', username])
 
 
 
@@ -57,18 +55,11 @@ def select_player(player_frame, player_name, player_role, user_board_state_info,
 		if player_name in (client_board_state.selected_players):
 			client_board_state.selected_players.remove(player_name)
 			
-			
-			
-			#XXX SET TO ORIGINAL COLOR, NOT BLUE!
-
-			#player_role = characters.character_dictionary[player['role']]
-			#print(f'TESTING player_role!!!!!!!:   {player_role}\r\n')
-
 			#set background to red if evil
 			user_role = characters.character_dictionary[user_board_state_info['role']]
 
-			print('userrole', user_role)
-			print('\r\n\r\n\r\n\r\n\r\nplaer role', player_role)
+			#print('userrole', user_role)
+			#print('\r\n\r\n\r\n\r\n\r\nplaer role', player_role)
 
 			if player_role in user_role[1]:
 				bg = '#cf2121'
@@ -263,7 +254,7 @@ def playerframetext(player, player_base_frame, username, user_info):
 		return display_text
 
 	except:
-		return "You're not in the game!"
+		return display_text
 
 
 
@@ -288,37 +279,39 @@ def update_voter_frame(widget_frame, widget_dictionary, approve_color, reject_co
 	# print(board_state['players'])
 
 
+
 	#[['approve', 'reject'], ['approve', 'reject']]
 	for player in board_state['players']:
 
 		name = player['name']
-		votes = player['votes']
-		on_team = player['on_team']
-		made_team = player['made_team']
+		votes = player['votes']  #'votes': [['reject', 'reject', 'approve'], ['approve'], ['approve']]
+		on_team = player['on_team']  #'on_team': [[True, True, True], [True], [True]]
+		made_team = player['made_team']  #'made_team': [[False, True, False], [False], [True]]
 
-		#print(name, votes, on_team, made_team)
-		#'players': [{'name': 'Frankie', 'role': 'Assassin', 'votes': [['approve']], 'on_team': [[]], 'made_team': [[]]},
+		print(f"{votes}, {on_team}, {made_team}")
 
-		round_number = 0
-		for round in player['votes']:
-			
-			vote_number = 0
-			for vote in round:
+		for round, (vote_round_list, on_team_bool_round_list, made_team_bool_round_list) in enumerate(zip(votes, on_team, made_team)):
+
+			for turn, (vote, on_team_bool, made_team_bool) in enumerate(zip(vote_round_list, on_team_bool_round_list, made_team_bool_round_list)):
+
+				print(round, turn, vote, on_team_bool, made_team_bool)
+
+			# for vote in round:
+				widget_index = round*5+turn
+				
+				#config widget border depending on made team or not
+				if made_team_bool:
+					widget_dictionary[name][widget_index].configure(bd=3)
 
 				#config widget color depending on approve/reject
-				#config widget text depending if on team or not
-				#config widget depending on made team or not
-				widget_index = round_number*5+vote_number
-
 				if vote == 'approve':
-					widget_dictionary[name][widget_index].configure(bg=approve_color)
-
+					widget_dictionary[name][widget_index].configure(bg=approve_color, fg=approve_color)
 				if vote == 'reject':
-					widget_dictionary[name][widget_index].configure(bg=reject_color)
+					widget_dictionary[name][widget_index].configure(bg=reject_color, fg=reject_color)
 
+				#config widget text depending if on team or not
+				if on_team_bool:
+					widget_dictionary[name][widget_index].configure(text="✔", fg="white", font="BOLD 12")
 
-
-				vote_number += 1
-			round_number += 1
 
 	pass

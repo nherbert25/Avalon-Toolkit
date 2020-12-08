@@ -66,16 +66,21 @@ def handle_client(conn, addr):
 
 
             elif msg[0] == '!INITIAL_CONNECT':
-                if msg[1] in server_board_state.players:
-                    #send server state to reconnect the player
-                    print('player already logged in')
 
-                    message = ['!INITIAL_CONNECT', msg[1], server_board_state.board_state]
-                    #message = msg[1]
+                client_username = msg[1]
+
+                if client_username in server_board_state.players:
+                    #send server state to reconnect the player
+                    print('Player already logged in, reconnecting.')
+                    message = ['!INITIAL_CONNECT', client_username, server_board_state.board_state]
 
                 else:
-                    server_board_state.players.append(msg[1])
-                    message = ['!INITIAL_CONNECT', msg[1], server_board_state.board_state]
+                    if client_username not in (None, ''):
+                        server_board_state.players.append(client_username)
+                        message = ['!INITIAL_CONNECT', client_username, server_board_state.board_state]
+
+                    else:
+                        message = ['!INITIAL_CONNECT', client_username, server_board_state.board_state]
 
 
 
@@ -116,14 +121,47 @@ def handle_client(conn, addr):
                 selected_team = msg[1]
                 server_board_state.board_state['team_selected'] = selected_team
 
-                #if 5th round:
-                #server_board_state.board_state['phase'] = 'mission_phase'
+                #if team is not null? 
+                for player in server_board_state.board_state['players']:
 
+                    #update player data to show who made team
+                    try:
+                        player['made_team'][server_board_state.board_state['round']-1].append(None)
+                        if player['name'] == server_board_state.board_state['player_picking_team']:
+                            player['made_team'][server_board_state.board_state['round']-1][server_board_state.board_state['turn']-1] = True
+                        else:
+                            player['made_team'][server_board_state.board_state['round']-1][server_board_state.board_state['turn']-1] = False
+                    except:
+                        print(f"\r\nSomething went wrong updating player_picking_team data point")
+                        # print(f"Made team: {server_board_state.board_state['player_picking_team']},  Player made team data points: {player['made_team']}\r\n")
+                        pass
+                    #update player data to show them on team
+                    try:
+                        #if turn is longer than array, add player to selected team
+                        #if len(player['on_team'][server_board_state.board_state['round']-1][server_board_state.board_state['turn']-1]) < server_board_state.board_state['turn']:
+                        
+                        player['on_team'][server_board_state.board_state['round']-1].append(None)
 
-                #if NOT fifth round:
+                        if player['name'] in server_board_state.board_state['team_selected']:
+                            player['on_team'][server_board_state.board_state['round']-1][server_board_state.board_state['turn']-1] = True
+                            #player['on_team'][server_board_state.board_state['round']-1].append(True)
+                        else:
+                            # player['on_team'][server_board_state.board_state['round']-1].append(False)
+                            player['on_team'][server_board_state.board_state['round']-1][server_board_state.board_state['turn']-1] = False
 
+                    except:
+                        print('\r\nThis function has already been ran? Something went wrong.')
+                        # print(f"{len(player['on_team'][server_board_state.board_state['round']-1][server_board_state.board_state['turn']-1])}")
+                        # print(f"{server_board_state.board_state['turn']}")
+                        # print(f"{player['name']}, {server_board_state.board_state['team_selected']}, player on team round array: {player['on_team'][server_board_state.board_state['round']-1]}")
+                        pass
 
-                #list of list
+                #if turn 5, force the hammer
+                # if server_board_state.board_state['turn'] == 5:
+                #     server_board_state.board_state['phase'] = 'mission_phase'
+
+                #otherwise update voting data points and set mission phase to waiting_on_votes
+                # else:
                 server_board_state.board_state['waiting_on_votes'] = server_board_state.get_list_of_player_names(server_board_state.board_state)
                 server_board_state.board_state['votes_cast'] = []
                 server_board_state.board_state['mission_votes_cast'] = []

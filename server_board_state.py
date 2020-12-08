@@ -27,8 +27,8 @@ game_over_phase = False
 
 
 team_size = {
-    1: [2, 3, 2, 3, 3],
-    2: [2, 3, 2, 3, 3],
+    1: [1, 1, 1, 1, 1],
+    2: [1, 2, 1, 2, 1],
     3: [2, 3, 2, 3, 3],
     4: [2, 3, 2, 3, 3],
     5: [2, 3, 2, 3, 3],
@@ -41,9 +41,9 @@ team_size = {
 
 
 
-players = ['Nate','Frankie', 'Jeff']
+#players = ['Nate','Frankie', 'Jeff']
 roles = []
-#players = []
+players = []
 votes = []
 mission = []
 

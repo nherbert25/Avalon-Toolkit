@@ -80,13 +80,11 @@ GAME FUNCTION CRITICAL:
 
 require multiple fails for round 4!!!/custom rounds
 
-on team/created team indicator on voter frame
-show players that were on teams (voting widget)
 show player that made team (voting widget)
-
-
 show team failed with multiple votes
 
+on team/created team indicator on voter frame - DONE
+show players that were on teams (voting widget) - DONE
 -------------------------------
 ENG GAME STEP:
 

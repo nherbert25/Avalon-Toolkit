@@ -65,8 +65,7 @@ class Client():
     #     print(message)
 
 
-    def initial_connect(self):
-        username = client_board_state.USERNAME
+    def initial_connect(self, username):
         username = self.send(['!INITIAL_CONNECT', username])
         return(username)
 
@@ -275,7 +274,7 @@ def main():
     my_client = Client()
 
     #sends !INITIAL_CONNECT to server, which takes in the username from client_board_state and adds it to the player list there
-    initial_connect_to_client  = my_client.initial_connect()
+    initial_connect_to_client  = my_client.initial_connect(client_board_state.username)
     print(f'initial connect:  {initial_connect_to_client}, {initial_connect_to_client[1]}')
     client_board_state.username = initial_connect_to_client[1]
     client_board_state.board_state = initial_connect_to_client[2]
