@@ -102,26 +102,18 @@ def submit_team(all_player_frames):
 	if client_board_state.board_state['phase'] != 'picking_phase':
 		return None
 
-
 	#if active player and # of selected players equals # of players for a team this round
 	if client_board_state.username == client_board_state.board_state['player_picking_team'] and len(client_board_state.selected_players) == client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]:
 		
 		#send a voting command to the server
-		print('submitting!')
 		client_board_state.client_queue.append(['!TEAMSELECT', client_board_state.selected_players])
 
 		#remove selected players from selected players list
 		client_board_state.selected_players = []
-		
-
-		#player_base_frame_widget = player_widget_dictionary['player_base_frame_widget']
 
 		#return original color to players
 		for dictionary in all_player_frames.values():
-			#dictionary['player_base_frame_widget']
-
 			dictionary['player_base_frame_widget'].configure(bg='#39658f')
-			#all_player_frames[player]['player_frame'].configure(bg='#39658f')
 
 
 	else:
@@ -181,12 +173,12 @@ def start_game(widget, start_button, list_of_characters):
 
 
 def game_started(widget):
-	#when receiving !GAMESTART from the server, start the game
-	#run  config_base_frame.grid_forget()
-	#run  function to create voting widget
-	#get list of players from the server/update players to sit in order
-	#reveal information to players
-	#update game board to show who's turn it is
+	"""when receiving !GAMESTART from the server, start the game
+	run  config_base_frame.grid_forget()
+	run  function to create voting widget
+	get list of players from the server/update players to sit in order
+	reveal information to players
+	update game board to show who's turn it is"""
 	widget.destroy()
 	pass
 
@@ -276,6 +268,12 @@ def playerframetext(player, player_base_frame, username, user_info):
 
 
 def update_voter_frame(widget_frame, widget_dictionary, approve_color, reject_color, board_state=None):
+
+
+	#U+2714
+	#From the list of unicodes, replace “+” with “000”. For example – “U+1F600” will become “U0001F600” and prefix the unicode with “\” and print it.
+	check_mark_unicode = r"\U0002714"
+
 
 	if board_state is None:
 		board_state = client_board_state.board_state

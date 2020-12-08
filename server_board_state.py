@@ -293,6 +293,10 @@ def message_to_client(board_state=board_state):
         waiting_on = ', '.join([str(elem) for elem in board_state['team_selected']])
         message = f"Waiting on mission results from: {waiting_on}"
 
+    if board_state['phase'] == 'assassination_phase':
+        waiting_on = ', '.join([str(elem) for elem in board_state['team_selected']])
+        message = f"WHO WE SHOOTIN', BOYS?!"
+
 #eff', 'mission': [], 'team_size': [2, 3, 2, 3, 3], 'round': 1, 'turn': 1, 'score': [], 'team_selected': ['Jeff', 'Frankie'], 'waiting_on_votes': ['Nate', 'Jeff', 'Frankie'],
 
     return message

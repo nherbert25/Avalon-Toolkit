@@ -37,37 +37,69 @@ updating the mission frame to match the vote data - DONE
 -------------------------------------
 
 
-assassination phase
-game end phase
 
 teams points widget - DONE
 make users go around teams widget - abandoned
 
 
-show selected team somehow to other players
-show team failed with multiple votes
 
-multiple fails for round 4!!!/custom rounds
+-------------------------------
+BEGIN WORK TO DO SECTION BELOW
+
+-------------------------------
+-------------------------------
+-------------------------------
+PLAYER NAME AND WIDGET CLEANUP:
 
 input name widget
+logic for if connects to an ongoing game with an invalid username (DON'T ADD THEM TO THE PLAYER LIST)
+cleaning up the "player" list vs server data structure
 
-on team/created team indicator on voter frame
+
+-------------------------------
+NON-CRITICAL FEATURES:
 
 conditional logic so 5th team automatically goes
-visualization of hammer?
+new character! resistance, revealed to evil at the end of the game (can't be shot as Merlin)
+new character! the marauder - if the first three missions are all success or all fail, the opposite team wins (can be assassinated? keeps them from revealing their role?) (Give them the ability to fail missions as good?) (you have to make it so good can't fail missions, otherwise they'll self sabatosh round 3 for the third fail... maybe it doesn't matter because evil would vote it up?.... No. Otherwise this means you NEED an evil on team 3 after two fails. Just houserule if you're good you have to vote succeed.)
+new character! normal resistance but with a unique name (claimable)
 
+-------------------------------
+VISUALIZATION:
+removing role information visualization button
 
-removing teammate visualization
-
+show selected team somehow to other players
 yellow boarder around active player (you?)
+visualization of hammer?
+reveal ALL information visulization function (for end game)
+reveal ALL evil for assassination phase?
+
+
+-------------------------------
+GAME FUNCTION CRITICAL:
+
+require multiple fails for round 4!!!/custom rounds
+
+on team/created team indicator on voter frame
+show players that were on teams (voting widget)
+show player that made team (voting widget)
+
+
+show team failed with multiple votes
+
+-------------------------------
+ENG GAME STEP:
+
+assassination phase (don't forget conditional on IF assassin is in the game, assassination phase)
+game end phase
+
+
+saving data structure at the end of the game
+adding additional statistics for the end of the game
 
 
 
-
-
-
-
-
+-------------------------------
 
 make server work between external computers!!!
 https://www.youtube.com/watch?v=KQasIwElg3w  --set server ip to the cloud service ip, set client ip to a blank string J(which will then update automatically when it's ran?....)
@@ -78,7 +110,7 @@ make sure executable works
 
 getting .png into executable?
 
-fix server crashes..../locking issues
+fix server crashes..../locking issues - DONE?....
 
 
 
@@ -92,10 +124,8 @@ Sister displays twice if the user is a sister - sisters are "known" to sisters s
 Board score is not updating after a mission. But if you close and open the app it does. - FIXED
 
 
-[Received the following instructions from ('192.168.1.47', 50210)]: ['!MISSION', 'Nate', 'fail']
-
+[Received the following instructions from ('192.168.1.47', 50210)]: ['!MISSION', 'Nate', 'fail'] - FIXED
 'mission_votes_cast': 'mission_votes_cast': [['Nate', 'approve'], ['Jeff', 'approve'], ['Frankie', 'reject']]},
-
 calculating!
 calculated votes!
 Mission 1 passed!
