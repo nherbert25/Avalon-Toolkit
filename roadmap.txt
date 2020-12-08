@@ -38,10 +38,10 @@ updating the mission frame to match the vote data - DONE
 
 
 assassination phase
+game end phase
 
-
-teams points widget
-make users go around teams widget
+teams points widget - DONE
+make users go around teams widget - abandoned
 
 
 show selected team somehow to other players
@@ -54,8 +54,12 @@ input name widget
 on team/created team indicator on voter frame
 
 conditional logic so 5th team automatically goes
+visualization of hammer?
 
 
+removing teammate visualization
+
+yellow boarder around active player (you?)
 
 
 
@@ -72,9 +76,27 @@ https://www.youtube.com/watch?v=5OL7fu2R4M8   --might be better, free google clo
 make sure executable works
     pyinstaller --onefile pythonScriptName.py  (requires the .png file as well in the same directory for some reason)
 
+getting .png into executable?
+
 fix server crashes..../locking issues
 
 
 
 -------------------------------------
 
+Known bugs:
+
+Sister displays twice if the user is a sister - sisters are "known" to sisters so they display. Need to add check that says "if this player is me, don't show known roles"
+
+
+Board score is not updating after a mission. But if you close and open the app it does. - FIXED
+
+
+[Received the following instructions from ('192.168.1.47', 50210)]: ['!MISSION', 'Nate', 'fail']
+
+'mission_votes_cast': 'mission_votes_cast': [['Nate', 'approve'], ['Jeff', 'approve'], ['Frankie', 'reject']]},
+
+calculating!
+calculated votes!
+Mission 1 passed!
+Users are submitting "fail" for !MISSION but application is showing "'mission_votes_cast': [['Frankie', 'approve'], ['Nate', 'approve']]}, 'Mission 1 passed!']]"

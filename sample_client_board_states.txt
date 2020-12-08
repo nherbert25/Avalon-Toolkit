@@ -5,6 +5,20 @@
 """
 
 
+[ask_server_for_board_state] Asking server for board state...
+[Client Send Function] Sending instructions: ['!BOARDSTATE']
+[Client Send Function] Server return message: ['!BOARDSTATE', 
+[{'phase': 'picking_phase', 'player_order': ['Jeff', 'cat', 'Frankie', 'Nate'], 'players': [
+    {'name': 'Frankie', 'role': 'Assassin', 'votes': [['approve'], []], 'on_team': [[], []],
+     'made_team': [[], []]}, {'name': 'Nate', 'role': 'Morgana', 'votes': [['approve'], []], 
+     'on_team': [[], []], 'made_team': [[], []]}, {'name': 'Jeff', 'role': 'Resistance', 'votes': 
+     [['approve'], []], 'on_team': [[], []], 'made_team': [[], []]}, {'name': 'cat', 'role': 'Mordred', 
+     'votes': [['approve'], []], 'on_team': [[], []], 'made_team': [[], []]}],
+      'player_picking_team': 'Jeff', 'mission': ['success'], 
+      'team_size': [2, 3, 2, 3, 3], 
+      'round': 2, 'turn': 1, 'team_selected': [], 'waiting_on_votes': [], 'votes_cast': [], 
+      'mission_votes_cast': [['Jeff', 'approve'], ['Nate', 'approve']]},
+       ['Jeff', 'cat', 'Frankie', 'Nate'], 'Waiting on Jeff to pick a team.']]
 
 
 """

@@ -1,19 +1,19 @@
-# {
-# 'player_order': ['Frankie', 'cat', 'Jeff', 'Nate'], 
+
+# [{'phase': 'picking_phase', 
+# 'player_order': ['Jeff', 'cat', 'Frankie', 'Nate'], 
+# 
 # 'players': [
-#     {'name': 'Frankie', 'role': 'Assassin', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, 
-#     {'name': 'cat', 'role': 'Percival', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, 
-#     {'name': 'Jeff', 'role': 'Resistance', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, 
-#     {'name': 'Nate', 'role': 'Merlin', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}
-#     ], 
-# 'player_picking_team': 'Frankie', 
-# 'mission': [], 
-# 'phase': 'picking_phase',
-# 'team_size': [2, 3, 2, 3, 3],
-# 'round': 1,
-# 'turn': 1,
-# 'team_selected': ['Nate', 'Jeff']
-# }
+#  {'name': 'Frankie', 'role': 'Assassin', 'votes': [['approve'], []], 'on_team': [[], []],'made_team': [[], []]},
+#  {'name': 'Nate', 'role': 'Morgana', 'votes': [['approve'], []], 'on_team': [[], []], 'made_team': [[], []]}, 
+# {'name': 'Jeff', 'role': 'Resistance', 'votes': [['approve'], []], 'on_team': [[], []], 'made_team': [[], []]}, 
+# {'name': 'cat', 'role': 'Mordred', 'votes': [['approve'], []], 'on_team': [[], []], 'made_team': [[], []]}],
+
+#    'player_picking_team': 'Jeff',
+#    'mission': ['success'], 
+#    'team_size': [2, 3, 2, 3, 3], 
+#    'round': 2, 'turn': 1, 'team_selected': [], 'waiting_on_votes': [], 'votes_cast': [], 
+#       'mission_votes_cast': [['Jeff', 'approve'], ['Nate', 'approve']]},
+#        ['Jeff', 'cat', 'Frankie', 'Nate'], 'Waiting on Jeff to pick a team.']]
 
 
 """
@@ -59,6 +59,7 @@ board_state = {
     'team_size': [],
     'round': 0,
     'turn': 0,
+    'score': [],
     'team_selected': []
     }
 
@@ -284,16 +285,19 @@ def message_to_client(board_state=board_state):
         message = f'Waiting on {board_state["player_picking_team"]} to pick a team.'
 
     if board_state['phase'] == 'voting_phase':
-        message = f"Waiting on votes from: {board_state['waiting_on_votes']}"
+        team_selected = ', '.join([str(elem) for elem in board_state['team_selected']])
+        waiting_on = ', '.join([str(elem) for elem in board_state['waiting_on_votes']])
+        message = f"The team selected is: {team_selected}\r\nWaiting on votes from: {waiting_on}"
 
     if board_state['phase'] == 'mission_phase':
-        message = f"Waiting on votes from: {board_state['team_selected']}"
+        waiting_on = ', '.join([str(elem) for elem in board_state['team_selected']])
+        message = f"Waiting on mission results from: {waiting_on}"
 
-
+#eff', 'mission': [], 'team_size': [2, 3, 2, 3, 3], 'round': 1, 'turn': 1, 'score': [], 'team_selected': ['Jeff', 'Frankie'], 'waiting_on_votes': ['Nate', 'Jeff', 'Frankie'],
 
     return message
 
-
+#' '.join([str(elem) for elem in s])
 
 """
 lobby_phase = True

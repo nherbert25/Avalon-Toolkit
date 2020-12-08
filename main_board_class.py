@@ -30,9 +30,10 @@ class Main_Page():
 	
 	NEUTRAL_BLUE = '#80c1ff'
 	GOOD_BLUE = '#0052cc'
-	GOOD_BLUE_TEXT_COLOR = '#ffffff'
+	GOOD_BLUE_TEXT_COLOR = '#ffffff' #white
 	EVIL_RED = '#cf2121'
-	SELECTION_YELLOW = '#39658f'
+	COOL_BLUE = '#39658f'
+	SELECT_YELLOW = '#ecf719'
 
 	root = tk.Tk()
 	root.title("Avalon")
@@ -66,12 +67,8 @@ class Main_Page():
 
 
 	background_image = tk.PhotoImage(file='landscape.png')
-
 	background_label = tk.Label(root, image=background_image)
 	background_label.grid(row=0, column=0)
-
-	#background_label.place(x=0, y=0, relwidth=1, relheight=1)
-
 
 	##############################################################
 
@@ -86,16 +83,16 @@ class Main_Page():
 
 
 		self.root.protocol('WM_DELETE_WINDOW', self.crash_gui)  # root is your root window
-		self.main_frame = tk.LabelFrame(self.root)
+		self.main_frame = tk.LabelFrame(self.root, bd=10, bg=self.NEUTRAL_BLUE)
 		self.main_frame.grid(row=0, column=0)
 
-		self.top_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10, pady=10, padx=5, text="Top Frame")
+		self.top_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10, pady=10, padx=5)#, text="Top Frame")
 		self.top_frame.grid(row=0, column=0, sticky='EW')
 		#self.top_frame.grid_rowconfigure(0, weight=1)
 		#https://stackoverflow.com/questions/45847313/what-does-weight-do-in-tkinter
 		self.top_frame.grid_columnconfigure(0, weight=1)
 		
-		self.player_lobby_widget, player_frames = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+		self.player_lobby_widget, self.player_frame_widget_dictionary = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 		#self.player_lobby_widget.grid(row=0, column=0, sticky='EW')
 
 		self.server_message_frame = self.generate_server_message_frame()
@@ -113,30 +110,37 @@ class Main_Page():
 	#creates a widget housing a 'player' widget for each player in the lobby
 	def generate_player_lobby_widget(self, top_frame, list_of_players):
 
-		config_base_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10)#, text="Player Frame")
+		config_base_frame = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=1)#, text="Player Frame")
 		config_base_frame.grid(row=0, column=0, sticky='EW')
 		#config_base_frame.grid_columnconfigure(0, weight=1)
 
 		column_num = 0
 		row_num = 0
-		player_frames = {}
+		player_frame_widget_dictionary = {}
 
 		#create individual widgets for each player and append to the base widget
-		for player in list_of_players:
+		for player_name in list_of_players:
 			config_base_frame.grid_columnconfigure(column_num, weight=1)
-			player_frames[player] = tk.LabelFrame(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, padx=10, pady=10)#, height=2, width=2)#text="player_frame",)
-			player_frames[player].grid(row=row_num, column=column_num)#, sticky='EW')
-			player_frames[player].grid_columnconfigure(column_num, weight=1)
 
-			player = tk.Label(player_frames[player], font=40, text=player, height=5, width=10)
-			player.grid(row=0, column=0, sticky='EW')
+			player_base_frame_widget = tk.LabelFrame(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, padx=10, pady=10)
+			player_base_frame_widget.grid(row=row_num, column=column_num)#, sticky='EW')
+			player_base_frame_widget.grid_columnconfigure(column_num, weight=1)
+
+			player_text_widget = tk.Label(player_base_frame_widget, font=40, text=player_name, height=5, width=10)
+			player_text_widget.grid(row=0, column=0, sticky='EW')
+
+
+			player_frame_widget_dictionary[player_name] = {'player_base_frame_widget': player_base_frame_widget, 'player_text_widget': player_text_widget}
 			column_num += 1
 
 			if column_num >= 6:
 				column_num = 0
 				row_num += 1
 
-		return config_base_frame, player_frames
+		print(f"\r\n\r\n{player_frame_widget_dictionary}\r\n\r\n\r\n")
+
+
+		return config_base_frame, player_frame_widget_dictionary
 
 
 
@@ -170,76 +174,116 @@ class Main_Page():
 
 
 
+	def update_player_lobby_widget_to_start_game(self, top_frame, player_frame_widget_dictionary, board_state, username):
+	#player_frame_widget_dictionary[player_name] = {'player_base_frame_widget': player_base_frame_widget, 'player_text_widget': player_text_widget}
 
-
-
-
-
-
-
-	def generate_game_started_player_frame(self, top_frame, board_state, username):
-
-		user_info = []
-		for player in client_board_state.board_state['players']:
-			if username == player['name']:
-				user_info = player
-
-		#print(f'\r\nshould be the logged in persons information...: {user_info}\r\n')
-		#print(f'client username:  {client_board_state.username}')
-		#print(f'board state in generate_game_started_player_frame method: {board_state}')
-
-		config_base_frame = tk.LabelFrame(self.top_frame, bg=self.NEUTRAL_BLUE, bd=10)#, text="Player Frame")
-		config_base_frame.grid(row=1, column=0, sticky='EW')
-
-		count = 0
-
-		#player_name: player frame
-		all_player_frames = {}
-
-
+		user_board_state_info = {}
 		for player in board_state['players']:
-
-			player_base_frame = tk.LabelFrame(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, pady=10)  #text="player_frame"
-			player_base_frame.grid(row=0, column=count)
-
-			player_frame = tk.Label(player_base_frame, bg='#39658f', fg='#ffffff', font=('Helvetica', '20'), text=main_board_helper.playerframetext(player, player_base_frame, username, user_info))
-			player_frame.grid(row=0, column=0)
-
-			def create_select_player_button(player_frame=player_frame, player_name=player['name']):
-
-				select_player_button = tk.Button(player_base_frame, text='Select!', bg='#0052cc', fg='#ffffff', font=('Helvetica', '8'), command=lambda: main_board_helper.select_player(player_frame, player_name))
-				select_player_button.grid(row=3, column=0, pady=5)
-
-				return select_player_button
-
-			select_player_button = create_select_player_button()
-
-			all_player_frames[player['name']] = {'name': player['name'], 'player_base_frame': player_base_frame, 'player_frame': player_frame, 'select_player_button': select_player_button}
-			count += 1
+			if username == player['name']:
+				user_board_state_info = player
 
 
-		config_base_frame_submit = tk.LabelFrame(self.top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="Submit Frame")
-		config_base_frame_submit.grid(row=2, column=0)
+		print(f"\r\nBroken here:\r\n{player_frame_widget_dictionary}\r\n\r\n\r\n")
+
+		#update all player widgets to match user information
+		for player_name, player_widget_dictionary in player_frame_widget_dictionary.items():
+			
+			player_base_frame_widget = player_widget_dictionary['player_base_frame_widget']
+			player_text_widget = player_widget_dictionary['player_text_widget']
+			
+			for player in board_state['players']:
+				if player['name'] == player_name:
+					player_board_state_info = player
+					break
+			#player_board_state_info = board_state['players'][player_name]
+
+			if player_name == username:
+				client_user = True
+			else:
+				client_user = False
+
+			#update widget base frame color to good or evil
+			#player_base_frame_widget.config(bg=main_board_helper.character_alignment_color(player_base_frame_widget, username, user_info, EVIL_RED))
+
+			#update widget text (currently this updates the base widget color as well, trying to seperate this)
 
 
-		submit_button = tk.Button(config_base_frame_submit, text='Submit!', bg='#0052cc', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.submit_team(all_player_frames))
+			player_text_widget.configure(text=main_board_helper.playerframetext(player_board_state_info, player_base_frame_widget, username, user_board_state_info))
+
+			#create select button and add to the widget frame
+			if 'select_player_button' not in player_frame_widget_dictionary[player_name].keys():
+
+				def create_select_player_button(player_frame=player_base_frame_widget, player_name=player_board_state_info['name'], player_role=player_board_state_info['role']):
+
+					select_player_button = tk.Button(player_base_frame_widget, text='Select!', bg=self.GOOD_BLUE, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '8'), command=lambda: main_board_helper.select_player(player_frame, player_name, player_role, user_board_state_info, username))
+					select_player_button.grid(row=3, column=0, pady=5)
+
+					return select_player_button
+
+				select_player_button = create_select_player_button()
+				player_frame_widget_dictionary[player_name]['select_player_button'] = select_player_button
+
+
+		#create Submit frame widget
+		config_base_frame_submit = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="Submit Frame")
+		config_base_frame_submit.grid(row=1, column=0)
+
+		submit_button = tk.Button(config_base_frame_submit, text='Submit!', bg=self.GOOD_BLUE, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.submit_team(player_frame_widget_dictionary))
 		submit_button.grid(row=0, column=0, pady=(10,10))
 
-
-		config_base_frame_vote = tk.LabelFrame(self.top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="config_base_frame_vote")
+		#create Vote Buttons frame widget
+		config_base_frame_vote = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="config_base_frame_vote")
 		config_base_frame_vote.columnconfigure(0, weight=1)
 		config_base_frame_vote.columnconfigure(1, weight=1)
-		config_base_frame_vote.grid(row=3, column=0)
+		config_base_frame_vote.grid(row=2, column=0)
 
-		approve_succeed_button = tk.Button(config_base_frame_vote, text='Approve/Succeed', bg='#0052cc', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.approve_succeed_button(all_player_frames))
+		approve_succeed_button = tk.Button(config_base_frame_vote, text='Approve/Succeed', bg=self.GOOD_BLUE, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.approve_succeed_button())
 		approve_succeed_button.grid(row=0, column=0, padx=(0, 20), sticky='nsew')
 
-		reject_fail_button = tk.Button(config_base_frame_vote, text='Reject/Fail', bg='#cf2121', fg='#ffffff', font=('Helvetica', '12'), command=lambda: main_board_helper.reject_fail_button(all_player_frames))
+		reject_fail_button = tk.Button(config_base_frame_vote, text='Reject/Fail', bg=self.EVIL_RED, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.reject_fail_button())
 		reject_fail_button.grid(row=0, column=1, padx=(20, 0), sticky='nsew')
 
-		return config_base_frame
+		return player_frame_widget_dictionary
 
 
+	def generate_team_score_widget(self, top_frame, team_size):
+		"""team_widget_list = [[team_frame_widget, team_number_text_widget], [team_frame_widget, team_number_text_widget], [team_frame_widget, team_number_text_widget]]
+		'team_size': [2, 3, 2, 3, 3]"""
+
+		team_widget_list = []
+
+		config_base_frame = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=0, pady=15, padx=5)
+
+		column_num = 0
+		for team in team_size:
+
+			# config_base_frame.grid_columnconfigure(column_num, weight=1)
+
+			team_frame_widget = tk.Label(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, padx=6, pady=3, relief="raised", text=team, font='Helvetica 18 bold')
+			team_frame_widget.grid(row=0, column=column_num)#, sticky='EW')
+			team_frame_widget.grid_columnconfigure(column_num, weight=1)
+
+			team_number_text_widget = tk.Label(team_frame_widget, text=team, font='Helvetica 18 bold', bg=self.NEUTRAL_BLUE)#, height=1, width=1)
+			#team_number_text_widget.grid(row=0, column=0)#, sticky='EW')
+
+
+			team_widget_list.append(team_frame_widget)#, team_number_text_widget])
+			column_num += 1
+
+		return config_base_frame, team_widget_list
+
+
+	def update_team_score_widget(self, team_score_widget, team_widget_list, score, GOOD_BLUE, EVIL_RED):
+		#score = board_state['mission']
+
+		try:
+			for count, widget in enumerate(team_widget_list):
+				if score[count] == "success":
+					widget.configure(bg = GOOD_BLUE)
+				elif score[count] == "fail":
+					widget.configure(bg = EVIL_RED)
+		except:
+			pass
 
 
 
@@ -251,15 +295,6 @@ class Main_Page():
 		config_base_frame.grid(row=4, column=0, sticky='nsew')
 
 		return config_base_frame
-
-
-
-
-
-
-
-
-
 
 
 	def generate_voting_frame(self):
@@ -300,9 +335,6 @@ class Main_Page():
 
 		#print(player_vote_dictionary)  {'Nate': [widget_object, widget_object, widget_object], 'Frankie': [widget_object, widget_object, widget_object]}
 		return config_base_frame, player_vote_dictionary
-
-
-
 
 
 
@@ -348,7 +380,7 @@ class Main_Page():
 		if client_board_state.board_state['phase'] == 'lobby_phase' and Main_Page.list_of_players != client_board_state.players:
 			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
 			Main_Page.list_of_players = client_board_state.players
-			self.player_lobby_widget, player_frames = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+			self.player_lobby_widget, self.player_frame_widget_dictionary = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 			#self.player_lobby_widget.grid(row=0, column=0, sticky='EW')
 			self.player_lobby_widget.grid_rowconfigure(0, weight=1)
 
@@ -360,43 +392,42 @@ class Main_Page():
 		if client_board_state.board_state['phase'] != 'lobby_phase' and self.game_phase == 'lobby_phase':
 			self.game_phase = client_board_state.board_state['phase']
 
-			#print(self.game_phase)
-			#time.sleep(1)
 			main_board_helper.game_started(self.rules_frame)
-
 			Main_Page.list_of_players = client_board_state.players
+
+
 			#Main_Page.board_state = client_board_state.board_state
-			self.player_lobby_widget.destroy()
-			self.player_lobby_widget = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
+			#self.player_lobby_widget.destroy()
+			#self.player_lobby_widget = self.generate_game_started_player_frame(top_frame=self.top_frame, board_state=client_board_state.board_state, username=client_board_state.username)
 
+
+			#update player_lobby_widget to include role information, add approve/reject and select buttons
+			self.player_lobby_widget, self.player_frame_widget_dictionary = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
+			self.player_frame_widget_dictionary = self.update_player_lobby_widget_to_start_game(top_frame=self.top_frame, player_frame_widget_dictionary=self.player_frame_widget_dictionary, board_state=client_board_state.board_state, username=client_board_state.username)
+
+			#create and update team score frame
+			self.team_score_widget, self.team_widget_list = self.generate_team_score_widget(self.top_frame, client_board_state.board_state['team_size'])
+			self.update_team_score_widget(self.team_score_widget, self.team_widget_list, client_board_state.board_state['mission'], self.GOOD_BLUE, self.EVIL_RED)
+			self.team_score_widget.grid(row=3, column=0)
+			# 	self.team_score_widget.columnconfigure(count, weight=1)
+
+
+			#create and update voter frame
 			self.voting_frame, self.player_vote_dictionary = self.generate_voting_frame()
-
-
 			main_board_helper.update_voter_frame(self.voting_frame, self.player_vote_dictionary, Main_Page.GOOD_BLUE, Main_Page.EVIL_RED)
 
 
-		#if client_board_state.board_state['phase'] != 'lobby_phase':# and Main_Page.board_state != client_board_state.board_state:
-			#print(f'widget list: {Main_Page.list_of_players}\nclient list: {client_board_state.players}')
-			#Main_Page.list_of_players = client_board_state.players
-			#Main_Page.board_state = client_board_state.board_state
 
-			#print(Main_Page.list_of_players == client_board_state.players)
-			#print(client_board_state.board_state['phase'] != 'lobby_phase' and Main_Page.board_state != client_board_state.board_state)
-
-
+		#when phase of game changes update board state
 		if client_board_state.board_state['phase'] != self.game_phase:
 			self.game_phase = client_board_state.board_state['phase']
 			main_board_helper.update_voter_frame(self.voting_frame, self.player_vote_dictionary, Main_Page.GOOD_BLUE, Main_Page.EVIL_RED)
+			self.update_team_score_widget(self.team_score_widget, self.team_widget_list, client_board_state.board_state['mission'], self.GOOD_BLUE, self.EVIL_RED)
 
 
 
 
-		#print(client_board_state.message_from_server, 'client board state')
-		#print(Main_Page.message_from_server)
-
-
-
-
+		#display message from server
 		if client_board_state.message_from_server != Main_Page.message_from_server:
 			Main_Page.message_from_server = client_board_state.message_from_server
 			self.server_message_frame.configure(text=Main_Page.message_from_server)

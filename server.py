@@ -185,7 +185,7 @@ def handle_client(conn, addr):
                 if player_voting in server_board_state.board_state['team_selected']:
 
                     server_board_state.board_state['team_selected'].remove(player_voting)
-                    server_board_state.board_state['mission_votes_cast'].append([player_voting, vote])
+                    server_board_state.board_state['mission_votes_cast'].append([player_voting, mission_vote])
 
 
                 #if not waiting on anyone, append votes to players and either go to next round or begin mission phase
