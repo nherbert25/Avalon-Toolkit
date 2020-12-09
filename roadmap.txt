@@ -38,7 +38,13 @@ seperate out the rounds slightly for voting block
 GAME FUNCTION CRITICAL:
 
 show player that made team (voting widget)
-remove command line when avalon.py is ran
+
+
+remove command line when avalon.py is ran (simply save as .pyw file.. this worked!!...... maybe compile after this?....)
+https://stackoverflow.com/questions/764631/how-to-hide-console-window-in-python
+https://www.google.com/search?q=suppress+command+line+when+running+python+exe&oq=suppress+command+line+when+running+python+exe&aqs=chrome..69i57j33i22i29i30.6591j1j4&sourceid=chrome&ie=UTF-8
+
+
 
 
 BUG: Pressing submit will set all backgrounds to "good" color instead of what character knows
@@ -85,13 +91,22 @@ https://www.youtube.com/watch?v=5OL7fu2R4M8   --might be better, free google clo
 
 make sure executable works
     pyinstaller --onefile pythonScriptName.py  (requires the .png file as well in the same directory for some reason)
+    pyinstaller --onefile avalon.py
+
+    MANUALLY PUT THE .PNG IN THE "/dist" FOLDER THAT'S CREATED
 
 getting .png into executable?
 
+
+
+GAME DOESN'T SEEM TO WORK CORRECTLY AFTER DISCONNECT WHEN LAUNCHING FROM THE .EXE!!! Will hang on !INITIAL_CONNECT and not disconnect properly.
+Server needs to disconnect from client if client doesn't respond after a period of time?....
+
+
+
+
+
 fix server crashes..../locking issues - DONE?....
-
-
-
 ---------------------------------------
 WISHLIST: 
 
