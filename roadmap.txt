@@ -22,7 +22,9 @@ new character! normal resistance but with a unique name (claimable)
 
 -------------------------------
 VISUALIZATION FEATURES:
-removing role information visualization button
+
+
+removing role information visualization button - Add a tick box which will run the "update_player_lobby_widget_to_start_game" to run with the evil color as "cool blue"
 
 show selected team somehow to other players
 yellow boarder around active player (you?)
@@ -32,8 +34,9 @@ reveal ALL evil for assassination phase?
 
 make "number of fails on a mission" permanently displayed
 
-seperate out the rounds slightly for voting block
 
+
+seperate out the rounds slightly for voting block - DONE (padx and ipadx are .grid configs not label configs)
 -------------------------------
 GAME FUNCTION CRITICAL:
 
@@ -45,14 +48,13 @@ https://stackoverflow.com/questions/764631/how-to-hide-console-window-in-python
 https://www.google.com/search?q=suppress+command+line+when+running+python+exe&oq=suppress+command+line+when+running+python+exe&aqs=chrome..69i57j33i22i29i30.6591j1j4&sourceid=chrome&ie=UTF-8
 
 
-
-
-BUG: Pressing submit will set all backgrounds to "good" color instead of what character knows
 BUG: Clicking submit and/or approve/fail buttons in rapid succession leads to incorrect team sizes on server
 
 
 
 
+
+BUG: Pressing submit will set all backgrounds to "good" color instead of what character knows - FIXED
 require multiple fails for round 4!!!/custom rounds - DONE
 show team failed with multiple votes - DONE
 on team/created team indicator on voter frame - DONE
@@ -73,15 +75,47 @@ adding additional statistics for the end of the game
 -------------------------------------
 Known bugs:
 
-Sister displays twice if the user is a sister - sisters are "known" to sisters so they display. Need to add check that says "if this player is me, don't show known roles"
+Server stability
+
+---------------------------------------
+GAME DOESN'T SEEM TO WORK CORRECTLY AFTER DISCONNECT WHEN LAUNCHING FROM THE .EXE!!! Will hang on !INITIAL_CONNECT. Server appears to maintain the connection and not disconnect properly.
+Server needs to disconnect from client if client doesn't respond after a period of time?....
+Could be several things, client connection might not be closing after closing the application.. could be a bug in the initial connect functions.. could be a bug related to .exe
+Looks like it's NOT a problem with the .exe this hangs for python as well. Waiting on a return from !INITIAL_CONNECT but.. it doesn't look like the server receives it?... it doesn't display at least.
+[Client Send Function] Sending instructions: ['!INITIAL_CONNECT', '']
+
+Last instruction on the server:
+
+Exception in thread Thread-5:
+Traceback (most recent call last):
+  File "C:\Users\Nate\AppData\Local\Programs\Python\Python37-32\lib\threading.py", line 917, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Nate\AppData\Local\Programs\Python\Python37-32\lib\threading.py", line 865, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Nate\Documents\GitHub\Avalon-Toolkit\server.py", line 47, in handle_client
+    msg_length = conn.recv(HEADER).decode(FORMAT)
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+
+
+PRESSING CTRL + C ON THE TERMINAL FIXED IT!!!!!!
+Server must be hanging on multiple connects for some reason
+
+
+After closing my program it now says:
+Exception in thread Thread-8 <---! (thread 8?...)
+
+Upon investigation, this looks normal. Looks like I tried running the application multiple times and even though it was stuck on this one instruction, it somehow still picked up the other connections?
+
+I think the issue might be if you close the client while the server is sending it information it hangs?
+---------------------------------------
+Known bugs:
 
 
 
 
+Sister displays twice if the user is a sister - sisters are "known" to sisters so they display. Need to add check that says "if this player is me, don't show known roles" - FIXED
 Board score is not updating after a mission. But if you close and open the app it does. - FIXED
 Users are submitting "fail" for !MISSION but application is showing "'mission_votes_cast': [['Frankie', 'approve'], ['Nate', 'approve']]}, 'Mission 1 passed!']]" - FIXED
-
-
 -------------------------------
 EXTERNAL SERVER:
 

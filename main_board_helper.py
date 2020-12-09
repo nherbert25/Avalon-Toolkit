@@ -40,7 +40,7 @@ def login(username):
 
 def select_player(player_frame, player_name, player_role, user_board_state_info, username):
 
-	print('You are ' + player_name + ', It is currently ' + client_board_state.board_state['player_picking_team'] + 's turn')
+	print('You are ' + username + ', It is currently ' + client_board_state.board_state['player_picking_team'] + 's turn')
 	print(f'Before pressing, these players are selected: {client_board_state.selected_players}')
 
 	if client_board_state.board_state['phase'] != 'picking_phase':
@@ -50,7 +50,6 @@ def select_player(player_frame, player_name, player_role, user_board_state_info,
 	if client_board_state.username == client_board_state.board_state['player_picking_team']:
 
 		max_players = client_board_state.board_state['team_size'][0][client_board_state.board_state['round']-1]
-
 
 		if player_name in (client_board_state.selected_players):
 			client_board_state.selected_players.remove(player_name)
@@ -88,7 +87,7 @@ def select_player(player_frame, player_name, player_role, user_board_state_info,
 
 
 
-def submit_team(all_player_frames):
+def submit_team(all_player_frames, username, COOL_BLUE, EVIL_RED):
 
 	if client_board_state.board_state['phase'] != 'picking_phase':
 		return None
@@ -104,9 +103,22 @@ def submit_team(all_player_frames):
 
 		#return original color to players
 		#XXXX CURRENTLY SETTING EVERYONE TO BLUE!!!! SHOULD PUT BACK ORIGINAL COLOR
-		for dictionary in all_player_frames.values():
-			dictionary['player_base_frame_widget'].configure(bg='#39658f')
+		user_board_state_info = all_player_frames[username]['player_board_state_info']
 
+		for dictionary in all_player_frames.values():
+			#dictionary['player_base_frame_widget'].configure(bg='#39658f')
+
+			dictionary['player_base_frame_widget'].configure(bg=update_player_widget_background_color(dictionary['player_base_frame_widget'], dictionary['player_board_state_info'], username, user_board_state_info, COOL_BLUE, EVIL_RED))
+
+		return all_player_frames
+			#player_base_frame_widget.config(bg=main_board_helper.update_player_widget_background_color(player_base_frame_widget, player_board_state_info, username, user_board_state_info, self.COOL_BLUE, self.EVIL_RED))
+
+#def update_player_widget_background_color(player_base_frame, player_info, username, user_info, GOOD_BLUE, EVIL_RED):
+
+
+
+
+#ALL PLAYER INFORMATION FOR WIDGET     XXXX player_widget_dictionary['player_board_state_info']
 
 	else:
 		print('It''s either not your turn or something''s wrong!')
@@ -117,7 +129,7 @@ def submit_team(all_player_frames):
 		#print('round: ' + str(client_board_state.board_state['round']))
 		print('team size to select: ' + str(client_board_state.board_state['team_size'][0][client_board_state.board_state['round']-1]))
 
-
+	return all_player_frames
 
 def approve_succeed_button(all_player_frames=None):
 
@@ -203,10 +215,42 @@ def threaded_server_connection_i_dunno():
     # }
 
 
+def update_player_widget_background_color(player_base_frame, player_info, username, user_info, GOOD_BLUE, EVIL_RED):
+	try:
+
+		user_role = characters.character_dictionary[user_info['role']]
+		player_role = player_info['role']
+
+		#print(f'TESTING user_role!!!!!!!:   {user_role}\r\n')
+		#player_role = characters.character_dictionary[player['role']]
+		#print(f'TESTING player_role!!!!!!!:   {player_role}\r\n')
+
+
+		#set background to red if player is known evil to you or if this is you and you are evil
+		if player_role in user_role[1] or (player_info['name'] == username and user_role[0] == 'evil'):
+			bg = EVIL_RED
+			player_base_frame.configure(bg = bg)
+
+		else:
+			bg = GOOD_BLUE
+			player_base_frame.configure(bg = bg)
+
+		# #This is you. Even if your character doesn't see this character, you know YOU. (Oberon)
+		# if player_info['name'] == username and user_role[0] == 'evil':
+		# 	bg = EVIL_RED
+		# 	player_base_frame.configure(bg = bg)
+		return bg
+
+	except:
+		print("Something went wrong in update_player_widget_background_color.")
+		bg = GOOD_BLUE
+		return bg
+
+
 #function for setting the player frames to the correct color and text after game start. Takes in player objects from board state,
 #updates the background of the widget, and returns a string to be displayed
-def playerframetext(player, player_base_frame, username, user_info):
-	display_text = player['name']
+def playerframetext(player_base_frame, player_info, username, user_info):
+	display_text = player_info['name']
 
 
 	#user_role = client_board_state.board_state['players']
@@ -214,43 +258,28 @@ def playerframetext(player, player_base_frame, username, user_info):
 	# print(f'characters.character_dictionary:   {characters.character_dictionary}')
 	# print(f'user role: {characters.character_dictionary[user_info["role"]]}')
 
-
 	try:
 		user_role = characters.character_dictionary[user_info['role']]
 		#print(f'TESTING user_role!!!!!!!:   {user_role}\r\n')
 
-		player_role = player['role']
+		player_role = player_info['role']
 		#player_role = characters.character_dictionary[player['role']]
 		#print(f'TESTING player_role!!!!!!!:   {player_role}\r\n')
 
-		#set background to red if evil
-		if player_role in user_role[1]:
-			bg = '#cf2121'
-			player_base_frame.configure(bg = bg)
-
-		else:
-			bg = '#39658f'
-			player_base_frame.configure(bg = bg)
-
-		if player['name'] == username and user_role[0] == 'evil':
-			bg = '#cf2121'
-			player_base_frame.configure(bg = bg)
-
-		#if player_role in characters.character_dictionary[player.role.lower()]
-
-		#print(player['name'])
-		#print('username: '+username)
+		#Percival Text
 		if user_info['role'] == 'Percival' and player_role in user_role[2]:
 			display_text += '\r\n'
 			display_text += 'Merlin?'
 
-		if user_info['role'] == 'Sister' and player_role in user_role[2]:
+		#Sister Text (omit self from being known)
+		if user_info['role'] == 'Sister' and player_info['name'] != username and player_role in user_role[2]:
 			display_text += '\r\n'
 			display_text += 'Sister'
 
-		if player['name'] == username:
+		#Display your own role
+		if player_info['name'] == username:
 			display_text += '\r\n'
-			display_text += player['role']
+			display_text += player_info['role']
 
 		return display_text
 
@@ -264,7 +293,7 @@ def update_voter_frame(widget_frame, widget_dictionary, approve_color, reject_co
 
 	#U+2714
 	#From the list of unicodes, replace “+” with “000”. For example – “U+1F600” will become “U0001F600” and prefix the unicode with “\” and print it.
-	check_mark_unicode = r"\U0002714"
+	#check_mark_unicode = r"\U0002714"
 
 
 	if board_state is None:

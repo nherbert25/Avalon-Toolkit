@@ -141,7 +141,7 @@ class Main_Page():
 				column_num = 0
 				row_num += 1
 
-		print(f"\r\n\r\n{player_frame_widget_dictionary}\r\n\r\n\r\n")
+		#print(f"\r\n\r\n{player_frame_widget_dictionary}\r\n\r\n\r\n")
 
 
 		return config_base_frame, player_frame_widget_dictionary
@@ -199,6 +199,7 @@ class Main_Page():
 			for player in board_state['players']:
 				if player['name'] == player_name:
 					player_board_state_info = player
+					player_widget_dictionary['player_board_state_info'] = player_board_state_info
 					break
 			#player_board_state_info = board_state['players'][player_name]
 
@@ -208,10 +209,10 @@ class Main_Page():
 				client_user = False
 
 			#update widget base frame color to good or evil
-			#player_base_frame_widget.config(bg=main_board_helper.character_alignment_color(player_base_frame_widget, username, user_info, EVIL_RED))
+			player_base_frame_widget.config(bg=main_board_helper.update_player_widget_background_color(player_base_frame_widget, player_board_state_info, username, user_board_state_info, self.COOL_BLUE, self.EVIL_RED))
 
 			#update widget text (currently this updates the base widget color as well, trying to seperate this)
-			player_text_widget.configure(text=main_board_helper.playerframetext(player_board_state_info, player_base_frame_widget, username, user_board_state_info))
+			player_text_widget.configure(text=main_board_helper.playerframetext(player_base_frame_widget, player_board_state_info, username, user_board_state_info))
 
 			#create select button and add to the widget frame
 			if 'select_player_button' not in player_frame_widget_dictionary[player_name].keys():
@@ -231,7 +232,7 @@ class Main_Page():
 		config_base_frame_submit = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="Submit Frame")
 		config_base_frame_submit.grid(row=1, column=0)
 
-		submit_button = tk.Button(config_base_frame_submit, text='Submit!', bg=self.GOOD_BLUE, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.submit_team(player_frame_widget_dictionary))
+		submit_button = tk.Button(config_base_frame_submit, text='Submit!', bg=self.GOOD_BLUE, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.submit_team(player_frame_widget_dictionary, username, self.COOL_BLUE, self.EVIL_RED))
 		submit_button.grid(row=0, column=0, pady=(10,10))
 
 		#create Vote Buttons frame widget
@@ -338,6 +339,8 @@ class Main_Page():
 				if (i + 1) % 5 == 0:
 					 votebox.config(padx=2)
 				votebox.grid(row=vcount, column=xcount)
+				if (i + 1) % 5 == 0:
+					 votebox.grid(padx=(0, 3))
 				player_vote_dictionary[player].append(votebox)
 				
 
