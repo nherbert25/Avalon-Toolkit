@@ -1,49 +1,3 @@
-x number of players see the same screen, barring certain information - DONE
-
-
-x players can interact with the board and everybody sees it - DONE
-x players can interact with the board and only they see it - DONE
-
-
-stats
-saving stats?
-saving logins?
-
-has to work on tablet!! lol, never going to happen
-
-
-
----------------------------------------
-percival logic - DONE
-
-
-selecting people buttons - DONE
-send team button - DONE
-
-voting function - DONE
-if not enough votes, next turn function - DONE
-
-
-server waiting on several people but also able to send and receive. (server threading?) - DONE
-updating the vote frame to match the vote data - DONE
-
-
-
-mission function - DONE
-updating the mission frame to match the vote data - DONE
-
-
-
--------------------------------------
-
-
-
-teams points widget - DONE
-make users go around teams widget - abandoned
-
-
-
--------------------------------
 BEGIN WORK TO DO SECTION BELOW
 
 -------------------------------
@@ -51,13 +5,15 @@ BEGIN WORK TO DO SECTION BELOW
 -------------------------------
 PLAYER NAME AND WIDGET CLEANUP:
 
-input name widget
 logic for if connects to an ongoing game with an invalid username (DON'T ADD THEM TO THE PLAYER LIST)
 cleaning up the "player" list vs server data structure
 
-
+input name widget - DONE
 -------------------------------
 NON-CRITICAL FEATURES:
+
+allow board state to be set during configuration (currently it looks like this doesn't tell the client to update? client log doesn't change from main screen "select roles" to new message)
+revamping game loop logic to be more robust
 
 conditional logic so 5th team automatically goes
 new character! resistance, revealed to evil at the end of the game (can't be shot as Merlin)
@@ -65,7 +21,7 @@ new character! the marauder - if the first three missions are all success or all
 new character! normal resistance but with a unique name (claimable)
 
 -------------------------------
-VISUALIZATION:
+VISUALIZATION FEATURES:
 removing role information visualization button
 
 show selected team somehow to other players
@@ -74,17 +30,28 @@ visualization of hammer?
 reveal ALL information visulization function (for end game)
 reveal ALL evil for assassination phase?
 
+make "number of fails on a mission" permanently displayed
+
+seperate out the rounds slightly for voting block
 
 -------------------------------
 GAME FUNCTION CRITICAL:
 
-require multiple fails for round 4!!!/custom rounds
-
 show player that made team (voting widget)
-show team failed with multiple votes
+remove command line when avalon.py is ran
 
+
+BUG: Pressing submit will set all backgrounds to "good" color instead of what character knows
+BUG: Clicking submit and/or approve/fail buttons in rapid succession leads to incorrect team sizes on server
+
+
+
+
+require multiple fails for round 4!!!/custom rounds - DONE
+show team failed with multiple votes - DONE
 on team/created team indicator on voter frame - DONE
 show players that were on teams (voting widget) - DONE
+teams points widget - DONE
 -------------------------------
 ENG GAME STEP:
 
@@ -97,7 +64,20 @@ adding additional statistics for the end of the game
 
 
 
+-------------------------------------
+Known bugs:
+
+Sister displays twice if the user is a sister - sisters are "known" to sisters so they display. Need to add check that says "if this player is me, don't show known roles"
+
+
+
+
+Board score is not updating after a mission. But if you close and open the app it does. - FIXED
+Users are submitting "fail" for !MISSION but application is showing "'mission_votes_cast': [['Frankie', 'approve'], ['Nate', 'approve']]}, 'Mission 1 passed!']]" - FIXED
+
+
 -------------------------------
+EXTERNAL SERVER:
 
 make server work between external computers!!!
 https://www.youtube.com/watch?v=KQasIwElg3w  --set server ip to the cloud service ip, set client ip to a blank string J(which will then update automatically when it's ran?....)
@@ -112,19 +92,34 @@ fix server crashes..../locking issues - DONE?....
 
 
 
--------------------------------------
-
-Known bugs:
-
-Sister displays twice if the user is a sister - sisters are "known" to sisters so they display. Need to add check that says "if this player is me, don't show known roles"
+---------------------------------------
+WISHLIST: 
 
 
-Board score is not updating after a mission. But if you close and open the app it does. - FIXED
+stats
+saving stats?
+saving logins?
+
+has to work on tablet!! - abandoned
+make users go around teams widget - abandoned
 
 
-[Received the following instructions from ('192.168.1.47', 50210)]: ['!MISSION', 'Nate', 'fail'] - FIXED
-'mission_votes_cast': 'mission_votes_cast': [['Nate', 'approve'], ['Jeff', 'approve'], ['Frankie', 'reject']]},
-calculating!
-calculated votes!
-Mission 1 passed!
-Users are submitting "fail" for !MISSION but application is showing "'mission_votes_cast': [['Frankie', 'approve'], ['Nate', 'approve']]}, 'Mission 1 passed!']]"
+---------------------------------------
+OLD UNORGANIZED TODO LIST:
+
+x number of players see the same screen, barring certain information - DONE
+x players can interact with the board and everybody sees it - DONE
+x players can interact with the board and only they see it - DONE
+
+percival logic - DONE
+selecting people buttons - DONE
+send team button - DONE
+
+voting function - DONE
+if not enough votes, next turn function - DONE
+
+server waiting on several people but also able to send and receive. (server threading?) - DONE
+updating the vote frame to match the vote data - DONE
+
+mission function - DONE
+updating the mission frame to match the vote data - DONE

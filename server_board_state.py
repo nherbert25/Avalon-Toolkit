@@ -27,21 +27,25 @@ game_over_phase = False
 
 
 team_size = {
-    1: [1, 1, 1, 1, 1],
-    2: [1, 2, 1, 2, 1],
-    3: [2, 3, 2, 3, 3],
-    4: [2, 3, 2, 3, 3],
-    5: [2, 3, 2, 3, 3],
-    6: [2, 3, 4, 3, 4],
-    7: [2, 3, 3, 4, 4],
-    8: [3, 4, 4, 5, 5],
-    9: [3, 4, 4, 5, 5],
-    10: [3, 4, 4, 5, 5]
+    1: [[1, 1, 1, 1, 1], [False,False,False,False,False]],
+    2: [[1, 2, 1, 2, 1], [False,True,False,True,False]],
+    3: [[2, 3, 2, 3, 3], [False,False,False,False,False]],
+    4: [[2, 3, 2, 3, 3], [False,False,False,False,False]],
+    5: [[2, 3, 2, 3, 3], [False,False,False,False,False]],
+    6: [[2, 3, 4, 3, 4], [False,False,False,False,False]],
+    7: [[2, 3, 3, 4, 4], [False,False,False,True,False]],
+    8: [[3, 4, 4, 5, 5], [False,False,False,True,False]],
+    9: [[3, 4, 4, 5, 5], [False,False,False,True,False]],
+    10: [[3, 4, 4, 5, 5], [False,False,False,True,False]],
+    11: [[3, 4, 4, 5, 5], [False,False,False,True,False]],
+    12: [[4, 4, 5, 6, 6], [False,False,False,True,False]],
+    13: [[3, 4, 4, 5, 5], [False,False,False,True,False]],
+    14: [[3, 4, 4, 5, 5], [False,False,False,True,False]]
 }
 
 
 
-#players = ['Nate','Frankie', 'Jeff']
+
 roles = []
 players = []
 votes = []
@@ -56,6 +60,7 @@ board_state = {
     'players': [],
     'player_picking_team': '',
     'mission': [],
+    'number_of_mission_fails': [],
     'team_size': [],
     'round': 0,
     'turn': 0,
@@ -223,23 +228,31 @@ def calculate_mission_votes(board_state=board_state):
 
     round = board_state['round']
     turn = board_state['turn']
+    team_size = board_state['team_size']
+    number_of_fails_to_fail_mission = team_size[1] #boolean, 'requires 2 fails to fail mission?'
 
     number_of_fails = 0
 
     #vote = ['Nate', 'fail']
     for vote in board_state['mission_votes_cast']:
-
         if vote[1] == 'fail':
             number_of_fails += 1
 
-    if number_of_fails > 0:
+    #if two or more fails, fail mission
+    if number_of_fails >= 2:
         board_state['mission'].append('fail')
-        to_return = f'Mission {round} failed with {number_of_fails} fail(s)!'
+        to_return = f'Mission {round} failed with {number_of_fails} fails!'
+
+    #if it's not a mission that requires 2+ fails, fail mission
+    elif number_of_fails >= 1 and not number_of_fails_to_fail_mission[round-1]:
+        board_state['mission'].append('fail')
+        to_return = f'Mission {round} failed with {number_of_fails} fail!'
 
     else:
         board_state['mission'].append('success')
         to_return = f'Mission {round} passed!'
 
+    board_state['number_of_mission_fails'].append(number_of_fails)
     board_state['phase'] = 'picking_phase'
     #if 3 success or 3 failure, change game state, game over
     success_count = 0
@@ -283,6 +296,21 @@ def message_to_client(board_state=board_state):
 
     if board_state['phase'] == 'picking_phase':
         message = f'Waiting on {board_state["player_picking_team"]} to pick a team.'
+
+        #if the last team failed append number of fails to message
+        if board_state['number_of_mission_fails'] != []:
+
+            #if number of fails from last round >= 2, mission failed
+            if board_state['number_of_mission_fails'][board_state['round']-2] >= 2:
+                message += f"\r\nMission {board_state['round']-1} failed with {board_state['number_of_mission_fails'][board_state['round']-2]} fails!"
+
+            #if number of fails from last round = 1 AND team didn't require two fails, mission failed
+            elif board_state['number_of_mission_fails'][board_state['round']-2] == 1 and not board_state['team_size'][1][board_state['round']-2]:
+                message += f"\r\nMission {board_state['round']-1} failed with {board_state['number_of_mission_fails'][board_state['round']-2]} fail!"
+
+            #otherwise mission succeeded
+            else:
+                message += f"\r\nMission {board_state['round']-1} succeeded!"
 
     if board_state['phase'] == 'voting_phase':
         team_selected = ', '.join([str(elem) for elem in board_state['team_selected']])
@@ -341,56 +369,37 @@ game_over_phase = False
 
 
 
-player1 = {
-'name': 'Frankie', 
-'role': 'merlin',  #class object?
-'votes': [[1, 1, 0],[0, 1]],
-'on_team': [[1, 1, 0],[0, 1]],
-'made_team': [[1, 0, 0],[1, 0]]
-}
+# player1 = {
+# 'name': 'Frankie', 
+# 'role': 'merlin',  #class object?
+# 'votes': [[1, 1, 0],[0, 1]],
+# 'on_team': [[1, 1, 0],[0, 1]],
+# 'made_team': [[1, 0, 0],[1, 0]]
+# }
 
-player2 = {
-'name': 'Nate', 
-'role': 'assassin',  #class object?
-'votes': [[1, 1, 0],[0, 1]],
-'on_team': [[1, 1, 0],[0, 1]],
-'made_team': [[0, 1, 0],[0, 1]]
-}
+# player2 = {
+# 'name': 'Nate', 
+# 'role': 'assassin',  #class object?
+# 'votes': [[1, 1, 0],[0, 1]],
+# 'on_team': [[1, 1, 0],[0, 1]],
+# 'made_team': [[0, 1, 0],[0, 1]]
+# }
 
-player3 = {
-'name': 'Jeff', 
-'role': 'morgana',  #class object?
-'votes': [[1, 1, 0],[0, 1]],
-'on_team': [[1, 1, 0],[0, 1]],
-'made_team': [[0, 0, 1],[0, 0]]
-}
-
-
-sample_board_state = {
-'players': [player1, player2, player3],
-'player_picking_team': 'Nate',
-'mission' : [1, 0, 0],
-'phase' : 'lobby_phase'
-}
+# player3 = {
+# 'name': 'Jeff', 
+# 'role': 'morgana',  #class object?
+# 'votes': [[1, 1, 0],[0, 1]],
+# 'on_team': [[1, 1, 0],[0, 1]],
+# 'made_team': [[0, 0, 1],[0, 0]]
+# }
 
 
-
-
-
-
-
-
-# def player_state(players=players): 
-#     #print(f'[player_state function] to return:   {players}')  
-#     return (players) 
-
-
-
-
-
-
-
-
+# sample_board_state = {
+# 'players': [player1, player2, player3],
+# 'player_picking_team': 'Nate',
+# 'mission' : [1, 0, 0],
+# 'phase' : 'lobby_phase'
+# }
 
 
 '''
@@ -404,7 +413,11 @@ def gamestate(players, votes, mission):
 '''
 
 
+########################
+#TESTING GAME CONFIGS
+#players = ['Nate','Frankie', 'Jeff']
+players = ['Nate','cat']
+players = ['Nate','Jeff', 'Frankie', 'Phillip', "Robert", 'cat', 'bork', 'oof', 'small PP', '10', 'asdf', 'errrr']
 
 
-
-
+#board_state = {'phase': 'picking_phase', 'player_order': ['Nate', 'cat'], 'players': [{'name': 'cat', 'role': 'Morgana', 'votes': [['approve'], ['approve'], []], 'on_team': [[False], [True], []], 'made_team': [[False], [True], []]}, {'name': 'Nate', 'role': 'Morgana', 'votes': [['approve'], ['approve'], []], 'on_team': [[True], [True], []], 'made_team': [[True], [False], []]}], 'player_picking_team': 'Nate', 'mission': ['success', 'success'], 'number_of_mission_fails': [0, 1], 'team_size': [[1, 2, 1, 2, 1], [False, True, False, True, False]], 'round': 3, 'turn': 1, 'score': [], 'team_selected': [], 'waiting_on_votes': [], 'votes_cast': [], 'mission_votes_cast': [['cat', 'fail'], ['Nate', 'pass']]}

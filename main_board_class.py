@@ -186,9 +186,9 @@ class Main_Page():
 			if username == player['name']:
 				user_board_state_info = player
 
-		print(f"username: {username}")
-		print(f"user_board_state_info: {user_board_state_info}")
-		print(f"\r\nBroken here:\r\n{player_frame_widget_dictionary}\r\n\r\n\r\n")
+		# print(f"username: {username}")
+		# print(f"user_board_state_info: {user_board_state_info}")
+		# print(f"\r\nBroken here:\r\n{player_frame_widget_dictionary}\r\n\r\n\r\n")
 
 		#update all player widgets to match user information
 		for player_name, player_widget_dictionary in player_frame_widget_dictionary.items():
@@ -211,8 +211,6 @@ class Main_Page():
 			#player_base_frame_widget.config(bg=main_board_helper.character_alignment_color(player_base_frame_widget, username, user_info, EVIL_RED))
 
 			#update widget text (currently this updates the base widget color as well, trying to seperate this)
-
-
 			player_text_widget.configure(text=main_board_helper.playerframetext(player_board_state_info, player_base_frame_widget, username, user_board_state_info))
 
 			#create select button and add to the widget frame
@@ -253,16 +251,21 @@ class Main_Page():
 
 	def generate_team_score_widget(self, top_frame, team_size):
 		"""team_widget_list = [[team_frame_widget, team_number_text_widget], [team_frame_widget, team_number_text_widget], [team_frame_widget, team_number_text_widget]]
-		'team_size': [2, 3, 2, 3, 3]"""
+		'team_size': [[3, 4, 4, 5, 5], [False,False,False,True,False]]"""
 
 		team_widget_list = []
-
 		config_base_frame = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=0, pady=15, padx=5)
-
+		
 		column_num = 0
-		for team in team_size:
+		#team_number = team_size[0]
+		#two_fail_bool_list = team_size[1]
+
+		print(team_size)
+		for team, two_fail in zip(team_size[0], team_size[1]):
 
 			# config_base_frame.grid_columnconfigure(column_num, weight=1)
+			if two_fail:
+				team = str(team) + "*"
 
 			team_frame_widget = tk.Label(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, padx=6, pady=3, relief="raised", text=team, font='Helvetica 18 bold')
 			team_frame_widget.grid(row=0, column=column_num)#, sticky='EW')
@@ -331,6 +334,9 @@ class Main_Page():
 
 				xcount += 1
 				votebox = tk.Label(config_base_frame, text="✔", fg="white", font="BOLD 12", relief="solid", bd=3, bg='white')#, borderwidth=2)#,, highlightbackground="#37d3ff", highlightthickness=4)
+				
+				if (i + 1) % 5 == 0:
+					 votebox.config(padx=2)
 				votebox.grid(row=vcount, column=xcount)
 				player_vote_dictionary[player].append(votebox)
 				

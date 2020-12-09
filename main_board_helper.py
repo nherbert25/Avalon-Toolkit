@@ -49,7 +49,7 @@ def select_player(player_frame, player_name, player_role, user_board_state_info,
 	#if your turn, you may select players
 	if client_board_state.username == client_board_state.board_state['player_picking_team']:
 
-		max_players = client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]
+		max_players = client_board_state.board_state['team_size'][0][client_board_state.board_state['round']-1]
 
 
 		if player_name in (client_board_state.selected_players):
@@ -94,7 +94,7 @@ def submit_team(all_player_frames):
 		return None
 
 	#if active player and # of selected players equals # of players for a team this round
-	if client_board_state.username == client_board_state.board_state['player_picking_team'] and len(client_board_state.selected_players) == client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]:
+	if client_board_state.username == client_board_state.board_state['player_picking_team'] and len(client_board_state.selected_players) == client_board_state.board_state['team_size'][0][client_board_state.board_state['round']-1]:
 		
 		#send a voting command to the server
 		client_board_state.client_queue.append(['!TEAMSELECT', client_board_state.selected_players])
@@ -103,6 +103,7 @@ def submit_team(all_player_frames):
 		client_board_state.selected_players = []
 
 		#return original color to players
+		#XXXX CURRENTLY SETTING EVERYONE TO BLUE!!!! SHOULD PUT BACK ORIGINAL COLOR
 		for dictionary in all_player_frames.values():
 			dictionary['player_base_frame_widget'].configure(bg='#39658f')
 
@@ -114,7 +115,7 @@ def submit_team(all_player_frames):
 		print('# of selected players: ' + str(len(client_board_state.selected_players)))
 		#print('full team size list: ' + str(client_board_state.board_state['team_size']))
 		#print('round: ' + str(client_board_state.board_state['round']))
-		print('team size to select: ' + str(client_board_state.board_state['team_size'][client_board_state.board_state['round']-1]))
+		print('team size to select: ' + str(client_board_state.board_state['team_size'][0][client_board_state.board_state['round']-1]))
 
 
 
