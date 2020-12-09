@@ -415,8 +415,10 @@ def gamestate(players, votes, mission):
 
 ########################
 #TESTING GAME CONFIGS
+
+players = []
 #players = ['Nate','Frankie', 'Jeff']
-players = ['Nate','cat']
+#players = ['Nate','cat']
 players = ['Nate','Jeff', 'Frankie', 'Phillip', "Robert", 'cat', 'bork', 'oof', 'small PP', '10', 'asdf', 'errrr']
 
 

@@ -9,13 +9,20 @@ import client_board_state
 class Client():
 
     HEADER = 64
-    PORT = 5050
-    #SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
 
+
+    #set this to the IP address of the AWS server! Ex: 172.105.4.10
+    #SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
     SERVER = socket.gethostbyname(socket.gethostname())
+
+
+    #may have to consider port forwarding
+    PORT = 5050
+
     ADDR = (SERVER, PORT)
     FORMAT = 'utf-8'
     DISCONNECT_MESSAGE = "!DISCONNECT"
+    RECEIVE_MESSAGE_LENGTH = 3048
     CLIENT_CONNECT_TIME = 3 #0.5 #number of seconds to sleep before request full board state from the server again
 
     #this is all of the data coming in
@@ -49,7 +56,7 @@ class Client():
 
 
         #return_message = pickle.loads(self.client.recv(2048))
-        return_message = pickle.loads(self.client.recv(3048))
+        return_message = pickle.loads(self.client.recv(RECEIVE_MESSAGE_LENGTH))
         #return_message = self.client.recv(2048).decode(self.FORMAT)
 
         print(f"[Client Send Function] Server return message: {return_message}")

@@ -12,10 +12,20 @@ import server_board_state
 
 #threading lets you seperate code out so it's not stacked waiting for code to finish
 
+#number of bytes of the header message
 HEADER = 64
-PORT = 5050 #arbitrary port number
-#SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
-SERVER = socket.gethostbyname(socket.gethostname())  #pulls in the ipaddress based off your computer's local name
+PORT = 5050 #arbitrary port number, may have to consider port forwarding
+
+
+
+
+#If you leave SERVER as a blank string, when running "server.bind(ADDR)" it will bind to any available ip address.
+#For my computer, there's only one. It doesn't display anything... but it still works and is functionally identical to hard coding this to my IP ('192.168.1.47')
+SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
+#SERVER = socket.gethostbyname(socket.gethostname())  #pulls in the ipaddress based off your computer's local name
+#SERVER = ''
+
+
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -52,7 +62,7 @@ def handle_client(conn, addr):
 
 
 
-
+        #if message is not None
         if msg_length:
             msg_length = int(msg_length)
             msg = pickle.loads(conn.recv(msg_length))
@@ -262,6 +272,7 @@ def handle_client(conn, addr):
 
             if message[0] != '!BOARDSTATE':
                 print(f"[Sending back to client: {addr}]: {message}\r\n")
+
             message = pickle.dumps(message)
             conn.send(message)
 
