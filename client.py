@@ -56,7 +56,7 @@ class Client():
 
 
         #return_message = pickle.loads(self.client.recv(2048))
-        return_message = pickle.loads(self.client.recv(RECEIVE_MESSAGE_LENGTH))
+        return_message = pickle.loads(self.client.recv(self.RECEIVE_MESSAGE_LENGTH))
         #return_message = self.client.recv(2048).decode(self.FORMAT)
 
         print(f"[Client Send Function] Server return message: {return_message}")
