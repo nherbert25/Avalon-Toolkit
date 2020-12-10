@@ -15,6 +15,8 @@ class Client():
     #SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
     SERVER = socket.gethostbyname(socket.gethostname())
 
+    #SERVER = "34.122.32.4" #google ip
+    SERVER = "45.33.6.23"  #random app thingy ip
 
     #may have to consider port forwarding
     PORT = 5050
@@ -23,7 +25,7 @@ class Client():
     FORMAT = 'utf-8'
     DISCONNECT_MESSAGE = "!DISCONNECT"
     RECEIVE_MESSAGE_LENGTH = 3048
-    CLIENT_CONNECT_TIME = 3 #0.5 #number of seconds to sleep before request full board state from the server again
+    CLIENT_CONNECT_TIME = 0.5 #number of seconds to sleep before request full board state from the server again
 
     #this is all of the data coming in
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -47,7 +49,7 @@ class Client():
         #determine the length of the message to be sent to the server, message must be 64 bits to be valid
         msg_length = len(message)
         send_length = str(msg_length).encode(self.FORMAT)
-        send_length += b' ' * (self.HEADER - len(send_length))
+        send_length += b' ' * (self.HEADER - len(send_length))  #b' ' means the byte representation of a space
 
         #send message length then message to the server
         #client.send is a method of the socket object, NOT this send method. See the following: client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -55,6 +57,7 @@ class Client():
         self.client.send(message)
 
 
+        #XXX SET THE RECEIVED MESSAGE LENGTH TO BE A VARIABLE SENT BY THE HEADER OF THE SERVER!
         #return_message = pickle.loads(self.client.recv(2048))
         return_message = pickle.loads(self.client.recv(self.RECEIVE_MESSAGE_LENGTH))
         #return_message = self.client.recv(2048).decode(self.FORMAT)

@@ -181,3 +181,19 @@ Useful resources:
 tkinter is just a pythonic wrapper around an embedded tcl interpreter which includes the tk library. The canonical docs for tk mention this feature. 
 Here's the reference: tcl.tk/man/tcl8.5/TkCmd/grid.htm#M16
 
+
+Linux:
+htop   displays everything running on the server
+find the program
+"f9"  to kill
+press enter
+
+
+screen python3 server.py  (screen detaches the command from the display window so that you can run your program, and it won't crash if you close the putty display)
+
+
+tmux command does the same as screen?
+
+
+
+pyinstaller --onefile avalon.pyw

@@ -419,7 +419,7 @@ def gamestate(players, votes, mission):
 players = []
 #players = ['Nate','Frankie', 'Jeff']
 #players = ['Nate','cat']
-players = ['Nate','Jeff', 'Frankie', 'Phillip', "Robert", 'cat', 'bork', 'oof', 'small PP', '10', 'asdf', 'errrr']
+#players = ['Nate','Jeff', 'Frankie', 'Phillip', "Robert", 'cat', 'bork', 'oof', 'small PP', '10', 'asdf', 'errrr']
 
 
 #board_state = {'phase': 'picking_phase', 'player_order': ['Nate', 'cat'], 'players': [{'name': 'cat', 'role': 'Morgana', 'votes': [['approve'], ['approve'], []], 'on_team': [[False], [True], []], 'made_team': [[False], [True], []]}, {'name': 'Nate', 'role': 'Morgana', 'votes': [['approve'], ['approve'], []], 'on_team': [[True], [True], []], 'made_team': [[True], [False], []]}], 'player_picking_team': 'Nate', 'mission': ['success', 'success'], 'number_of_mission_fails': [0, 1], 'team_size': [[1, 2, 1, 2, 1], [False, True, False, True, False]], 'round': 3, 'turn': 1, 'score': [], 'team_selected': [], 'waiting_on_votes': [], 'votes_cast': [], 'mission_votes_cast': [['cat', 'fail'], ['Nate', 'pass']]}

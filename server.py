@@ -21,9 +21,9 @@ PORT = 5050 #arbitrary port number, may have to consider port forwarding
 
 #If you leave SERVER as a blank string, when running "server.bind(ADDR)" it will bind to any available ip address.
 #For my computer, there's only one. It doesn't display anything... but it still works and is functionally identical to hard coding this to my IP ('192.168.1.47')
-SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
+#SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
 #SERVER = socket.gethostbyname(socket.gethostname())  #pulls in the ipaddress based off your computer's local name
-#SERVER = ''
+SERVER = ''
 
 
 ADDR = (SERVER, PORT)
