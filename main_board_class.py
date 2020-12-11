@@ -90,7 +90,7 @@ class Main_Page():
 		self.player_name_widget.grid(row=0, column=2, sticky='EW')
 
 
-		self.top_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10, pady=10, padx=5)#, text="Top Frame")
+		self.top_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=5, pady=10, padx=5)#, text="Top Frame")
 		self.top_frame.grid(row=0, column=0, sticky='EW')
 		#self.top_frame.grid_rowconfigure(0, weight=1)
 		#https://stackoverflow.com/questions/45847313/what-does-weight-do-in-tkinter
@@ -383,6 +383,9 @@ class Main_Page():
 		text_label = tk.Label(config_base_frame, text = "Please enter username:")
 		player_name_entry = tk.Entry(config_base_frame)
 		submit_button = tk.Button(config_base_frame, text="submit", command=submit)
+		player_name_entry.focus_set()
+
+		player_name_entry.bind('<Return>', submit)
 
 		text_label.grid(row=0, columnspan=2)
 		player_name_entry.grid(row=1, column=0)

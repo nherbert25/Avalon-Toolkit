@@ -12,10 +12,23 @@ input name widget - DONE
 -------------------------------
 NON-CRITICAL FEATURES:
 
+
 allow board state to be set during configuration (currently it looks like this doesn't tell the client to update? client log doesn't change from main screen "select roles" to new message) - likely due to the couple second delay hack between starting the client connection and entering your name in the widget
 revamping game loop logic to be more robust
+Client/Server health check
+Make health/full board state check every ~10 seconds. Otherwise PUSH new information from server instead of requesting full board state every x seconds
+
+Make header message dynamic for... either client or server, can't remember. Replace .recv(4000) with message msg_length
+
+Launch server + multiple game instances from a single file for testing purposes
+
+
+
+make 'enter' submit playername. Aka bind the submit function to "enter"?
+
 
 conditional logic so 5th team automatically goes
+
 new character! resistance, revealed to evil at the end of the game (can't be shot as Merlin)
 new character! the marauder - if the first three missions are all success or all fail, the opposite team wins (can be assassinated? keeps them from revealing their role?) (Give them the ability to fail missions as good?) (you have to make it so good can't fail missions, otherwise they'll self sabatosh round 3 for the third fail... maybe it doesn't matter because evil would vote it up?.... No. Otherwise this means you NEED an evil on team 3 after two fails. Just houserule if you're good you have to vote succeed.)
 new character! normal resistance but with a unique name (claimable)
@@ -43,7 +56,9 @@ GAME FUNCTION CRITICAL:
 
 BUG: Clicking submit and/or approve/fail buttons in rapid succession leads to incorrect team sizes on server
 
-Put server on cloud. See "EXTERNAL SERVER" section
+
+
+
 
 
 
@@ -53,6 +68,10 @@ remove command line when avalon.py is ran (simply save as .pyw file.. this worke
 https://stackoverflow.com/questions/764631/how-to-hide-console-window-in-python
 https://www.google.com/search?q=suppress+command+line+when+running+python+exe&oq=suppress+command+line+when+running+python+exe&aqs=chrome..69i57j33i22i29i30.6591j1j4&sourceid=chrome&ie=UTF-8
 
+
+
+
+Put server on cloud. See "EXTERNAL SERVER" section - DONE
 BUG: Pressing submit will set all backgrounds to "good" color instead of what character knows - FIXED
 require multiple fails for round 4!!!/custom rounds - DONE
 show team failed with multiple votes - DONE
@@ -75,8 +94,14 @@ adding additional statistics for the end of the game
 Known bugs:
 
 Server stability
+Server game state logic if buttons are clicked too fast
 
----------------------------------------
+--
+
+Occationally a client disconnecting from server will hang the server. I believe this happens if the server is currently in the middle of a message to the client, the server doesn't process the
+DISCONNECT message from the client as it's hanging on "still sending the last board state"
+
+
 GAME DOESN'T SEEM TO WORK CORRECTLY AFTER DISCONNECT WHEN LAUNCHING FROM THE .EXE!!! Will hang on !INITIAL_CONNECT. Server appears to maintain the connection and not disconnect properly.
 Server needs to disconnect from client if client doesn't respond after a period of time?....
 Could be several things, client connection might not be closing after closing the application.. could be a bug in the initial connect functions.. could be a bug related to .exe
@@ -106,6 +131,11 @@ Exception in thread Thread-8 <---! (thread 8?...)
 Upon investigation, this looks normal. Looks like I tried running the application multiple times and even though it was stuck on this one instruction, it somehow still picked up the other connections?
 
 I think the issue might be if you close the client while the server is sending it information it hangs?
+Server needs to disconnect from client if client doesn't respond after a period of time?....
+Looks like this fixes itself if you ctrl+c from the server's command line, it's hanging on something. It's NOT the .exe doing this, got the same error through avalon.py
+
+--
+
 ---------------------------------------
 Known bugs:
 
@@ -133,10 +163,6 @@ getting .png into executable?
 I think all you need is a folder with avalon.exe and the png in it. Essentially, add the .png to dist and copy/paste the dist folder anywhere, and it should work.
 
 
-
-
-GAME DOESN'T SEEM TO WORK CORRECTLY AFTER DISCONNECT WHEN LAUNCHING FROM THE .EXE!!! Will hang on !INITIAL_CONNECT and not disconnect properly.
-Server needs to disconnect from client if client doesn't respond after a period of time?....
 
 
 
@@ -175,8 +201,9 @@ updating the mission frame to match the vote data - DONE
 
 
 -----------------------------------------------------
-
 Useful resources:
+
+
 
 tkinter is just a pythonic wrapper around an embedded tcl interpreter which includes the tk library. The canonical docs for tk mention this feature. 
 Here's the reference: tcl.tk/man/tcl8.5/TkCmd/grid.htm#M16
