@@ -94,7 +94,7 @@ class Main_Page():
 		self.top_frame.grid(row=0, column=0, sticky='EW')
 		#self.top_frame.grid_rowconfigure(0, weight=1)
 		#https://stackoverflow.com/questions/45847313/what-does-weight-do-in-tkinter
-		self.top_frame.grid_columnconfigure(0, weight=1)
+		#self.top_frame.grid_columnconfigure(0, weight=1)
 		
 		self.player_lobby_widget, self.player_frame_widget_dictionary = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 		#self.player_lobby_widget.grid(row=0, column=0, sticky='EW')
@@ -124,15 +124,15 @@ class Main_Page():
 
 		#create individual widgets for each player and append to the base widget
 		for player_name in list_of_players:
-			config_base_frame.grid_columnconfigure(column_num, weight=1)
-
+			#config_base_frame.grid_columnconfigure(column_num, weight=1)
+			#GOOD_BLUE    NEUTRAL_BLUE 
 			player_base_frame_widget = tk.LabelFrame(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, padx=10, pady=10)
 			player_base_frame_widget.grid(row=row_num, column=column_num)#, sticky='EW')
-			player_base_frame_widget.grid_columnconfigure(column_num, weight=1)
+			#player_base_frame_widget.grid_columnconfigure(column_num, weight=1)
 
 			player_text_widget = tk.Label(player_base_frame_widget, font=40, text=player_name, height=5, width=10)
 			player_text_widget.grid(row=0, column=0, sticky='EW')
-
+			#ZZZ
 
 			player_frame_widget_dictionary[player_name] = {'player_base_frame_widget': player_base_frame_widget, 'player_text_widget': player_text_widget}
 			column_num += 1
@@ -142,8 +142,6 @@ class Main_Page():
 				row_num += 1
 
 		#print(f"\r\n\r\n{player_frame_widget_dictionary}\r\n\r\n\r\n")
-
-
 		return config_base_frame, player_frame_widget_dictionary
 
 
@@ -232,20 +230,39 @@ class Main_Page():
 		config_base_frame_submit = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="Submit Frame")
 		config_base_frame_submit.grid(row=1, column=0)
 
-		submit_button = tk.Button(config_base_frame_submit, text='Submit!', bg=self.GOOD_BLUE, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.submit_team(player_frame_widget_dictionary, username, self.COOL_BLUE, self.EVIL_RED))
+		submit_button = tk.Button(config_base_frame_submit, text='Submit!', bd=5, bg=self.GOOD_BLUE, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.submit_team(player_frame_widget_dictionary, username, self.COOL_BLUE, self.EVIL_RED))
 		submit_button.grid(row=0, column=0, pady=(10,10))
 
 		#create Vote Buttons frame widget
-		config_base_frame_vote = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="config_base_frame_vote")
+		config_base_frame_vote = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="config_base_frame_vote")#, sticky='NSEW')
+		config_base_frame_vote.grid(row=2, column=0, sticky='NSEW')
 		config_base_frame_vote.columnconfigure(0, weight=1)
+		#config_base_frame_vote.rowconfigure(0, weight=1)
+		#config_base_frame_vote.rowconfigure(1, weight=1)
 		config_base_frame_vote.columnconfigure(1, weight=1)
-		config_base_frame_vote.grid(row=2, column=0)
+		#config_base_frame_vote.grid_columnconfigure(0, weight=1)
+		#config_base_frame_vote.grid_columnconfigure(1, weight=1)
+		#config_base_frame_vote.grid(row=0, column=0, sticky='EW')
 
-		approve_succeed_button = tk.Button(config_base_frame_vote, text='Approve/Succeed', bg=self.GOOD_BLUE, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.approve_succeed_button())
-		approve_succeed_button.grid(row=0, column=0, padx=(0, 20), sticky='nsew')
+		#ZZZ   NEUTRAL_BLUE   GOOD_BLUE
+		approve_button_labelframe_widget = tk.LabelFrame(config_base_frame_vote, bg=self.NEUTRAL_BLUE, bd=0)#, text='omg')#, padx=10, pady=10)
+		approve_button_labelframe_widget.grid(row=0, column=0, sticky='NSEW')
+		approve_button_labelframe_widget.grid_columnconfigure(0, weight=1)
 
-		reject_fail_button = tk.Button(config_base_frame_vote, text='Reject/Fail', bg=self.EVIL_RED, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.reject_fail_button())
-		reject_fail_button.grid(row=0, column=1, padx=(20, 0), sticky='nsew')
+		reject_button_labelframe_widget = tk.LabelFrame(config_base_frame_vote, bg=self.NEUTRAL_BLUE, bd=0)#, text='bruh')#, padx=10, pady=10)
+		reject_button_labelframe_widget.grid(row=0, column=1, sticky='NSEW')
+		reject_button_labelframe_widget.grid_columnconfigure(1, weight=1)
+		#config_base_frame_vote.grid(row=0, column=0, sticky='EW')
+
+		approve_succeed_button = tk.Button(approve_button_labelframe_widget, width= 10, text='Approve\r\nSucceed', bd=5, relief="raised", bg=self.GOOD_BLUE, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.approve_succeed_button())
+		approve_succeed_button.grid(row=0, column=0)#, sticky='nsew') #padx=(0, 20), 
+		approve_succeed_button.grid_columnconfigure(0, weight=1)
+		#approve_succeed_button.grid(row=0, column=0, sticky='EW')
+		#player_text_widget.grid(row=0, column=0, sticky='EW')
+
+		reject_fail_button = tk.Button(reject_button_labelframe_widget, width= 10,text='Reject\r\nFail', bd=5, bg=self.EVIL_RED, fg=self.GOOD_BLUE_TEXT_COLOR, font=('Helvetica', '12'), command=lambda: main_board_helper.reject_fail_button())
+		reject_fail_button.grid(row=0, column=1)#, sticky='nsew')#padx=(20, 0), 
+		reject_fail_button.grid_columnconfigure(1, weight=1)
 
 		return player_frame_widget_dictionary
 
@@ -307,15 +324,15 @@ class Main_Page():
 
 
 	def generate_voting_frame(self):
-		config_base_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=10)#, text="Voting Frame")
+		config_base_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=0)#, text="Voting Frame")
 		config_base_frame.grid(row=2, column=0) #, fill=tk.X)
 
 
 		vcount = 0
 		xcount = 1
 		for i in range(1,6):
-			round_title = tk.Label(config_base_frame, text=f'Round {i}', font=12)
-			round_title.grid(row=vcount, column=xcount, columnspan=5)
+			round_title = tk.Label(config_base_frame, text=f'Round {i}', font="Helvetica 14 bold italic", bd=1, relief='raised')#, font=12)  bg=self.NEUTRAL_BLUE, 
+			round_title.grid(row=vcount, column=xcount, columnspan=5, sticky='ew')
 			xcount += 5
 
 
@@ -326,8 +343,9 @@ class Main_Page():
 
 		for player in client_board_state.board_state['player_order']:
 
-			player_name = tk.Label(config_base_frame, text=player, font=12)
-			player_name.grid(row=vcount, column=xcount)
+			#if player=='Frankie':
+			player_name = tk.Label(config_base_frame, text=player, font="Helvetica 12 bold", bd=0, bg=self.NEUTRAL_BLUE, relief='raised')
+			player_name.grid(row=vcount, column=xcount, sticky='ew')
 
 			player_vote_dictionary[player] = []
 
