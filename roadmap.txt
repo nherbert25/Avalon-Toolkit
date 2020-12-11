@@ -224,3 +224,11 @@ tmux command does the same as screen?
 
 
 pyinstaller --onefile avalon.pyw
+
+
+-----------------
+git branch   shows all branches
+git branch "nameofbranch" creates a new branch
+git checkout "name" moves to different branch
+git merge "name"  DO THIS FROM MASTER BRANCH to merge back into MASTER
+git log --oneline
