@@ -14,9 +14,8 @@ class Client():
     #set this to the IP address of the AWS server! Ex: 172.105.4.10
     #SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
     SERVER = socket.gethostbyname(socket.gethostname())
-
     #SERVER = "34.122.32.4" #google ip
-    SERVER = "45.33.6.23"  #random app thingy ip
+    #SERVER = "45.33.6.23"  #Linode manager ip address. This is an external ip. USE THIS ADDRESS TO CONNECT TO ONLINE SERVER!
 
     #may have to consider port forwarding
     PORT = 5050
