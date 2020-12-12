@@ -77,7 +77,13 @@ def handle_client(conn, addr):
                 if msg == DISCONNECT_MESSAGE:
                     connected = False
                     print(f"Received disconnect request from {addr}.")
+                    zzzz
                     message = "!NONE"
+
+                    print(f"Client {addr} sent disconnect message. Closing thread, unlocking if thread is locked.")
+                    print(f"Is a lock on? {lock.locked()}")
+                    if lock.locked():
+                        lock.release()
 
 
                 elif msg[0] == '!INITIAL_CONNECT':
@@ -282,13 +288,14 @@ def handle_client(conn, addr):
                 #conn.send("!NONE".encode(FORMAT))
 
 
-
+        #lock.locked() shows the visual studio error: "Instance of 'lock' has no 'locked' member" but it's a bug. This method works.
         except (socket.timeout):
             connected = False
             print(f"Connection to {addr} timed out!")
-            print(f"Is a lock on? {lock.locked()}. We are releasing the lock immediately after this line, if there is an error around here, this might be the issue.")
+            print(f"Is a lock on? {lock.locked()}. We are releasing the lock immediately after this line if one exists, if there is an error around here, this might be the issue.")
             #Still to be determined if this error keeps the lock or not! This may be a bug!
-            lock.release()
+            if lock.locked():
+                lock.release()
         except ConnectionResetError:
             connected = False
             print(f"Client unexpectedly closed, aborting send data. {addr} timed out!")
@@ -296,9 +303,9 @@ def handle_client(conn, addr):
             #lock.release()
         except:
             connected = False
-            print(f"Connection to {addr} timed out! We're not sure what the issue was!!")
+            print(f"WARNING: Connection to {addr} broke unexpectedly! We're not sure what the issue was!!")
             print(f"WARNING: We don't know what caused this disconnect error. If this thread is locking it must be released or you will hang the server. Catch and categorize this error!")
-            print(f"Testing is thread is currently locking: Is a lock on? {lock.locked()}") #This line shows "Instance of 'lock' has no 'locked' member" but it's a bug. This method works.
+            print(f"Testing if thread is currently locked: Is a lock on? {lock.locked()}")
             #lock.release()
 
 
