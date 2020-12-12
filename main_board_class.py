@@ -92,9 +92,11 @@ class Main_Page():
 
 		self.top_frame = tk.LabelFrame(self.main_frame, bg=self.NEUTRAL_BLUE, bd=5, pady=10, padx=5)#, text="Top Frame")
 		self.top_frame.grid(row=0, column=0, sticky='EW')
-		#self.top_frame.grid_rowconfigure(0, weight=1)
+		
+		#sets entire top frame widget (column 0, to expand to match voter frame, etc.)
 		#https://stackoverflow.com/questions/45847313/what-does-weight-do-in-tkinter
-		#self.top_frame.grid_columnconfigure(0, weight=1)
+		#self.top_frame.grid_rowconfigure(0, weight=1)
+		self.top_frame.grid_columnconfigure(0, weight=1)
 		
 		self.player_lobby_widget, self.player_frame_widget_dictionary = self.generate_player_lobby_widget(top_frame=self.top_frame, list_of_players=Main_Page.list_of_players)
 		#self.player_lobby_widget.grid(row=0, column=0, sticky='EW')
@@ -116,7 +118,6 @@ class Main_Page():
 
 		config_base_frame = tk.LabelFrame(top_frame, bg=self.NEUTRAL_BLUE, bd=1)#, text="Player Frame")
 		config_base_frame.grid(row=0, column=0, sticky='EW')
-		#config_base_frame.grid_columnconfigure(0, weight=1)
 
 		column_num = 0
 		row_num = 0
@@ -124,11 +125,12 @@ class Main_Page():
 
 		#create individual widgets for each player and append to the base widget
 		for player_name in list_of_players:
-			#config_base_frame.grid_columnconfigure(column_num, weight=1)
-			#GOOD_BLUE    NEUTRAL_BLUE 
+
+			#expands all columns within player frame to match entire widget and be symmetrical
+			config_base_frame.grid_columnconfigure(column_num, weight=1)
+
 			player_base_frame_widget = tk.LabelFrame(config_base_frame, bg=self.NEUTRAL_BLUE, bd=5, padx=10, pady=10)
 			player_base_frame_widget.grid(row=row_num, column=column_num)#, sticky='EW')
-			#player_base_frame_widget.grid_columnconfigure(column_num, weight=1)
 
 			player_text_widget = tk.Label(player_base_frame_widget, font=40, text=player_name, height=5, width=10)
 			player_text_widget.grid(row=0, column=0, sticky='EW')

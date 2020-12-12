@@ -331,7 +331,7 @@ def handle_client(conn, addr):
 
     print(f"Checking if this is the last active thread. If it is, we should make sure thread is unlocked.")
     print(f"[# of ACTIVE CONNECTIONS]: {threading.activeCount() - 1}")
-    if (threading.activeCount() - 1) == 2 and lock.locked():
+    if (threading.activeCount() - 1) == 1 and lock.locked():
         print("ERROR: LAST ACTIVE THREAD WAS LOCKED, CALLING EMERGENCY UNLOCK")
         lock.release()
 

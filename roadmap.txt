@@ -13,12 +13,13 @@ input name widget - DONE
 NON-CRITICAL FEATURES:
 
 
-allow board state to be set during configuration (currently it looks like this doesn't tell the client to update? client log doesn't change from main screen "select roles" to new message) - likely due to the couple second delay hack between starting the client connection and entering your name in the widget
 revamping game loop logic to be more robust
 Client/Server health check
 Make health/full board state check every ~10 seconds. Otherwise PUSH new information from server instead of requesting full board state every x seconds
-
 Make header message dynamic for... either client or server, can't remember. Replace .recv(4000) with message msg_length
+
+
+
 
 Launch server + multiple game instances from a single file for testing purposes
 
@@ -26,13 +27,15 @@ Launch server + multiple game instances from a single file for testing purposes
 
 make 'enter' submit playername. Aka bind the submit function to "enter"?
 
-
 conditional logic so 5th team automatically goes
 
 new character! resistance, revealed to evil at the end of the game (can't be shot as Merlin)
 new character! the marauder - if the first three missions are all success or all fail, the opposite team wins (can be assassinated? keeps them from revealing their role?) (Give them the ability to fail missions as good?) (you have to make it so good can't fail missions, otherwise they'll self sabatosh round 3 for the third fail... maybe it doesn't matter because evil would vote it up?.... No. Otherwise this means you NEED an evil on team 3 after two fails. Just houserule if you're good you have to vote succeed.)
 new character! normal resistance but with a unique name (claimable)
 
+
+
+allow board state to be set during configuration (currently it looks like this doesn't tell the client to update? client log doesn't change from main screen "select roles" to new message) - likely due to the couple second delay hack between starting the client connection and entering your name in the widget - DONE
 -------------------------------
 VISUALIZATION FEATURES:
 
@@ -67,9 +70,6 @@ BUG: Clicking submit and/or approve/fail buttons in rapid succession leads to in
 remove command line when avalon.py is ran (simply save as .pyw file.. this worked!!...... maybe compile after this?....) - DONE
 https://stackoverflow.com/questions/764631/how-to-hide-console-window-in-python
 https://www.google.com/search?q=suppress+command+line+when+running+python+exe&oq=suppress+command+line+when+running+python+exe&aqs=chrome..69i57j33i22i29i30.6591j1j4&sourceid=chrome&ie=UTF-8
-
-
-
 
 Put server on cloud. See "EXTERNAL SERVER" section - DONE
 BUG: Pressing submit will set all backgrounds to "good" color instead of what character knows - FIXED
