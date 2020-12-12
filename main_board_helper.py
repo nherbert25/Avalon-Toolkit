@@ -43,7 +43,7 @@ def select_player(player_frame, player_name, player_role, user_board_state_info,
 	print('You are ' + username + ', It is currently ' + client_board_state.board_state['player_picking_team'] + 's turn')
 	print(f'Before pressing, these players are selected: {client_board_state.selected_players}')
 
-	if client_board_state.board_state['phase'] != 'picking_phase':
+	if client_board_state.board_state['phase'] != 'picking_phase' or username == '':
 		return None
 
 	#if your turn, you may select players
@@ -89,7 +89,7 @@ def select_player(player_frame, player_name, player_role, user_board_state_info,
 
 def submit_team(all_player_frames, username, COOL_BLUE, EVIL_RED):
 
-	if client_board_state.board_state['phase'] != 'picking_phase':
+	if client_board_state.board_state['phase'] != 'picking_phase' or username == '':
 		return None
 
 	#if active player and # of selected players equals # of players for a team this round

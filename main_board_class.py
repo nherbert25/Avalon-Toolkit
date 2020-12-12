@@ -313,7 +313,9 @@ class Main_Page():
 
 
 
-	def generate_server_message_frame(self, message_from_server = client_board_state.message_from_server):
+	def generate_server_message_frame(self, message_from_server = None):
+		if message_from_server == None:
+			message_from_server = client_board_state.message_from_server
 		
 		#config_base_frame = tk.LabelFrame(self.main_frame, bg='#80c1ff', bd=10)#, text="Lower Frame")
 		
@@ -490,6 +492,7 @@ class Main_Page():
 
 		#display message from server
 		if client_board_state.message_from_server != Main_Page.message_from_server:
+			print(f"Updating message from {client_board_state.message_from_server} to {Main_Page.message_from_server}.")
 			Main_Page.message_from_server = client_board_state.message_from_server
 			self.server_message_frame.configure(text=Main_Page.message_from_server)
 

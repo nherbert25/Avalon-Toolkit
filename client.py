@@ -229,6 +229,7 @@ class Client():
                     try:
                         if data[2] != '':
                             client_board_state.message_from_server = data[2]
+                            print(client_board_state.message_from_server)
                     except:
                         pass
 

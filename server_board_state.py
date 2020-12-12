@@ -71,7 +71,7 @@ board_state = {
 
 
 
-
+#xxx take in the initial connect and create this if doesn't exist?
 def player_creation(name):
     player = {
     'name': name, 
@@ -94,7 +94,7 @@ def create_roles_list(roles_dic):
 
 
 
-
+#xxx remove player_creation from game start
 def create_board_state(players, board_state = board_state):
 
     board_state['player_order'] = players
@@ -290,7 +290,7 @@ def get_list_of_player_names(board_state):
 
 
 
-def message_to_client(board_state=board_state):
+def message_to_client(board_state):
 
     message = ''
 
@@ -419,9 +419,19 @@ def gamestate(players, votes, mission):
 players = []
 #players = ['Nate','Frankie', 'Jeff']
 #players = ['Nate','cat']
-players = ['Nate','Jeff', 'Frankie', 'Phillip', "Robert", 'cat', 'bork', 'oof', 'small PP', '10', 'asdf', 'errrr']
+#players = ['Nate','Jeff', 'Frankie', 'Phillip', "Robert", 'cat', 'bork', 'oof', 'small PP', '10', 'asdf', 'errrr']
 
 
-#board_state = {'phase': 'picking_phase', 'player_order': ['Nate', 'cat'], 'players': [{'name': 'cat', 'role': 'Morgana', 'votes': [['approve'], ['approve'], []], 'on_team': [[False], [True], []], 'made_team': [[False], [True], []]}, {'name': 'Nate', 'role': 'Morgana', 'votes': [['approve'], ['approve'], []], 'on_team': [[True], [True], []], 'made_team': [[True], [False], []]}], 'player_picking_team': 'Nate', 'mission': ['success', 'success'], 'number_of_mission_fails': [0, 1], 'team_size': [[1, 2, 1, 2, 1], [False, True, False, True, False]], 'round': 3, 'turn': 1, 'score': [], 'team_selected': [], 'waiting_on_votes': [], 'votes_cast': [], 'mission_votes_cast': [['cat', 'fail'], ['Nate', 'pass']]}
-board_state = {'phase': 'voting_phase', 'player_order': ['errrr', 'small PP', 'bork', 'Robert', 'Phillip', 'cat', 'Frankie', 'oof', '10', 'Nate', 'Jeff', 'asdf'], 'players': [{'name': 'asdf', 'role': 'Resistance', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'errrr', 'role': 'Assassin', 'votes': [[]], 'on_team': [[True]], 'made_team': [[True]]}, {'name': 'small PP', 'role': 'Percival', 'votes': [[]], 'on_team': [[True]], 'made_team': [[False]]}, {'name': 'bork', 'role': 'Spy', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Robert', 'role': 'Resistance', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Phillip', 'role': 'Percival', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'cat', 'role': 'Merlin', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Frankie', 'role': 'Sister', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'oof', 'role': 'Mordred', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': '10', 'role': 'Morgana', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Nate', 'role': 'Oberon', 'votes': [[]], 'on_team': [[True]], 'made_team': [[False]]}, {'name': 'Jeff', 'role': 'Sister', 'votes': [[]], 'on_team': [[True]], 'made_team': [[False]]}], 'player_picking_team': 'errrr', 'mission': [], 'number_of_mission_fails': [], 'team_size': [[4, 4, 5, 6, 6], [False, False, False, True, False]], 'round': 1, 'turn': 1, 'score': [], 'team_selected': ['errrr', 'small PP', 'Nate', 'Jeff'], 'waiting_on_votes': ['asdf', 'errrr', 'small PP', 'bork', 'Robert', 'Phillip', 'cat', 'Frankie', 'oof', '10', 'Nate', 'Jeff'], 'votes_cast': [], 'mission_votes_cast': []}
 
+
+
+
+
+#just before people start voting
+# board_state = {'phase': 'voting_phase', 'player_order': ['errrr', 'small PP', 'bork', 'Robert', 'Phillip', 'cat', 'Frankie', 'oof', '10', 'Nate', 'Jeff', 'asdf'], 'players': [{'name': 'asdf', 'role': 'Resistance', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'errrr', 'role': 'Assassin', 'votes': [[]], 'on_team': [[True]], 'made_team': [[True]]}, {'name': 'small PP', 'role': 'Percival', 'votes': [[]], 'on_team': [[True]], 'made_team': [[False]]}, {'name': 'bork', 'role': 'Spy', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Robert', 'role': 'Resistance', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Phillip', 'role': 'Percival', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'cat', 'role': 'Merlin', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Frankie', 'role': 'Sister', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'oof', 'role': 'Mordred', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': '10', 'role': 'Morgana', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Nate', 'role': 'Oberon', 'votes': [[]], 'on_team': [[True]], 'made_team': [[False]]}, {'name': 'Jeff', 'role': 'Sister', 'votes': [[]], 'on_team': [[True]], 'made_team': [[False]]}], 'player_picking_team': 'errrr', 'mission': [], 'number_of_mission_fails': [], 'team_size': [[4, 4, 5, 6, 6], [False, False, False, True, False]], 'round': 1, 'turn': 1, 'score': [], 'team_selected': ['errrr', 'small PP', 'Nate', 'Jeff'], 'waiting_on_votes': ['asdf', 'errrr', 'small PP', 'bork', 'Robert', 'Phillip', 'cat', 'Frankie', 'oof', '10', 'Nate', 'Jeff'], 'votes_cast': [], 'mission_votes_cast': []}
+# players = ['errrr', 'small PP', 'bork', 'Robert', 'Phillip', 'cat', 'Frankie', 'oof', '10', 'Nate', 'Jeff', 'asdf']
+
+#voting phase (people already started voting, doubt state is broken)
+# board_state =  {'phase': 'voting_phase', 'player_order': ['errrr', 'small PP', 'bork', 'Robert', 'Phillip', 'cat', 'Frankie', 'oof', '10', 'Nate', 'Jeff', 'asdf'], 'players': [{'name': 'asdf', 'role': 'Resistance', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'errrr', 'role': 'Assassin', 'votes': [[]], 'on_team': [[True]], 'made_team': [[True]]}, {'name': 'small PP', 'role': 'Percival', 'votes': [[]], 'on_team': [[True]], 'made_team': [[False]]}, {'name': 'bork', 'role': 'Spy', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Robert', 'role': 'Resistance', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Phillip', 'role': 'Percival', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'cat', 'role': 'Merlin', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Frankie', 'role': 'Sister', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'oof', 'role': 'Mordred', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': '10', 'role': 'Morgana', 'votes': [[]], 'on_team': [[False]], 'made_team': [[False]]}, {'name': 'Nate', 'role': 'Oberon', 'votes': [[]], 'on_team': [[True]], 'made_team': [[False]]}, {'name': 'Jeff', 'role': 'Sister', 'votes': [[]], 'on_team': [[True]], 'made_team': [[False]]}], 'player_picking_team': 'errrr', 'mission': [], 'number_of_mission_fails': [], 'team_size': [[4, 4, 5, 6, 6], [False, False, False, True, False]], 'round': 1, 'turn': 1, 'score': [], 'team_selected': ['errrr', 'small PP', 'Nate', 'Jeff'], 'waiting_on_votes': ['asdf', 'small PP', 'bork', 
+# 'Robert', 'Phillip', 'cat', 'Frankie', 'oof', '10', 'Jeff'], 'votes_cast': [['errrr', 'approve'], ['Nate', 'approve']], 'mission_votes_cast': []}
+# players =  ['errrr', 'small PP', 'bork', 'Robert', 'Phillip', 'cat', 'Frankie', 'oof', '10', 'Nate', 'Jeff', 'asdf']

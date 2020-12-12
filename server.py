@@ -2,6 +2,8 @@ import socket
 import threading
 import random
 import pickle
+import traceback
+
 
 import server_board_state
 
@@ -28,7 +30,7 @@ SERVER = ''
 
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
-SERVER_TIMEOUT = 5 #automatically disconnect from client after x seconds if we don't hear anything
+SERVER_TIMEOUT = 12 #automatically disconnect from client after x seconds if we don't hear anything
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
 
@@ -77,13 +79,15 @@ def handle_client(conn, addr):
                 if msg == DISCONNECT_MESSAGE:
                     connected = False
                     print(f"Received disconnect request from {addr}.")
-                    zzzz
                     message = "!NONE"
 
                     print(f"Client {addr} sent disconnect message. Closing thread, unlocking if thread is locked.")
                     print(f"Is a lock on? {lock.locked()}")
+                    lock.release()
+                    print(f"Is a lock on? {lock.locked()}")
                     if lock.locked():
                         lock.release()
+                    continue
 
 
                 elif msg[0] == '!INITIAL_CONNECT':
@@ -124,7 +128,7 @@ def handle_client(conn, addr):
 
 
                 elif msg[0] == '!BOARDSTATE':
-                        message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players, server_board_state.message_to_client()]]
+                        message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players, server_board_state.message_to_client(server_board_state.board_state)]]
 
 
 
@@ -277,7 +281,8 @@ def handle_client(conn, addr):
                     message = "!NONE"
 
 
-
+                # if message[0] == '!BOARDSTATE':
+                #     print(f"[Sending back to client: {addr}]: {server_board_state.message_to_client(server_board_state.board_state)}\r\n")
                 if message[0] != '!BOARDSTATE':
                     print(f"[Sending back to client: {addr}]: {message}\r\n")
 
@@ -293,25 +298,50 @@ def handle_client(conn, addr):
             connected = False
             print(f"Connection to {addr} timed out!")
             print(f"Is a lock on? {lock.locked()}. We are releasing the lock immediately after this line if one exists, if there is an error around here, this might be the issue.")
+            print(f"Note if the above line is True when testing with a single connection!!! If there is only one thread and it's not locked, we should NOT be unlocking on the following line.")
+
             #Still to be determined if this error keeps the lock or not! This may be a bug!
+            if not lock.locked() and (threading.activeCount() - 1) == 1:
+                print(f"ERROR: SINGLE THREAD IS NOT LOCKED AFTER DISCONNECT, YET WE'RE ATTEMPTING TO UNLOCK AFTER THIS LINE. THIS IS A CRITICAL ERROR")
             if lock.locked():
                 lock.release()
+
         except ConnectionResetError:
             connected = False
             print(f"Client unexpectedly closed, aborting send data. {addr} timed out!")
             print(f"Is a lock on? {lock.locked()}")
             #lock.release()
-        except:
+            if lock.locked() and (threading.activeCount() - 1) == 1:
+                print(f"ERROR: SINGLE THREAD IS STILL LOCKED AFTER {ConnectionResetError}. THIS IS A CRITICAL ERROR. UPDATE THIS EXCEPTION BLOCK.")
+
+        except Exception as e:
             connected = False
+            print(f"WARNING: UNEXPECTED ERROR IN CLIENT DISCONNECT: {e}")
+            print(traceback.format_exc())
             print(f"WARNING: Connection to {addr} broke unexpectedly! We're not sure what the issue was!!")
-            print(f"WARNING: We don't know what caused this disconnect error. If this thread is locking it must be released or you will hang the server. Catch and categorize this error!")
+            print(f"WARNING: We don't know what caused this disconnect error. If this specific thread is locking it must be released or you will hang the server. Catch and categorize this error!")
             print(f"Testing if thread is currently locked: Is a lock on? {lock.locked()}")
+            if lock.locked() and (threading.activeCount() - 1) == 1:
+                print(f"ERROR: SINGLE THREAD IS STILL LOCKED AFTER DISCONNECTING. THIS IS A CRITICAL ERROR. CATAGORIZE THIS ERROR AND SET TO UNLOCK, IMMEDIATELY.")
             #lock.release()
 
 
     conn.close()
-    print("Looks like the client disconnected. Closing thread.")
+    print("\r\n\r\nLooks like the client disconnected. Running close thread operations and closing thread.")
+
+    print(f"Checking if this is the last active thread. If it is, we should make sure thread is unlocked.")
+    print(f"[# of ACTIVE CONNECTIONS]: {threading.activeCount() - 1}")
+    if (threading.activeCount() - 1) == 2 and lock.locked():
+        print("ERROR: LAST ACTIVE THREAD WAS LOCKED, CALLING EMERGENCY UNLOCK")
+        lock.release()
+
+
+    print(f"Last known board and player state:\r\n")
+    print("board_state =", server_board_state.board_state)
+    print("players =", server_board_state.players, "\r\n\r\n")
     #print(f"[# of ACTIVE CONNECTIONS]: {threading.activeCount() - 1}")
+
+
 
 
 #ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
