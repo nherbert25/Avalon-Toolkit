@@ -54,10 +54,13 @@ def main():
 
 
     #disconnect from the server
-    #my_client.send(my_client.DISCONNECT_MESSAGE)
+    disconnect_successful = my_client.send(my_client.DISCONNECT_MESSAGE)
+    if disconnect_successful == '!NONE':
+        logging.info("Server registered client disconnect.")
+        logging.info('Avalon exited gracefully.')
 
-
-    logging.info('Avalon exited gracefully.')
+    else:
+        logging.info("Server did not respond to disconnect call.")
 
 
 

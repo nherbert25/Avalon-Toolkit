@@ -203,7 +203,7 @@ updating the mission frame to match the vote data - DONE
 -----------------------------------------------------
 Useful resources:
 
-
+-----
 
 tkinter is just a pythonic wrapper around an embedded tcl interpreter which includes the tk library. The canonical docs for tk mention this feature. 
 Here's the reference: tcl.tk/man/tcl8.5/TkCmd/grid.htm#M16
@@ -215,11 +215,18 @@ find the program
 "f9"  to kill
 press enter
 
+pkill python  
+
+
+
 
 screen python3 server.py  (screen detaches the command from the display window so that you can run your program, and it won't crash if you close the putty display)
 
 
 tmux command does the same as screen?
+
+------
+
 
 
 
@@ -229,6 +236,9 @@ pyinstaller --onefile avalon.pyw
 -----------------
 git branch   shows all branches
 git branch "nameofbranch" creates a new branch
+git branch -d "name" to delete branch
+git push origin :      to push the fact that branch has been deleted to github
+
 git checkout "name" moves to different branch
 git merge "name"  DO THIS FROM MASTER BRANCH to merge back into MASTER
 git log --oneline

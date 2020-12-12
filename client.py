@@ -24,7 +24,7 @@ class Client():
     FORMAT = 'utf-8'
     DISCONNECT_MESSAGE = "!DISCONNECT"
     RECEIVE_MESSAGE_LENGTH = 3048
-    CLIENT_CONNECT_TIME = 0.5 #number of seconds to sleep before request full board state from the server again
+    CLIENT_CONNECT_TIME = 2 #0.5 #number of seconds to sleep before request full board state from the server again
 
     #this is all of the data coming in
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
