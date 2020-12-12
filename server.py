@@ -28,9 +28,9 @@ SERVER = ''
 
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
+SERVER_TIMEOUT = 5 #automatically disconnect from client after x seconds if we don't hear anything
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
-lock = threading.Lock()
 
 #this is all of the data coming in
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -38,8 +38,8 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
 
 
-SERVER_TIMEOUT = 5 #automatically disconnect from client after x seconds if we don't hear anything
 
+lock = threading.Lock()
 
 
 
@@ -60,7 +60,7 @@ def handle_client(conn, addr):
 
             msg_length = conn.recv(HEADER).decode(FORMAT)
 
-            
+
             lock.acquire()
 
 
@@ -283,9 +283,23 @@ def handle_client(conn, addr):
 
 
 
-        except socket.timeout:
-            print(f"Connection to {addr} timed out!")
+        except (socket.timeout):
             connected = False
+            print(f"Connection to {addr} timed out!")
+            print(f"Is a lock on? {lock.locked()}. We are releasing the lock immediately after this line, if there is an error around here, this might be the issue.")
+            #Still to be determined if this error keeps the lock or not! This may be a bug!
+            lock.release()
+        except ConnectionResetError:
+            connected = False
+            print(f"Client unexpectedly closed, aborting send data. {addr} timed out!")
+            print(f"Is a lock on? {lock.locked()}")
+            #lock.release()
+        except:
+            connected = False
+            print(f"Connection to {addr} timed out! We're not sure what the issue was!!")
+            print(f"WARNING: We don't know what caused this disconnect error. If this thread is locking it must be released or you will hang the server. Catch and categorize this error!")
+            print(f"Testing is thread is currently locking: Is a lock on? {lock.locked()}") #This line shows "Instance of 'lock' has no 'locked' member" but it's a bug. This method works.
+            #lock.release()
 
 
     conn.close()
@@ -293,6 +307,7 @@ def handle_client(conn, addr):
     #print(f"[# of ACTIVE CONNECTIONS]: {threading.activeCount() - 1}")
 
 
+#ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
 
 ##    lock = threading.Lock()
     #lock.acquire()
