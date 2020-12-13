@@ -135,7 +135,7 @@ def approve_succeed_button(all_player_frames=None):
 
 	if client_board_state.board_state['phase'] == 'voting_phase':
 		client_board_state.client_queue.append(['!VOTE', client_board_state.username, 'approve'])
-		print(client_board_state.client_queue)
+		#print(client_board_state.client_queue)
 		print('approving')
 
 	if client_board_state.board_state['phase'] == 'mission_phase' and client_board_state.username in client_board_state.board_state['team_selected']:

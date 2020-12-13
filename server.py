@@ -83,10 +83,12 @@ def handle_client(conn, addr):
 
                     print(f"Client {addr} sent disconnect message. Closing thread, unlocking if thread is locked.")
                     print(f"Is a lock on? {lock.locked()}")
-                    lock.release()
-                    print(f"Is a lock on? {lock.locked()}")
+
                     if lock.locked():
+                        print("Great, unlocking and killing thread.")
                         lock.release()
+                        print(f"Is a lock on? {lock.locked()}")
+
                     continue
 
 
@@ -115,7 +117,7 @@ def handle_client(conn, addr):
                     server_board_state.roles = server_board_state.create_roles_list(msg[1])
                     random.shuffle(server_board_state.roles)
 
-                    server_board_state.board_state = server_board_state.create_board_state(server_board_state.players)
+                    server_board_state.board_state = server_board_state.create_board_state(server_board_state.players, server_board_state.board_state)
                     server_board_state.board_state['phase'] = 'picking_phase'
                     server_board_state.start_game(server_board_state.board_state)
                     #server_board_state.next_round(server_board_state.board_state)
@@ -204,32 +206,32 @@ def handle_client(conn, addr):
                     player_voting = msg[1]
                     vote = msg[2]
 
-                    if player_voting in server_board_state.board_state['waiting_on_votes']:
+                    to_send_message = f"Waiting on votes from: {server_board_state.board_state['waiting_on_votes']}"
+                    message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players, to_send_message]]
+
+                    if player_voting in server_board_state.board_state['waiting_on_votes'] and server_board_state.board_state['phase'] == 'voting_phase':
 
                         server_board_state.board_state['waiting_on_votes'].remove(player_voting)
                         server_board_state.board_state['votes_cast'].append([player_voting, vote])
 
-
-
-
-                    #if not waiting on anyone, append votes to players and either go to next round or begin mission phase
-                    if len(server_board_state.board_state['waiting_on_votes']) == 0:
-                        print('calculating!')
-
-
-
-                        server_board_state.board_state, vote_message = server_board_state.calculate_votes()  # 'approve' 'reject'
-
-                        #print(f'Calculated votes! Team {team_approve_or_reject}')
-
-                        print(vote_message)
-                        message = ['!ENDVOTINGPHASE', [server_board_state.board_state, vote_message]]
-
-
-
-                    else:
                         to_send_message = f"Waiting on votes from: {server_board_state.board_state['waiting_on_votes']}"
                         message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players, to_send_message]]
+
+                        #if not waiting on anyone, append votes to players and either go to next round or begin mission phase
+                        if len(server_board_state.board_state['waiting_on_votes']) == 0:
+                            print('calculating votes in function calculate_votes!')
+
+                            server_board_state.board_state, vote_message = server_board_state.calculate_votes(server_board_state.board_state)  # 'approve' 'reject'
+
+                            #print(f'Calculated votes! Team {team_approve_or_reject}')
+                            #print(vote_message)
+                            message = ['!ENDVOTINGPHASE', [server_board_state.board_state, vote_message]]
+
+
+
+                        # else:
+                        #     to_send_message = f"Waiting on votes from: {server_board_state.board_state['waiting_on_votes']}"
+                        #     message = ['!BOARDSTATE', [server_board_state.board_state, server_board_state.players, to_send_message]]
 
 
 
@@ -240,23 +242,25 @@ def handle_client(conn, addr):
                     player_voting = msg[1]
                     mission_vote = msg[2]
 
+                    message = ['!MISSION', [server_board_state.board_state, server_board_state.players]]
 
-                    if player_voting in server_board_state.board_state['team_selected']:
+                    if player_voting in server_board_state.board_state['team_selected'] and server_board_state.board_state['phase'] == 'mission_phase':
 
                         server_board_state.board_state['team_selected'].remove(player_voting)
                         server_board_state.board_state['mission_votes_cast'].append([player_voting, mission_vote])
 
+                        message = ['!MISSION', [server_board_state.board_state, server_board_state.players]]
 
-                    #if not waiting on anyone, append votes to players and either go to next round or begin mission phase
-                    if len(server_board_state.board_state['team_selected']) == 0:
-                        print('calculating!')
+                        #if not waiting on anyone, append votes to players and either go to next round or begin mission phase
+                        if len(server_board_state.board_state['team_selected']) == 0:
+                            print('calculating!')
 
-                        #appends success/failure to board_state['mission'], calculates and changes phase to next round or assassination phase. Returns a string meant for players (round 4 failed with 2 fails!)
-                        server_board_state.board_state, mission_message = server_board_state.calculate_mission_votes()
-                        print('calculated votes!')
-                        print(mission_message)
+                            #appends success/failure to board_state['mission'], calculates and changes phase to next round or assassination phase. Returns a string meant for players (round 4 failed with 2 fails!)
+                            server_board_state.board_state, mission_message = server_board_state.calculate_mission_votes(server_board_state.board_state)
+                            print('calculated votes!')
+                            print(mission_message)
 
-                        message = ['!ENDMISSION', [server_board_state.board_state, mission_message]]
+                            message = ['!ENDMISSION', [server_board_state.board_state, mission_message]]
 
 
 
@@ -273,8 +277,8 @@ def handle_client(conn, addr):
                         #if fail, call next turn function
                     
                     
-                    else:
-                        message = ['!MISSION', [server_board_state.board_state, server_board_state.players]]
+                    # else:
+                    #     message = ['!MISSION', [server_board_state.board_state, server_board_state.players]]
 
 
                 else:
@@ -316,7 +320,7 @@ def handle_client(conn, addr):
 
         except Exception as e:
             connected = False
-            print(f"WARNING: UNEXPECTED ERROR IN CLIENT DISCONNECT: {e}")
+            print(f"WARNING: SERVER IS CRASHING DUE TO TRACEBACK ERROR OR THERE IS AN UNEXPECTED ERROR IN CLIENT DISCONNECT: {e}")
             print(traceback.format_exc())
             print(f"WARNING: Connection to {addr} broke unexpectedly! We're not sure what the issue was!!")
             print(f"WARNING: We don't know what caused this disconnect error. If this specific thread is locking it must be released or you will hang the server. Catch and categorize this error!")
@@ -327,51 +331,32 @@ def handle_client(conn, addr):
 
 
     conn.close()
+    
     print("\r\n\r\nLooks like the client disconnected. Running close thread operations and closing thread.")
-
     print(f"Checking if this is the last active thread. If it is, we should make sure thread is unlocked.")
     print(f"[# of ACTIVE CONNECTIONS]: {threading.activeCount() - 1}")
+
     if (threading.activeCount() - 1) == 1 and lock.locked():
         print("ERROR: LAST ACTIVE THREAD WAS LOCKED, CALLING EMERGENCY UNLOCK")
         lock.release()
+
+    print(f"Final check if thread is locked: {lock.locked()}")
 
 
     print(f"Last known board and player state:\r\n")
     print("board_state =", server_board_state.board_state)
     print("players =", server_board_state.players, "\r\n\r\n")
-    #print(f"[# of ACTIVE CONNECTIONS]: {threading.activeCount() - 1}")
 
 
 
-
-#ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
-
-##    lock = threading.Lock()
-    #lock.acquire()
-    #lock.release()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def start():
+def start_server():
     server.listen()
     print(f"[LISTENING]: Server is listening on {SERVER}")
+
     while True:
-        #when a new connection occurs, we'll parse "socket object", "information about the connection"
+        #when a new connection occurs, we'll parse "socket object", "information about the connection" and start a server thread listening on this address
         conn, addr = server.accept()
         conn.settimeout(SERVER_TIMEOUT)
-
-
 
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
@@ -382,8 +367,11 @@ def start():
 
 
 
-print("[STARTING]: Server is starting")
-start()
+
+if __name__ == '__main__':
+    print("[STARTING]: Server is starting")
+    start_server()
 
 
-
+else:
+    print("Server module loaded successfully.")

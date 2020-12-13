@@ -65,7 +65,9 @@ board_state = {
     'round': 0,
     'turn': 0,
     'score': [],
-    'team_selected': []
+    'team_selected': [], 
+    'votes_cast': [],
+    'mission_votes_cast': []
     }
 
 
@@ -93,9 +95,9 @@ def create_roles_list(roles_dic):
     return roles
 
 
-
+#XXX REMOVE DEFAULT
 #xxx remove player_creation from game start
-def create_board_state(players, board_state = board_state):
+def create_board_state(players, board_state):
 
     board_state['player_order'] = players
 
@@ -127,7 +129,8 @@ def start_game(board_state):
 
 
 def next_turn(board_state):
-
+    print('running next_turn_funciton')
+    print(f"board_state['player_order']: {board_state['player_order']}")
     moved_player = board_state['player_order'].pop(0)
     board_state['player_order'].append(moved_player)
     board_state['player_picking_team'] = board_state['player_order'][0]
@@ -174,11 +177,11 @@ def next_round(board_state):
 
 
 
-
+#XXX REMOVE DEFAULT
 #calculate if vote passes or fails
 #append queued votes to player
 #sets board_state['votes_cast'] to empty list
-def calculate_votes(board_state=board_state):
+def calculate_votes(board_state):
 
     round = board_state['round']
     turn = board_state['turn']
@@ -222,9 +225,9 @@ def calculate_votes(board_state=board_state):
 
 
 
-
+#XXX REMOVE DEFAULT
 #appends success/failure to board_state['mission'], calculates and changes phase to next round or assassination phase. Runs next_round() if applicable. Returns a string meant for players ('Mission {round} failed with {number_of_fails} fail(s)!')
-def calculate_mission_votes(board_state=board_state):
+def calculate_mission_votes(board_state):
 
     round = board_state['round']
     turn = board_state['turn']
@@ -418,13 +421,13 @@ def gamestate(players, votes, mission):
 
 players = []
 #players = ['Nate','Frankie', 'Jeff']
-#players = ['Nate','cat']
+#players = ['nate','cat']
 #players = ['Nate','Jeff', 'Frankie', 'Phillip', "Robert", 'cat', 'bork', 'oof', 'small PP', '10', 'asdf', 'errrr']
 
 
-
-
-
+#two player game start
+board_state = {'phase': 'picking_phase', 'player_order': ['1', '2'], 'players': [{'name': '2', 'role': 'Merlin', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}, {'name': '1', 'role': 'Morgana', 'votes': [[]], 'on_team': [[]], 'made_team': [[]]}], 'player_picking_team': '1', 'mission': [], 'number_of_mission_fails': [], 'team_size': [[1, 2, 1, 2, 1], [False, True, False, True, False]], 'round': 1, 'turn': 1, 'score': [], 'team_selected': [], 'votes_cast': [], 'mission_votes_cast': []}
+players = ['1', '2']
 
 
 #just before people start voting
