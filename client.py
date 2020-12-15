@@ -8,19 +8,20 @@ import client_board_state
 
 class Client():
 
+    #fixed header length
     HEADER = 64
 
-
+    #IP address of the server that we're connecting to
     #set this to the IP address of the AWS server! Ex: 172.105.4.10
-    #SERVER = '192.168.1.47' #this is the device the serve will run off of. ipconfig
-    SERVER = socket.gethostbyname(socket.gethostname())
-    #SERVER = "34.122.32.4" #google ip
-    #SERVER = "45.33.6.23"  #Linode manager ip address. This is an external ip. USE THIS ADDRESS TO CONNECT TO ONLINE SERVER!
+    #SERVER_IP = '192.168.1.47' #this is the device the serve will run off of. ipconfig
+    SERVER_IP = socket.gethostbyname(socket.gethostname())
+    #SERVER_IP = "34.122.32.4" #google ip
+    #SERVER_IP = "45.33.6.23"  #Linode manager ip address. This is an external ip. USE THIS ADDRESS TO CONNECT TO ONLINE SERVER!
 
     #may have to consider port forwarding
     PORT = 5050
 
-    ADDR = (SERVER, PORT)
+    ADDR = (SERVER_IP, PORT)
     FORMAT = 'utf-8'
     DISCONNECT_MESSAGE = "!DISCONNECT"
     RECEIVE_MESSAGE_LENGTH = 3048
@@ -32,7 +33,7 @@ class Client():
 
 
     def __init__(self):
-        print(f'Server IP Address: {self.SERVER}')
+        print(f'Server IP Address: {self.SERVER_IP}')
 
 
 
@@ -56,13 +57,20 @@ class Client():
         self.client.send(message)
 
 
-        #XXX SET THE RECEIVED MESSAGE LENGTH TO BE A VARIABLE SENT BY THE HEADER OF THE SERVER!
-        #return_message = pickle.loads(self.client.recv(2048))
-        return_message = pickle.loads(self.client.recv(self.RECEIVE_MESSAGE_LENGTH))
-        #return_message = self.client.recv(2048).decode(self.FORMAT)
 
-        print(f"[Client Send Function] Server return message: {return_message}")
-        return(return_message)
+        msg_length = self.client.recv(self.HEADER).decode(self.FORMAT)
+        
+        #if message is not None
+        if msg_length:
+            #set the received message length to be dynamically returned from server
+            msg_length = int(msg_length)
+            print(f"Message length in bytes: {msg_length}")
+            return_message = pickle.loads(self.client.recv(msg_length))
+            #return_message = pickle.loads(self.client.recv(self.RECEIVE_MESSAGE_LENGTH))
+
+
+            print(f"[Client Send Function] Server return message: {return_message}")
+            return(return_message)
 
 
 
@@ -76,7 +84,9 @@ class Client():
 
 
     def initial_connect(self, username):
+        print('got here')
         username = self.send(['!INITIAL_CONNECT', username])
+        print('got here')
         return(username)
 
 

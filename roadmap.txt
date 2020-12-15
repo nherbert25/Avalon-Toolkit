@@ -14,14 +14,10 @@ NON-CRITICAL FEATURES:
 
 
 revamping game loop logic to be more robust
+
+https://www.youtube.com/watch?v=CV7_stUWvBQ
 Client/Server health check
 Make health/full board state check every ~10 seconds. Otherwise PUSH new information from server instead of requesting full board state every x seconds
-Make header message dynamic for... either client or server, can't remember. Replace .recv(4000) with message msg_length
-
-
-
-
-Launch server + multiple game instances from a single file for testing purposes
 
 
 
@@ -35,6 +31,10 @@ new character! normal resistance but with a unique name (claimable)
 
 
 
+
+
+Launch server + multiple game instances from a single file for testing purposes - DONE
+Make header message dynamic for... either client or server, can't remember. Replace .recv(4000) with message msg_length -DONE
 allow board state to be set during configuration (currently it looks like this doesn't tell the client to update? client log doesn't change from main screen "select roles" to new message) - likely due to the couple second delay hack between starting the client connection and entering your name in the widget - DONE
 -------------------------------
 VISUALIZATION FEATURES:
@@ -53,31 +53,7 @@ make "number of fails on a mission" permanently displayed
 show player that made team (voting widget)
 
 seperate out the rounds slightly for voting block - DONE (padx and ipadx are .grid configs not label configs)
--------------------------------
-GAME FUNCTION CRITICAL:
 
-
-BUG: Clicking submit and/or approve/fail buttons in rapid succession leads to incorrect team sizes on server
-
-
-
-
-
-
-
-
-
-remove command line when avalon.py is ran (simply save as .pyw file.. this worked!!...... maybe compile after this?....) - DONE
-https://stackoverflow.com/questions/764631/how-to-hide-console-window-in-python
-https://www.google.com/search?q=suppress+command+line+when+running+python+exe&oq=suppress+command+line+when+running+python+exe&aqs=chrome..69i57j33i22i29i30.6591j1j4&sourceid=chrome&ie=UTF-8
-
-Put server on cloud. See "EXTERNAL SERVER" section - DONE
-BUG: Pressing submit will set all backgrounds to "good" color instead of what character knows - FIXED
-require multiple fails for round 4!!!/custom rounds - DONE
-show team failed with multiple votes - DONE
-on team/created team indicator on voter frame - DONE
-show players that were on teams (voting widget) - DONE
-teams points widget - DONE
 -------------------------------
 ENG GAME STEP:
 
@@ -90,11 +66,39 @@ adding additional statistics for the end of the game
 
 
 
--------------------------------------
+
+
+-------------------------------
+GAME FUNCTION CRITICAL:
+
+
+
+
+
+
+
+
+
+
+
+BUG: Clicking submit and/or approve/fail buttons in rapid succession leads to incorrect team sizes on server - DONE
+remove command line when avalon.py is ran (simply save as .pyw file.. this worked!!...... maybe compile after this?....) - DONE
+https://stackoverflow.com/questions/764631/how-to-hide-console-window-in-python
+https://www.google.com/search?q=suppress+command+line+when+running+python+exe&oq=suppress+command+line+when+running+python+exe&aqs=chrome..69i57j33i22i29i30.6591j1j4&sourceid=chrome&ie=UTF-8
+
+Put server on cloud. See "EXTERNAL SERVER" section - DONE
+BUG: Pressing submit will set all backgrounds to "good" color instead of what character knows - FIXED
+require multiple fails for round 4!!!/custom rounds - DONE
+show team failed with multiple votes - DONE
+on team/created team indicator on voter frame - DONE
+show players that were on teams (voting widget) - DONE
+teams points widget - DONE
+--------------------------------------------------------------------------
 Known bugs:
 
 Server stability
 Server game state logic if buttons are clicked too fast
+
 
 --
 
@@ -135,10 +139,6 @@ Server needs to disconnect from client if client doesn't respond after a period 
 Looks like this fixes itself if you ctrl+c from the server's command line, it's hanging on something. It's NOT the .exe doing this, got the same error through avalon.py
 
 --
-
----------------------------------------
-Known bugs:
-
 
 
 

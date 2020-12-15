@@ -4,6 +4,8 @@ import random
 import pickle
 import traceback
 
+import select
+
 
 import server_board_state
 
@@ -36,9 +38,11 @@ DISCONNECT_MESSAGE = "!DISCONNECT"
 
 #this is all of the data coming in
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#allows ports to be reused after timeout error?...
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 #anything that hits this address, hits this socket
 server.bind(ADDR)
-
+currently_connected_clients = {}
 
 
 lock = threading.Lock()
@@ -46,6 +50,26 @@ lock = threading.Lock()
 
 
 
+def receive_message(client_socket):
+
+    addr = None
+    msg = None
+
+
+    try:
+        msg_length = conn.recv(HEADER).decode(FORMAT)
+
+        #if message is None, client has disconnected
+        if not len(msg_length):
+            return False
+
+
+        msg_length = int(msg_length)
+        msg = pickle.loads(conn.recv(msg_length))
+        print(f"[Received the following instructions from {addr}]: {msg}")
+
+    except:
+        return False
 
 
 
@@ -59,13 +83,8 @@ def handle_client(conn, addr):
     while connected:
 
         try:
-
             msg_length = conn.recv(HEADER).decode(FORMAT)
-
-
             lock.acquire()
-
-
 
 
             #if message is not None
@@ -285,16 +304,37 @@ def handle_client(conn, addr):
                     message = "!NONE"
 
 
+
+
+
+
+
+
+
                 # if message[0] == '!BOARDSTATE':
                 #     print(f"[Sending back to client: {addr}]: {server_board_state.message_to_client(server_board_state.board_state)}\r\n")
-                if message[0] != '!BOARDSTATE':
-                    print(f"[Sending back to client: {addr}]: {message}\r\n")
+                #if message[0] != '!BOARDSTATE':
+                #    print(f"[Sending back to client: {addr}]: {message}\r\n")
 
+
+
+
+                #print(f"[Client Send Function] Sending instructions: {msg}")
                 message = pickle.dumps(message)
+
+                #determine the length of the message to be sent to the server, message must be 64 bits to be valid
+                msg_length = len(message)
+                send_length = str(msg_length).encode(FORMAT)
+                send_length += b' ' * (HEADER - len(send_length))  #b' ' means the byte representation of a space
+
+
+                #send message length then message to the server
+                #client.send is a method of the socket object, NOT this send method. See the following: client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                conn.send(send_length)
                 conn.send(message)
 
                 lock.release()
-                #conn.send("!NONE".encode(FORMAT))
+
 
 
         #lock.locked() shows the visual studio error: "Instance of 'lock' has no 'locked' member" but it's a bug. This method works.
@@ -329,7 +369,13 @@ def handle_client(conn, addr):
                 print(f"ERROR: SINGLE THREAD IS STILL LOCKED AFTER DISCONNECTING. THIS IS A CRITICAL ERROR. CATAGORIZE THIS ERROR AND SET TO UNLOCK, IMMEDIATELY.")
             #lock.release()
 
-
+    lock.acquire()
+    print(f"Connection to {client_username} broke!")
+    print(f"Closing connection to address: {addr}")
+    print(f"Closing connection in thread: {currently_connected_clients[addr]}")
+    del currently_connected_clients[addr]
+    print(f"Remaining clients: {currently_connected_clients}")
+    lock.release()
     conn.close()
     
     print("\r\n\r\nLooks like the client disconnected. Running close thread operations and closing thread.")
@@ -353,16 +399,25 @@ def start_server():
     server.listen()
     print(f"[LISTENING]: Server is listening on {SERVER}")
 
+
+
     while True:
         #when a new connection occurs, we'll parse "socket object", "information about the connection" and start a server thread listening on this address
+        # conn is a new socket object usable to send and receive data on the connection (client socket object)
+        # address is the address bound to the socket on the other end of the connection
+        #server.accept goes hand in hand with client.connect from the client.py module
         conn, addr = server.accept()
         conn.settimeout(SERVER_TIMEOUT)
 
         thread = threading.Thread(target=handle_client, args=(conn, addr))
+
+        lock.acquire()
+        currently_connected_clients[addr] = thread
+        lock.release()
+        
         thread.start()
         print(f"[# of ACTIVE CONNECTIONS]: {threading.activeCount() - 1}")
-
-
+        print(currently_connected_clients)
 
 
 
@@ -375,3 +430,20 @@ if __name__ == '__main__':
 
 else:
     print("Server module loaded successfully.")
+
+
+
+"""
+
+#!/usr/bin/python3
+import asyncio 
+
+loop = asyncio.get_event_loop()
+try:
+    loop.run_forever()
+finally:
+    loop.close()
+
+
+example of an infinite loop. Maybe use this to continually scan for changes to board state, then loop through and send new board state to all clients?
+"""
