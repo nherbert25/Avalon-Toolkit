@@ -7,8 +7,6 @@ import client
 import main_board_class as board
 
 
-#testing commits
-
 def main():
 
     #logging.basicConfig(filename='AVALON.log', level=logging.INFO)
