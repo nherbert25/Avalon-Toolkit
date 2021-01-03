@@ -121,6 +121,19 @@ while True:
 
             print(f'Received message from {user["data"].decode("utf-8")}: {message["data"].decode("utf-8")}')
 
+
+
+            # XXX DROP SERVER LOGIC HERE, THEN SEND BOARD STATE TO ALL CLIENTS
+
+
+
+
+
+
+
+
+
+
             # Iterate over connected clients and broadcast message
             for client_socket in clients:
 
