@@ -1,6 +1,6 @@
 
 
-#[ allienment  ,    known,     percival noteds      ]
+#[ alignment  ,    known,     percival noteds      ]
 
 character_dictionary = {
 
