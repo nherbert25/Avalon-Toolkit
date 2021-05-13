@@ -1,9 +1,5 @@
-
-
-# [ alignment  ,    known,     percival noteds      ]
-
+# [alignment, known to character, percival noteds]
 character_dictionary = {
-
     'Merlin': ['good', ['Assassin', 'Morgana', 'Spy', 'Oberon']],
     'Percival': ['good', [],   ['Merlin', 'Morgana']],
     'Sister': ['good', [],   ['Sister']],
@@ -12,9 +8,7 @@ character_dictionary = {
     'Assassin': ['evil', ['Assassin', 'Morgana', 'Mordred', 'Spy']],
     'Mordred': ['evil', ['Assassin', 'Morgana', 'Mordred', 'Spy']],
     'Spy': ['evil', ['Assassin', 'Morgana', 'Spy']],
-    'Oberon': ['evil', []],
-
-
+    'Oberon': ['evil', []]
 }
 
 
