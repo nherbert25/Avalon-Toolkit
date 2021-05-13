@@ -5,7 +5,8 @@ import sys
 
 HEADER_LENGTH = 10
 
-IP = socket.gethostbyname(socket.gethostname())  #pulls in the ipaddress based off your computer's local name
+# pulls in the ipaddress based off your computer's local name
+IP = socket.gethostbyname(socket.gethostname())
 PORT = 1234
 my_username = input("Username: ")
 
