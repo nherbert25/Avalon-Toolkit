@@ -97,10 +97,9 @@ class Main_Page():
         self.lock.release()
 
     ##############################################################
-    # functions
+    # methods
 
     # creates a widget housing a 'player' widget for each player in the lobby
-
     def generate_player_lobby_widget(self, top_frame, list_of_players):
 
         config_base_frame = tk.LabelFrame(
@@ -416,8 +415,7 @@ class Main_Page():
         root.destroy()
 
     ##############################################################
-    # finished
-
+    # main loop
     # root.mainloop()
 
     def main_loop(self):

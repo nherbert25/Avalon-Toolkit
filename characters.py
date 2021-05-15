@@ -19,9 +19,6 @@ class Character:
         #noted = None
         pass
 
-    def base(self):
-        print("base class")
-
 
 class Merlin(Character):
     def __init__(self):
