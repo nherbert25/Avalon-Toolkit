@@ -43,10 +43,6 @@ currently_connected_clients = {}
 
 lock = threading.Lock()
 
-###################################################################################################
-###################################################################################################
-# definitions
-
 
 def receive_message(client_socket):
 
@@ -66,50 +62,6 @@ def receive_message(client_socket):
 
     except:
         return False
-
-
-def client_disconnect(addr):
-    connected = False
-    print(f"Received disconnect request from {addr}.")
-    message = "!NONE"
-
-    print(
-        f"Client {addr} sent disconnect message. Closing thread, unlocking if thread is locked.")
-    print(f"Is a lock on? {lock.locked()}")
-
-    if lock.locked():
-        print("Great, unlocking and killing thread.")
-        lock.release()
-        print(f"Is a lock on? {lock.locked()}")
-
-
-def client_initial_connect(msg):
-    client_username = msg[1]
-
-    if client_username in server_board_state.players:
-        # send server state to reconnect the player
-        print('Player already logged in, reconnecting.')
-        message = ['!INITIAL_CONNECT', client_username,
-                   server_board_state.board_state]
-
-    else:
-        if client_username not in (None, ''):
-            server_board_state.players.append(client_username)
-            message = ['!INITIAL_CONNECT', client_username,
-                       server_board_state.board_state]
-
-        else:
-            message = ['!INITIAL_CONNECT', client_username,
-                       server_board_state.board_state]
-
-
-# https://stackoverflow.com/questions/9168340/using-a-dictionary-to-select-function-to-execute
-server_dict = {
-
-    DISCONNECT_MESSAGE: client_disconnect(),
-    '!INITIAL_CONNECT': client_initial_connect()
-
-}
 
 
 # main function for handling client pings
