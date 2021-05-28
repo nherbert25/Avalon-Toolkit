@@ -4,6 +4,7 @@ import select
 import socket
 import threading
 import traceback
+import functools
 
 import server_board_state
 
@@ -39,12 +40,38 @@ class Server():
         # anything that hits this address, hits this socket
         self.server.bind(self.ADDR)
 
+        # mapping of possible client commands to the server
+        self.network_commands = {
+            '!DISCONNECT': self.client_disconnect,
+            '!INITIAL_CONNECT': self.client_initial_connect,
+            '!GAMESTART': 'placeholder',
+            '!BOARDSTATE': 'placeholder',
+            '!PLAYERSTATE': 'placeholder',
+            '!TEAMSELECT': 'placeholder',
+            '!VOTE': 'placeholder',
+            '!MISSION': 'placeholder'
+        }
+
         self.currently_connected_clients = {}
         self.lock = threading.Lock()
 
     ###################################################################################################
     ###################################################################################################
     # definitions
+
+    # https://stackoverflow.com/questions/9168340/using-a-dictionary-to-select-function-to-execute
+    # https://softwareengineering.stackexchange.com/questions/182093/why-store-a-function-inside-a-python-dictionary/182095
+    # takes the list [my_function, var1, var2, var3] sent by the client and converts/runs it as my_function(var1, var2, var3) according to the network_commands table
+    def process_network_command(self, command):
+        if len(command) > 1:
+            adaptive_func = self.network_commands[command[0]]
+            for ele in command[1:]:
+                adaptive_func = functools.partial(
+                    adaptive_func, ele)
+            adaptive_func()
+            return
+        else:
+            self.network_commands[command[0]]()
 
     def receive_message(self, client_socket):
 
@@ -66,8 +93,9 @@ class Server():
             return False
 
     def client_disconnect(self, connected):
-        connected = False
         print(f"Received disconnect request from {addr}.")
+
+        connected = False
         message = "!NONE"
 
         print(
@@ -102,18 +130,48 @@ class Server():
 
         return message
 
-    # https://stackoverflow.com/questions/9168340/using-a-dictionary-to-select-function-to-execute
-    # https://softwareengineering.stackexchange.com/questions/182093/why-store-a-function-inside-a-python-dictionary/182095
-    server_request_command_dict = {
-        "!DISCONNECT": client_disconnect,
-        '!INITIAL_CONNECT': client_initial_connect
-    }
+    # once a client connects, a thread is created and this function runs indefintely within that thread
+    def handle_client_revamp(self, conn, addr):
+        print(f"[NEW CONNECTION]: {addr} connected.")
 
-    def handle_client_requests(self, request):
-        server_request_command_dict[request]()
+        connected = True
 
-    # main function for handling client pings
-    # expects a list ['!INSTRUCTION', DATA_TYPE]
+        while connected:
+
+            try:
+                # conn.recv is a locking function, waits here until a message is received from the client
+                msg_length = conn.recv(self.HEADER).decode(self.FORMAT)
+                self.lock.acquire()
+
+                # if message is not None
+                if msg_length:
+                    msg_length = int(msg_length)
+                    msg = pickle.loads(conn.recv(msg_length))
+                    print(
+                        f"[Received the following instructions from {addr}]: {msg}")
+
+                    self.process_network_command(msg)
+
+                else:
+                    message = "!NONE"
+
+                # send response message to client
+                message = pickle.dumps(message)
+                # determine the length of the message to be sent to the server, message must be 64 bits to be valid
+                msg_length = len(message)
+                send_length = str(msg_length).encode(self.FORMAT)
+                # b' ' means the byte representation of a space
+                send_length += b' ' * (self.HEADER - len(send_length))
+
+                # send message length then message to the server
+                # client.send is a method of the socket object, NOT this send method. See the following: client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                conn.send(send_length)
+                conn.send(message)
+
+                self.lock.release()
+
+            except:
+                pass
 
     def handle_client(self, conn, addr):
         print(f"[NEW CONNECTION]: {addr} connected.")
