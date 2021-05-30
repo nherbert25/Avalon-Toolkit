@@ -61,7 +61,7 @@ class Server():
 
     # https://stackoverflow.com/questions/9168340/using-a-dictionary-to-select-function-to-execute
     # https://softwareengineering.stackexchange.com/questions/182093/why-store-a-function-inside-a-python-dictionary/182095
-    # takes the list [my_function, var1, var2, var3] sent by the client and converts/runs it as my_function(var1, var2, var3) according to the network_commands table
+    # takes the list [my_function, var1, var2, var3] sent by the client and converts then runs it as my_function(var1, var2, var3) according to the network_commands table
     def process_network_command(self, command):
         if len(command) > 1:
             adaptive_func = self.network_commands[command[0]]
@@ -515,19 +515,3 @@ if __name__ == '__main__':
 
 else:
     print("Server module loaded successfully.")
-
-
-"""
-
-#!/usr/bin/python3
-import asyncio 
-
-loop = asyncio.get_event_loop()
-try:
-    loop.run_forever()
-finally:
-    loop.close()
-
-
-example of an infinite loop. Maybe use this to continually scan for changes to board state, then loop through and send new board state to all clients?
-"""

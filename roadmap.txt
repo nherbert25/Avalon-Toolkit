@@ -73,7 +73,7 @@ GAME FUNCTION CRITICAL:
 
 
 
-
+BUG: need a failsafe on Succeed and Fail buttons!!! So that if you've already voted, it doesn't resend to the server.
 
 
 
@@ -201,6 +201,18 @@ updating the mission frame to match the vote data - DONE
 
 
 -----------------------------------------------------
+-----------------------------------------------------
+-----------------------------------------------------
+-----------------------------------------------------
+
+
+
+
+
+
+
+
+
 Useful resources:
 
 -----
@@ -277,3 +289,35 @@ Notes on client/server architecture
 
 # 'stop code' is the second way to handle this
 # keep fetching until I get the keyboard ex: "!stop"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+THIS WAS ORIGINALLY A NOTE IN THE server.py FILE
+"""
+
+#!/usr/bin/python3
+import asyncio 
+
+loop = asyncio.get_event_loop()
+try:
+    loop.run_forever()
+finally:
+    loop.close()
+
+
+example of an infinite loop. Maybe use this to continually scan for changes to board state, then loop through and send new board state to all clients?
+"""
