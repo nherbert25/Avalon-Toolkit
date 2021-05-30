@@ -130,7 +130,7 @@ class Server():
 
         return message
 
-    # once a client connects, a thread is created and this function runs indefintely within that thread
+    # once a client connects, a thread is created and this function runs indefinitely within that thread
     def handle_client_revamp(self, conn, addr):
         print(f"[NEW CONNECTION]: {addr} connected.")
 
