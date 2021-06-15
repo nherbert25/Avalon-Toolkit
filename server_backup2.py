@@ -110,9 +110,7 @@ class Server():
         return (connected, message)
 
     def client_initial_connect(self, msg):
-        print("HELLOOOOOOOOOOOOOOOOOOOOOOO")
-        print(msg)
-        client_username = msg
+        client_username = msg[1]
 
         if client_username in server_board_state.players:
             # send server state to reconnect the player
